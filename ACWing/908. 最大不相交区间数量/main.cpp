@@ -20,7 +20,7 @@ int main() {
     sort(range, range + n);
 
     int res = 0, end = -2E9;
-    for (int i = 0; i < n; i ++ )
+    for (int i = 0; i < n; i++)
         if (end < range[i].l) {
             res ++ ;
             end = range[i].r;
