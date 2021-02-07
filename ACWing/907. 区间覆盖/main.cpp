@@ -22,22 +22,21 @@ int main() {
 
     sort(range, range + n);
 
-    int res = 0, r = -1e9;
+    int res = 0, r = 0;
     for (int i = 0; i < n; i++) {
-        r = -1e9;
+        r = -2e9;
         int j = i;
         while (j < n && range[j].l <= st) {
             r = max(r, range[j].r);
             j++;
         }
 
-        res++;
-        if (r >= ed) {
+        if (r < st) {
             break;
         }
 
-        if (r < st) {
-            res = -1;
+        res++;
+        if (r >= ed) {
             break;
         }
 
