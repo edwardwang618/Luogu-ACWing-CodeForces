@@ -25,6 +25,8 @@ int main() {
     cin >> n;
 
     bool used[n];
+    memset(used, false, sizeof used);
+
     vector<int> v;
     dfs(n, v, used);
 

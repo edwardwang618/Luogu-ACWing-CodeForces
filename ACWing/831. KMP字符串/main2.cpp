@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+
 using namespace std;
 
 string s, p;
@@ -10,14 +11,19 @@ vector<int> res;
 void buildNext(string p, int ne[]) {
     ne[0] = -1;
     for (int i = 0, j = -1; i < m - 1;)
-        if (j < 0 || p[j] == p[i]) ne[++i] = ++j;
-        else j = ne[j];
+        if (j < 0 || p[j] == p[i]) {
+            i++;
+            j++;
+            ne[i] = p[i] != p[j] ? j : ne[j];
+        } else {
+            j = ne[j];
+        }
 }
 
 void kmp(string s, string p) {
     int ne[m];
     buildNext(p, ne);
-    for (int i = 0, j = 0; i < n && j < m; ) {
+    for (int i = 0, j = 0; i < n && j < m;) {
         if (j == -1 || s[i] == p[j]) i++, j++;
         else j = ne[j];
 
