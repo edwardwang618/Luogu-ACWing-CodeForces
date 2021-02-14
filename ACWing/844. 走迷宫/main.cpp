@@ -23,7 +23,7 @@ int main() {
 
     int res = 0;
     queue<PII> q;
-    q.push({1, 1});
+    q.push(make_pair(1, 1));
     int d[] = {1, 0, -1, 0, 1};
     while (!q.empty()) {
         res++;
@@ -40,7 +40,7 @@ int main() {
 
                 if (1 <= nextX && nextX <= m && 1 <= nextY && nextY <= n && a[nextX][nextY] == 0 && !visited[nextX][nextY]) {
                     visited[nextX][nextY] = true;
-                    q.push({nextX, nextY});
+                    q.push(make_pair(nextX, nextY));
                 }
             }
         }
