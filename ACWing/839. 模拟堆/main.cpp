@@ -4,7 +4,7 @@
 using namespace std;
 
 const int N = 100010;
-// ph从下表映射到堆，hp从堆映射到下标
+// ph从下标映射到堆，hp从堆映射到下标
 int h[N], ph[N], hp[N], s;
 
 void heap_swap(int a, int b) {
