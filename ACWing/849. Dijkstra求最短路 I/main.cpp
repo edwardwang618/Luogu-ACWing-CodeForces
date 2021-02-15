@@ -20,10 +20,11 @@ int dijkstra() {
         for (int j = 1; j <= n; j++) 
             if (!st[j] && (t == -1 || dist[t] > dist[j])) t = j;
         
+        if (t == n) break;
+
         st[t] = true;
         for (int j = 1; j <= n; j++) 
-            if (!st[j])
-                dist[j] = min(dist[j], dist[t] + g[t][j]);
+            if (!st[j]) dist[j] = min(dist[j], dist[t] + g[t][j]);
     }
 
     return dist[n] == 0x3f3f3f3f ? -1 : dist[n];
