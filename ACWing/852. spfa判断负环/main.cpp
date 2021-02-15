@@ -17,7 +17,10 @@ void add(int a, int b, int c) {
 bool spfa() {
     queue<int> q;
 
-    for (int i = 1; i <= n; i++) q.push(i);
+    for (int i = 1; i <= n; i++) {
+        q.push(i);
+        st[i] = true;
+    }
 
     while (!q.empty()) {
         int t = q.front();
