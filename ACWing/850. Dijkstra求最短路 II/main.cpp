@@ -35,7 +35,7 @@ int dijkstra() {
         st[v] = true;
         for (int i = h[v]; i != -1; i = ne[i]) {
             int j = e[i];
-            if (dist[j] > dis + w[i]) {
+            if (!st[j] && dist[j] > dis + w[i]) {
                 dist[j] = dis + w[i];
                 heap.push({dist[j], j});
             }
