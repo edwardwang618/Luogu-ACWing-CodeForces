@@ -32,6 +32,8 @@ int dijkstra() {
         int v = t.second, dis = t.first;
         if (st[v]) continue;
 
+        if (v == n) break;
+        
         st[v] = true;
         for (int i = h[v]; i != -1; i = ne[i]) {
             int j = e[i];
