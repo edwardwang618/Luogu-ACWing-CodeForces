@@ -13,13 +13,14 @@ void add(int a, int b) {
     e[idx] = b, ne[idx] = h[a], h[a] = idx++;
 }
 
-bool find(int x) {
-    for (int i = h[x]; i != -1; i = ne[i]) {
+bool dfs(int v) {
+    st[v] = true;
+    for (int i = h[v]; i != -1; i = ne[i]) {
         int j = e[i];
         if (!st[j]) {
             st[j] = true;
-            if (match[j] == 0 || find(match[j])) {
-                match[j] = x;
+            if (match[j] == 0 || dfs(match[j])) {
+                match[j] = v;
                 return true;
             }
         }
@@ -42,7 +43,7 @@ int main() {
     int res = 0;
     for (int i = 1; i <= n1; i++) {
         memset(st, false, sizeof st);
-        if (find(i)) res++;
+        if (dfs(i)) res++;
     }
 
     cout << res << endl;
