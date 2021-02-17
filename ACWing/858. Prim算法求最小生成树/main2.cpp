@@ -5,10 +5,10 @@ using namespace std;
 
 typedef pair<int, int> PII;
 
-const int N = 200010, INF = 0x3f3f3f3f;
+const int N = 100010, M = 2 * N, INF = 0x3f3f3f3f;
 
 int n, m;
-int h[N], w[N], e[N], ne[N], idx;
+int h[N], w[M], e[M], ne[M], idx;
 int cnt;
 int dist[N];
 bool st[N];
