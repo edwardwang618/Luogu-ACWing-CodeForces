@@ -15,7 +15,7 @@ int main() {
     for (int i = 1; i <= n; i++) 
         for (int j = 1; j <= m; j++)
             if (j >= v[i])
-                f[j] = max(f[j],  f[j - v[i]] + w[i]);   
+                f[j] = max(f[j],  f[j - v[i]] + w[i]); 
 
     cout << f[m] << endl;
     return 0;
