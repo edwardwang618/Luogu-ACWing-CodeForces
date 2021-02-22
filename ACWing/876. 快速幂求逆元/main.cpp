@@ -21,9 +21,13 @@ int main() {
         int a, p;
         scanf("%d%d", &a, &p);
         
+        if (a % p == 0) {
+            printf("impossible\n");
+            continue;
+        }
+        
         int res = fast_pow(a, p - 2, p);
-        if (a % p != 0) printf("%d\n", res);
-        else printf("impossible\n");
+        printf("%d\n", res);
     }
 
     return 0;
