@@ -1,0 +1,64 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+const int N = 5010;
+
+int primes[N], cnt;
+int times[N];
+bool st[N];
+
+void get_primes(int n) {
+    for (int i = 2; i <= n; i++) {
+        if (!st[i]) primes[cnt++] = i;
+        for (int j = 0; primes[j] <= n / i; j++) {
+            st[primes[j] * i] = true;
+            if (i % primes[j] == 0) break;
+        }
+    }
+}
+
+int get_index(int n, int p) {
+    int res = 0;
+    while (n) {
+        n /= p;
+        res += n;
+    }
+
+    return res;
+}
+
+vector<int> mul(vector<int> a, int b) {
+    vector<int> res;
+    int t = 0;
+    for (int i = 0; i < a.size() || t; i++) {
+        if (i < a.size()) t += a[i] * b;
+        res.push_back(t % 10);
+        t /= 10;
+    }
+
+    return res;
+}
+
+int main() {
+    int a, b;
+    cin >> a >> b;
+
+    get_primes(a);
+
+    for (int i = 0; i < cnt; i++) {
+        int p = primes[i];
+        times[i] = get_index(a, p) - get_index(b, p) - get_index(a - b, p);
+    }
+
+    vector<int> res;
+    res.push_back(1);
+
+    for (int i = 0; i < cnt; i++)
+        for (int j = 0; j < times[i]; j++) 
+            res = mul(res, primes[i]);
+
+    for (int i = res.size() - 1; i >= 0; i--) cout << res[i];
+    cout << endl;
+    return 0;
+}
