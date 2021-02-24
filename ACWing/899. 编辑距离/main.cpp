@@ -1,0 +1,44 @@
+#include <iostream>
+#include <string.h>
+using namespace std;
+
+const int N = 15, M = 1010;
+
+int n, m;
+int f[N][N];
+char str[M][N];
+
+int edit_dis(char a[], char b[]) {
+    int la = strlen(a), lb = strlen(b);
+    for (int i = 0; i <= lb; i++) f[0][i] = i;
+    for (int i = 0; i <= la; i++) f[i][0] = i;
+
+    for (int i = 1; i <= la; i++)
+        for (int j = 1; j <= lb; j++) {
+            f[i][j] = min(f[i - 1][j] + 1, f[i][j - 1] + 1);
+            if (a[i - 1] == b[j - 1]) f[i][j] = min(f[i][j], f[i - 1][j - 1]);
+            else f[i][j] = min(f[i][j], f[i - 1][j - 1] + 1);
+        }
+
+    return f[la][lb];
+}
+
+int main() {
+    cin >> n >> m;
+    for (int i = 0; i < n; i++) cin >> str[i];
+
+    while (m--) {
+        char s[N];
+        int lim;
+        scanf("%s%d", s, &lim);
+
+        int res = 0;
+        for (int i = 0; i < n; i++) 
+            if (edit_dis(str[i], s) <= lim) 
+                res++;
+        
+        cout << res << endl;
+    }
+
+    return 0;
+}
