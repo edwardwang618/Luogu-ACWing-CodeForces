@@ -20,7 +20,7 @@ int main() {
         for (int j = 0; j < n; j++)
             if (i >> j & 1)
                 for (int k = 0; k < n; k++)
-                    if ((i - (1 << j)) >> k & 1)
+                    if (k != j && i >> k & 1)
                         f[i][j] = min(f[i][j], f[i - (1 << j)][k] + w[k][j]);
 
     printf("%d\n", f[(1 << n) - 1][n - 1]);
