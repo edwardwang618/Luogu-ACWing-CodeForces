@@ -7,17 +7,17 @@ int a[N];
 void quick_sort(int l, int r) {
     if (l >= r) return;
 
-    int m = a[l + (r - l >> 1)];
+    int piv = a[l + (r - l >> 1)];
     int i = l, j = r;
-    do{
-        while(a[i] < m) i++;
-        while(a[j] > m) j--; 
+    while (i <= j){
+        while(a[i] < piv) i++;
+        while(a[j] > piv) j--; 
         if (i <= j) {
             swap(a[i], a[j]);
             i++;
             j--;
         }
-    } while(i <= j); 
+    } 
 
     quick_sort(l, j);
     quick_sort(i, r);
