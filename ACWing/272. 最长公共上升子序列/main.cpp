@@ -16,7 +16,7 @@ int main() {
         for (int j = 1; j <= n; j++) {
             f[i][j] = f[i - 1][j];
             if (a[i] == b[j]) f[i][j] = max(f[i][j], maxv + 1);
-            if (b[j] < a[i]) maxv = max(maxv, f[i][j]);
+            if (b[j] < a[i]) maxv = max(maxv, f[i - 1][j]);
         }
     }
 
