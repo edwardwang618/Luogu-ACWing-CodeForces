@@ -9,7 +9,6 @@ int q[M];
 
 int main() {
     cin >> n >> m;
-
     for (int i = 1; i <= n; i++) 
         // v体积，w价值，s个数
         cin >> v[i] >> w[i] >> s[i];
