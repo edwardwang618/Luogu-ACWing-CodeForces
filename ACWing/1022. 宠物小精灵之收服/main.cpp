@@ -12,22 +12,18 @@ int main() {
     cin >> n >> m >> k;
     for (int i = 1; i <= k; i++) scanf("%d%d", &v1[i], &v2[i]);
 
-    int count = 0, remain = m;
     for (int i = 1; i <= k; i++)
         for (int j = 0; j <= n; j++)
             for (int l = 0; l < m; l++) {
                 f[i & 1][j][l] = f[i - 1 & 1][j][l];
                 if (j >= v1[i] && l >= v2[i])
                     f[i & 1][j][l] = max(f[i & 1][j][l], f[i - 1 & 1][j - v1[i]][l - v2[i]] + 1);
- 
-                if (f[i & 1][j][l] > count) {
-                    count = f[i & 1][j][l];
-                    remain = m - l;
-                } else if (f[i & 1][j][l] == count) 
-                    remain = max(remain, m - l);
             }
+    
+    int t = m - 1;
+    while (t > 0 && f[k & 1][n][t - 1] == f[k & 1][n][m - 1]) t--;
 
-    printf("%d %d", count, remain);
+    printf("%d %d\n", f[k & 1][n][m - 1], m - t);
 
     return 0;
 }
