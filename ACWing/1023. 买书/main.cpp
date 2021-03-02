@@ -10,8 +10,8 @@ int main() {
 
     f[0] = 1;
     for (int i = 1; i <= 4; i++)
-        for (int j = 1; j <= n; j++) 
-            if (j >= a[i]) f[j] += f[j - a[i]];
+        for (int j = a[i]; j <= n; j++) 
+            f[j] += f[j - a[i]];
 
     cout << f[n] << endl;
 
