@@ -35,7 +35,7 @@ int main() {
         for (int i = 0; i < n; i++) {
             int s = stone[i].s, e = stone[i].e, l = stone[i].l;
             for (int j = m; j >= s; j--) 
-                f[j] = max(f[j], f[j - s] + e - (j - s) * l);
+                f[j] = max(f[j], f[j - s] + max(0, e - (j - s) * l));
         }
 
         int res = 0;
