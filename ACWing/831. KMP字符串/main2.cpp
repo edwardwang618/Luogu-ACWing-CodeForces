@@ -15,9 +15,7 @@ void buildNext(string p, int ne[]) {
             i++;
             j++;
             ne[i] = p[i] != p[j] ? j : ne[j];
-        } else {
-            j = ne[j];
-        }
+        } else j = ne[j];
 }
 
 void kmp(string s, string p) {
