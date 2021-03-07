@@ -51,7 +51,7 @@ int main() {
                 }
 
     long res = 0;
-    for (int i = 0; i < 1 << n; i++) res += f[n][k][i];
+    for (int i = 0; i < state.size(); i++) res += f[n][k][i];
 
     cout << res << endl;
 
