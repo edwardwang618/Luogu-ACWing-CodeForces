@@ -45,7 +45,7 @@ int main() {
         for (int j = 0; j < state.size(); j++)
             for (int k = 0; k < state.size(); k++)
                 for (int u = 0; u < state.size(); u++) {
-                    if (i == 1 && u != 0) continue;
+                    if (i == 1 && u != 0 && j != 0) continue;
                     int a = state[j], b = state[k], c = state[u];
                     if ((a & b) | (b & c) | (a & c)) continue;
                     if (g[i - 1] & a | g[i] & b) continue;
