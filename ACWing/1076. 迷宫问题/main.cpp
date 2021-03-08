@@ -26,6 +26,8 @@ void bfs(int x, int y) {
 
             q.push({nx, ny});
             pre[nx][ny] = t;
+
+            if (nx == 0 && ny == 0) return;
         }
     }
 }
@@ -34,18 +36,15 @@ int main() {
     cin >> n;
     for (int i = 0; i < n; i++)
         for (int j = 0; j < n; j++)
-            cin >> a[i][j];
+            scanf("%d", &a[i][j]);
 
     bfs(n - 1, n - 1);
     pair<int, int> end = {0, 0};
 
     while (1) {
-        cout << end.first << ' ' << end.second << endl;
+        printf("%d %d\n", end.first, end.second);
+        if (end.first == n - 1 && end.second == n - 1) break;
         end = pre[end.first][end.second];
-        if (end.first == n - 1 && end.second == n - 1) {
-            cout << n - 1 << ' ' << n - 1 << endl;
-            break;
-        }
     }
     
     return 0;
