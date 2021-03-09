@@ -7,7 +7,7 @@ int n;
 int a[N];
 vector<long> f[N][N];
 
-vector<long> mul(vector<long> A, int b) {
+vector<long> mul(vector<long> A, long b) {
     vector<long> C;
     if (A.empty()) return C;
     long t = 0;
@@ -21,8 +21,8 @@ vector<long> mul(vector<long> A, int b) {
 }
 
 vector<long> add(vector<long> A, vector<long> B) {
-    if (A.empty()) return B;
-    else if (B.empty()) return A;
+    if (A.empty()) A.push_back(0);
+    else if (B.empty()) B.push_back(0);
 
     vector<long> C;
     long t = 0;
@@ -55,7 +55,7 @@ int main() {
     for (int len = 3; len <= n; len++)
         for (int l = 1; l + len - 1 <= n; l++) {
             int r = l + len - 1;
-            for (int i = 0; i < 34; i++) f[l][r].push_back(0);
+            for (int i = 0; i < 30; i++) f[l][r].push_back(0);
             f[l][r].push_back(1);
 
             for (int k = l + 1; k < r; k++) {
