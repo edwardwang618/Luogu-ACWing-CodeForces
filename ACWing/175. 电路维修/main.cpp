@@ -2,8 +2,6 @@
 #include <cstring>
 #include <deque>
 
-#define x first
-#define y second
 using namespace std;
 
 const int N = 510;
@@ -29,7 +27,7 @@ int bfs() {
         auto t = dq.front();
         dq.pop_front();
 
-        int x = t.x, y = t.y;
+        int x = t.first, y = t.second;
 
         if (x == n && y == m) return dist[x][y];
 
@@ -42,7 +40,7 @@ int bfs() {
                 int gx = x + ix[i], gy = y + iy[i];
                 int w = (g[gx][gy] != s[i]);
                 int d = dist[x][y] + w;
-                if (d <= dist[nx][ny]) {
+                if (d < dist[nx][ny]) {
                     dist[nx][ny] = d;
                     if (w) dq.push_back({nx, ny});
                     else dq.push_front({nx, ny});
