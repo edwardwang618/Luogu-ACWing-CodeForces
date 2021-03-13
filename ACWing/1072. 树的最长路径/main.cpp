@@ -4,7 +4,7 @@ using namespace std;
 
 const int N = 10010, M = 2 * N;
 int n, res;
-int e[M], ne[M], h[N], w[M], idx;
+int h[N], e[M], ne[M], w[M], idx;
 
 void add(int a, int b, int c) {
     e[idx] = b, w[idx] = c, ne[idx] = h[a], h[a] = idx++;
