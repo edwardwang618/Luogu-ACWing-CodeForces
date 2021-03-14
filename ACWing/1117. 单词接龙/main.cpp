@@ -29,12 +29,11 @@ int main() {
     for (int i = 0; i < n; i++)
         for (int j = 0; j < n; j++) {
             string a = word[i], b = word[j];
-            int k = 1;
-            while (k < min(a.size(), b.size()))
+            for (int k = 1; k < min(a.size(), b.size()); k++)
                 if (a.substr(a.size() - k) == b.substr(0, k)) {
                     g[i][j] = k;
                     break;
-                } else k++;
+                }
         }
 
     for (int i = 0; i < n; i++)
