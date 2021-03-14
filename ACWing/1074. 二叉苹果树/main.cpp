@@ -17,7 +17,7 @@ void dfs(int u, int parent) {
         if (v == parent) continue;
         dfs(v, u);
 
-        for (int j = m; j >= 0; j--) 
+        for (int j = m; j >= 1; j--) 
             for (int k = 0; k < j; k++)
                 f[u][j] = max(f[u][j], f[u][j - k - 1] + f[v][k] + w[i]);
     }
