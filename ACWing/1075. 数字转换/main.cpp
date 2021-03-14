@@ -13,13 +13,12 @@ void add(int a, int b) {
     e[idx] = b, ne[idx] = h[a], h[a] = idx++;
 }
 
-int dfs(int u, int parent) {
+int dfs(int u) {
     int d1 = 0, d2 = 0;
     for (int i = h[u]; i != -1; i = ne[i]) {
         int j = e[i];
-        if (j == parent) continue;
 
-        int dist = dfs(j, u) + 1;
+        int dist = dfs(j) + 1;
         if (dist > d1) d2 = d1, d1 = dist;
         else if (dist > d2) d2 = dist;
     }
@@ -47,7 +46,7 @@ int main() {
 
     for (int i = 1; i <= n; i++)
         if (is_root[i])
-            dfs(i, -1);
+            dfs(i);
 
     cout << res << endl;
 
