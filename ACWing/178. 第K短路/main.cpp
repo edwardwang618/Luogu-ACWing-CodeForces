@@ -45,6 +45,7 @@ void dijkstra() {
 }
 
 int astar() {
+    if (dist[S] == 0x3f3f3f3f) return -1;
     priority_queue<PIII, vector<PIII>, greater<PIII> > heap;
     heap.push({dist[S], {0, S}});
 
@@ -59,6 +60,7 @@ int astar() {
 
         for (int i = h[v]; ~i; i = ne[i]) {
             int j = e[i];
+            if (dist[j] == 0x3f3f3f3f) continue;
             heap.push({dis + w[i] + dist[j], {dis + w[i], j}});
         }
     }
@@ -82,8 +84,7 @@ int main() {
 
     dijkstra();
 
-    if (dist[S] == 0x3f3f3f3f) printf("-1\n");
-    else printf("%d\n", astar());
+    printf("%d\n", astar());
 
     return 0;
 }

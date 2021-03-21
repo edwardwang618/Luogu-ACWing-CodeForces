@@ -1,7 +1,6 @@
 #include <iostream>
 #include <algorithm>
 #include <unordered_map>
-#include <vector>
 #include <queue>
 
 #define x first
