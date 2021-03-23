@@ -37,7 +37,7 @@ int main() {
     cin >> n >> m;
     cin >> s >> e;
 
-    memset(g, 0x3f3f3f3f, sizeof g);
+    memset(g, 0x3f, sizeof g);
 
     for (int i = 0; i < m; i++) {
         int a, b, c;
