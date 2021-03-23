@@ -12,6 +12,12 @@ int find(int x) {
     return p[x];
 }
 
+void merge(int x, int y) {
+    int px = find(x), py = find(y);
+    if (px == py) return;
+    p[px] = py;
+}
+
 int main() {
     string s;
 
@@ -30,7 +36,7 @@ int main() {
             st[a] = st[b] = true;
             dout[a]++, din[b]++;
 
-            p[find(a)] = find(b);
+            merge(a, b);
         }
 
         int start = 0, end = 0;
