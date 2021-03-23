@@ -10,27 +10,27 @@ int stop[N];
 bool st[N];
 
 int bfs() {
+    if (n == 1) return 0;
+    
     queue<int> q;
     q.push(1);
     st[1] = true;
 
     int res = 0;
     while (q.size()) {
+        res++;
         int s = q.size();
         for (int i = 0; i < s; i++) {
             int t = q.front();
-
-            if (t == n) return res;
             q.pop();
 
             for (int j = 1; j <= n; j++) 
                 if (g[t][j] && !st[j]) {
+                    if (j == n) return res;
                     q.push(j);
                     st[j] = true;
                 }
         }
-
-        res++;
     }
 
     return -1;
