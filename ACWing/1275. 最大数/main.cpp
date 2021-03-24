@@ -51,7 +51,7 @@ int main() {
     while (m--) {
         scanf("%s%d", op, &x);
         if (op[0] == 'Q') {
-            last = query(1, n - x  + 1, n);
+            last = query(1, n - x + 1, n);
             printf("%d\n", last);
         } else {
             modify(1, n + 1, (last + x) % p);
@@ -59,6 +59,5 @@ int main() {
         }
     }
     
-
     return 0;
 }
