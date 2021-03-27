@@ -9,8 +9,8 @@ public:
     ListNode* reverseList(ListNode* head) {
         ListNode *prev = nullptr, *tmp = nullptr;
         while (head) {
-            tmp = head -> next;
-            head -> next = prev;
+            tmp = head->next;
+            head->next = prev;
             prev = head;
             head = tmp;
         }
