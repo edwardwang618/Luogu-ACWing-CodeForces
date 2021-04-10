@@ -17,7 +17,7 @@ void buildNext(string p, int ne[]) {
 void kmp(string s, string p) {
     int ne[m];
     buildNext(p, ne);
-    for (int i = 0, j = 0; i < n && j < m; ) {
+    for (int i = 0, j = 0; i < n; ) {
         if (j == -1 || s[i] == p[j]) i++, j++;
         else j = ne[j];
 

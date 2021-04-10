@@ -2,22 +2,22 @@
 #include <cmath>
 using namespace std;
 
-const int N = 10010, M = 22;
+const int N = 22;
 int n, m;
-int minv[M], mins[M];
-int R[M], H[N];
+int minv[N], mins[N];
+int R[N], H[N];
 int res = 0x3f3f3f3f;
 
 void dfs(int u, int v, int s) {
     if (v + minv[u] > n) return;
     if (s + mins[u] >= res) return;
 
-    if (s + 2 * (n - v) / R[u + 1] >= res) return;
-
     if (!u) {
         if (v == n) res = s;
         return;
     }
+
+    if (s + 1 + 2 * (n - v) / R[u + 1] >= res) return;
 
     for (int r = min(R[u + 1] - 1, (int) sqrt(n - v)); r >= u; r--) 
         for (int h = min(H[u + 1] - 1, (n - v) / r / r); h >= u; h--) {
