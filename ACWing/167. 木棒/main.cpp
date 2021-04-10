@@ -1,7 +1,6 @@
 #include <iostream>
 #include <cstring>
 #include <algorithm>
-
 using namespace std;
 
 const int N = 70;
@@ -38,15 +37,11 @@ int main() {
         }
 
         sort(a, a + n, greater<int>());
-        len = a[0];
-        while (len <= sum) {
+        for (len = a[0]; len <= sum; len++)
             if (sum % len == 0 && dfs(0, 0, 0)) {
                 printf("%d\n", len);
                 break;
             }
-
-            len++;
-        }
     }
 
     return 0;
