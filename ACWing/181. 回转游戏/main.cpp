@@ -37,8 +37,9 @@ void operate(int x) {
 }
 
 bool dfs(int depth, int max_depth, int last) {
-    if (depth + f() > max_depth) return false;
-    if (!f()) return true;
+    int h = f();
+    if (depth + h > max_depth) return false;
+    if (!h) return true;
 
     for (int i = 0; i < 8; i++) {
         if (last == oppo[i]) continue;
