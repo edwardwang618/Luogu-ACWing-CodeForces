@@ -11,6 +11,7 @@ int source[6];
 int h[N], e[M], ne[M], w[M], idx;
 int dist[6][N];
 bool st[N];
+int res = INF;
 
 void add(int a, int b, int c) {
     e[idx] = b, w[idx] = c, ne[idx] = h[a], h[a] = idx++;
@@ -40,19 +41,16 @@ void dijkstra(int start, int dis[]) {
     }
 }
 
-int dfs(int u, int start, int distance) {
-    if (u == 6) return distance;
+void dfs(int u, int start, int distance) {
+    if (u == 6) res = min(res, distance);
 
-    int res = INF;
     for (int i = 1; i <= 5; i++)
         if (!st[i]) {
             int next = source[i];
             st[i] = true;
-            res = min(res, dfs(u + 1, i, distance + dist[start][next]));
+            dfs(u + 1, i, distance + dist[start][next]);
             st[i] = false;
         }
-
-    return res;
 }
 
 int main() {
@@ -71,7 +69,8 @@ int main() {
     for (int i = 0; i < 6; i++) dijkstra(source[i], dist[i]);
 
     memset(st, 0, sizeof st);
-    printf("%d\n", dfs(1, 0, 0));
+    dfs(1, 0, 0);
+    printf("%d\n", res);
 
     return 0;
 }
