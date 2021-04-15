@@ -7,7 +7,6 @@ using namespace std;
 const int N = 100010;
 int n, m;
 int h[N], e[N], ne[N], idx;
-int d[N];
 int vis[N];
 vector<int> res;
 
@@ -37,7 +36,6 @@ int main() {
         int a, b;
         cin >> a >> b;
         add(a, b);
-        d[b]++;
     }
 
     memset(vis, -1, sizeof vis);

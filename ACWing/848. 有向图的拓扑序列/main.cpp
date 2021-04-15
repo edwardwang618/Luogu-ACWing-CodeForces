@@ -15,7 +15,7 @@ void add(int a, int b) {
     e[idx] = b, ne[idx] = h[a], h[a] = idx++;
 }
 
-void bfs() {
+bool bfs() {
     queue<int> q;
     for (int i = 1; i <= n; i++) 
         if (!d[i]) {
@@ -38,6 +38,8 @@ void bfs() {
             }
         }
     }
+
+    return res.size() == n;
 }
 
 int main() {
@@ -52,9 +54,7 @@ int main() {
         d[b]++;
     }
 
-    bfs();
-
-    if (res.size() < n) puts("-1");
+    if (!bfs()) puts("-1");
     else for (int i = 0; i < n; i++) cout << res[i] << ' ';
 
     return 0;
