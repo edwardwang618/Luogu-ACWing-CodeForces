@@ -33,10 +33,10 @@ void dfs(int u, int bid) {
 
 void dijkstra(int bid) {
     priority_queue<PII, vector<PII>, greater<PII> > heap;
-    for (auto ver : block[bid]) heap.push({dist[ver], ver});
+    for (int ver : block[bid]) heap.push({dist[ver], ver});
 
     while (heap.size()) {
-        auto t = heap.top();
+        PII t = heap.top();
         heap.pop();
 
         int ver = t.second, d = t.first;
