@@ -26,12 +26,12 @@ bool dfs(int u, long a, long b, int depth, int max_depth) {
     }
 
     bool found = false;
-    for (int i = max(u, (int) (b / a) + 1); i < b / a * (max_depth - depth + 1); i++) {
+    for (int i = max(u, (int) (b / a) + 1); i <= b / a * (max_depth - depth + 1); i++) {
         long nx = a * i - b, ny = b * i;
         long g = gcd(nx, ny);
         nx /= g, ny /= g;
         tmp[depth - 1] = i;
-        if (dfs(u + 1, nx, ny, depth + 1, max_depth)) found = true;
+        if (dfs(i + 1, nx, ny, depth + 1, max_depth)) found = true;
     }
 
     return found;

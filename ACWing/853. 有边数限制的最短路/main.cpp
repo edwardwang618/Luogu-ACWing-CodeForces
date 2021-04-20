@@ -12,7 +12,7 @@ struct Edge {
 } edges[M];
 
 int bellman_ford() {
-    memset(dist, 0x3f3f3f3f, sizeof dist);
+    memset(dist, 0x3f, sizeof dist);
     dist[1] = 0;
 
     for (int i = 0; i < k; i++) {
