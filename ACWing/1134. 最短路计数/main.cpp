@@ -13,7 +13,7 @@ void add(int a, int b) {
 }
 
 void bfs() {
-    memset(dist, 0x3f, sizeof dist);
+    memset(dist, -1, sizeof dist);
     dist[1] = 0;
     cnt[1] = 1;
 
@@ -26,13 +26,12 @@ void bfs() {
 
         for (int i = h[t]; ~i; i = ne[i]) {
             int j = e[i];
-            if (dist[j] > dist[t] + 1) {
-                dist[j] = dist[t] + 1;
-                cnt[j] = cnt[t];
-                q.push(j);
-            } else if (dist[j] == dist[t] + 1) {
-                cnt[j] += cnt[t];
-                cnt[j] %= mod;
+            if (dist[j] == -1 || dist[j] == dist[t] + 1) {
+                cnt[j] = (cnt[j] + cnt[t]) % mod;
+                if (dist[j] == -1) {
+                    q.push(j);
+                    dist[j] = dist[t] + 1;
+                }
             }
         }
     }
