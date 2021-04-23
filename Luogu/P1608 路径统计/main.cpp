@@ -1,7 +1,6 @@
 #include <iostream>
 #include <cstring>
 #include <queue>
-
 using namespace std;
 
 typedef pair<int, int> PII;
@@ -29,7 +28,7 @@ void dijkstra(int s) {
         st[v] = true;
 
         for (int i = 1; i <= n; i++) {
-            if (g[v][i] == INF) continue;
+            if (g[v][i] == INF || st[i]) continue;
 
             if (dist[i] > d + g[v][i]) {
                 dist[i] = d + g[v][i];
