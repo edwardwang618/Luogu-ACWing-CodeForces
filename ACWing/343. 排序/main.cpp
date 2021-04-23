@@ -5,16 +5,8 @@ using namespace std;
 
 const int N = 26;
 int n, m;
-int g[N][N], d[N][N];
+int d[N][N];
 bool st[N];
-
-void floyd() {
-    memcpy(d, g, sizeof g);
-    for (int k = 0; k < n; k++)
-        for (int i = 0; i < n; i++)
-            for (int j = 0; j < n; j++)
-                d[i][j] |= d[i][k] & d[k][j];
-}
 
 int check() {
     for (int i = 0; i < n; i++)
@@ -49,15 +41,22 @@ char get() {
 
 int main() {
     while (cin >> n >> m, n || m) {
-        memset(g, 0, sizeof g);
         int type = 0, t;
+        memset(d, 0, sizeof d);
         for (int i = 1; i <= m; i++) {
             char str[5];
             cin >> str;
             int a = str[0] - 'A', b = str[2] - 'A';
             if (!type) {
-                g[a][b] = 1;
-                floyd();
+                d[a][b] = 1;
+                for (int x = 0; x < n; x++) {
+                    if (d[x][a]) d[x][b] = 1;
+                    if (d[b][x]) d[a][x] = 1;
+                    for (int y = 0; y < n; y++)
+                        if (d[x][a] & d[b][y])
+                            d[x][y] = 1;
+                }
+                    
                 type = check();
                 if (type) t = i;
             }
