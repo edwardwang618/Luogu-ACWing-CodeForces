@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cstring>
-#include <map>
+#include <unordered_map>
 using namespace std;
 
 const int N = 210;
@@ -18,7 +18,7 @@ void mul(int c[][N], int a[][N], int b[][N]) {
     memcpy(c, tmp, sizeof tmp); 
 }
 
-void qmi() {
+void qmi(int k) {
     memset(res, 0x3f, sizeof res);
     for (int i = 1; i <= n; i++) res[i][i] = 0;
     
@@ -34,7 +34,7 @@ int main() {
 
     memset(g, 0x3f, sizeof g);
 
-    map<int, int> ids;
+    unordered_map<int, int> ids;
     if (!ids.count(S)) ids[S] = ++n;
     if (!ids.count(E)) ids[E] = ++n;
     S = ids[S], E = ids[E];
@@ -49,7 +49,7 @@ int main() {
         g[a][b] = g[b][a] = min(g[a][b], c);
     }
     
-    qmi();
+    qmi(k);
 
     cout << res[S][E] << endl;
 
