@@ -2,10 +2,8 @@
 #include <algorithm>
 using namespace std;
 
-const int N = 310, M = 8010;
+const int N = 2010, M = 10010;
 int n, m;
-int res;
-
 struct Edge {
     int a, b, w;
     bool operator<(const Edge &t) const {
@@ -21,25 +19,29 @@ int find(int x) {
 
 int main() {
     cin >> n >> m;
-    for (int i = 0; i < m; i++) {
-        int a, b, w;
-        cin >> a >> b >> w;
-        e[i] = {a, b, w};
-    }
-
     for (int i = 1; i <= n; i++) p[i] = i;
 
-    sort(e, e + m);
-
+    int res = 0, cnt = 0;
     for (int i = 0; i < m; i++) {
+        int t, a, b, w;
+        cin >> t >> a >> b >> w;
+        if (t == 1) {
+            res += w;
+            p[find(a)] = find(b);
+        } else e[cnt++] = {a, b, w};
+    }
+
+    sort(e, e + cnt);
+
+    for (int i = 0; i < cnt; i++) {
         int pa = find(e[i].a), pb = find(e[i].b);
         if (pa != pb) {
             p[pa] = pb;
-            res = e[i].w;
+            res += e[i].w;
         }
     }
 
-    printf("%d %d\n", n - 1, res);
+    cout << res << endl;
 
     return 0;
 }
