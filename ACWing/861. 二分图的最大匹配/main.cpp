@@ -14,7 +14,6 @@ void add(int a, int b) {
 }
 
 bool dfs(int v) {
-    st[v] = true;
     for (int i = h[v]; ~i; i = ne[i]) {
         int j = e[i];
         if (!st[j]) {
