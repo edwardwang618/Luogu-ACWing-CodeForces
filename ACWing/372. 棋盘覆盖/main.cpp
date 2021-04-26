@@ -20,6 +20,7 @@ int get_pos(int x, int y) {
 
 bool dfs(int u) {
     if (forb[u]) return false;
+    
     for (int i = h[u]; ~i; i = ne[i]) {
         int j = e[i];
         if (st[j]) continue;
@@ -45,7 +46,7 @@ int main() {
 
     memset(h, -1, sizeof h);
     for (int i = 1; i <= n; i++)
-        for (int j = 1; j <= n; j++) {
+        for (int j = 1; j <= n; j++)
             if ((i + j) % 2 == 0) {
                 for (int k = 0; k < 4; ++k) {
                     int ni = i + d[k], nj = j + d[k + 1];
@@ -53,7 +54,6 @@ int main() {
                         add(get_pos(i, j), get_pos(ni, nj));
                 }
             }
-        }
 
     int res = 0;
     for (int i = 1; i <= n; i++)
