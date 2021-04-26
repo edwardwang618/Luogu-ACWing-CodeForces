@@ -25,7 +25,7 @@ public:
         matrix[x][y] = '#';
         for (int i = 0; i < 4; i++) {
             int nx = x + d[i], ny = y + d[i + 1];
-            if (0 <= nx && nx < matrix.size() && 0 <= ny && ny < matrix[0].size()) {
+            if (0 <= nx && nx < matrix.size() && 0 <= ny && ny < matrix[0].size() && matrix[nx][ny] != '#') {
                 if (dfs(nx, ny, matrix, pos + 1, str)) return true;
             }
         }
