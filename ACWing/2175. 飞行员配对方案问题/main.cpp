@@ -2,8 +2,8 @@
 #include <cstring>
 using namespace std;
 
-const int N = 10010, M = 200010, INF = 1e8;
-int n, m, S, T;
+const int N = 110, M = 5210, INF = 1e8;
+int m, n, S, T;
 int h[N], e[M], f[M], ne[M], idx;
 int q[N], d[N], cur[N];
 
@@ -23,8 +23,8 @@ bool bfs() {
             if (d[v] == -1 && f[i]) {
                 d[v] = d[t] + 1;
                 if (v == T) return true;
-                
-                cur[v] = h[v];                
+
+                cur[v] = h[v];
                 q[tt++] = v;
             }
         }
@@ -40,7 +40,7 @@ int dfs(int u, int limit) {
         cur[u] = i;
         int v = e[i];
         if (d[v] == d[u] + 1 && f[i]) {
-            int t = dfs(v, min(f[i], limit - flow));
+            int t = dfs(v, min(limit - flow, f[i]));
             if (!t) d[v] = -1;
             f[i] -= t, f[i ^ 1] += t, flow += t;
         }
@@ -51,20 +51,26 @@ int dfs(int u, int limit) {
 
 int dinic() {
     int r = 0, flow;
-    while (bfs()) while (flow = dfs(S, INF)) r += flow;
+    while (bfs()) while(flow = dfs(S, INF)) r += flow;
     return r;
 }
 
 int main() {
-    scanf("%d%d%d%d", &n, &m, &S, &T);
+    scanf("%d%d", &m, &n);
+    S = 0, T = n + 1;
     memset(h, -1, sizeof h);
-    while (m--) {
-        int a, b, c;
-        scanf("%d%d%d", &a, &b, &c);
-        add(a, b, c);
-    }
-    
+
+    for (int i = 1; i <= m; i++) add(S, i, 1);
+    for (int i = m + 1; i <= n; i++) add(i, T, 1);
+
+    int a, b;
+    while (cin >> a >> b, ~a) add(a, b, 1);
+
     printf("%d\n", dinic());
+
+    for (int i = 0; i < idx; i += 2) 
+        if (e[i] > m && e[i] <= n && !f[i]) 
+            printf("%d %d\n", e[i ^ 1], e[i]);
 
     return 0;
 }
