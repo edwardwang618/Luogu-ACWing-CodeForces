@@ -38,7 +38,7 @@ int lca(int a, int b) {
         if (depth[fa[a][k]] >= depth[b]) 
             a = fa[a][k];
 
-    if (a == b) return a;
+    if (a == b) return b;
     for (int k = 15; k >= 0; k--)
         if (fa[a][k] != fa[b][k])
             a = fa[a][k], b = fa[b][k];
