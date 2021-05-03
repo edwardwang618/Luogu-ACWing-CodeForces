@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#include <unordered_map>
 #include <vector>
 using namespace std;
 
@@ -12,7 +13,7 @@ int dist[N];
 int p[N];
 int res[N];
 int st[N];
-vector<PII> query[N];
+unordered_map<int, vector<PII> > query;
 
 void add(int a, int b, int c) {
     e[idx] = b, ne[idx] = h[a], w[idx] = c, h[a] = idx++;
@@ -44,6 +45,8 @@ void tarjan(int u) {
 
     for (auto item : query[u]) {
         int y = item.first, id = item.second;
+        if (res[id]) continue;
+        
         if (st[y] == 2) {
             int anc = find(y);
             res[id] = dist[u] + dist[y] - dist[anc] * 2;
@@ -66,6 +69,8 @@ int main() {
         int a, b;
         scanf("%d%d", &a, &b);
         if (a != b) {
+            if (!query.count(a)) query[a] = vector<PII>();
+            if (!query.count(b)) query[b] = vector<PII>();
             query[a].push_back({b, i});
             query[b].push_back({a, i});
         }
