@@ -89,7 +89,6 @@ void update(int& dist1, int& dist2, int d) {
 }
 
 int lca(int a, int b, int w) {
-    int distance[N * 2];
     int cnt = 0;
     if (depth[a] < depth[b]) swap(a, b);
 

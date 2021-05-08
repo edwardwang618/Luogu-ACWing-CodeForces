@@ -24,7 +24,7 @@ bool bfs() {
                 d[v] = d[t] + 1;
                 if (v == T) return true;
                 
-                cur[v] = h[v];                
+                cur[v] = h[v];               
                 q[tt++] = v;
             }
         }
