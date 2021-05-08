@@ -67,13 +67,12 @@ int main() {
     for (int i = 1; i <= n; i++) dfs(i, -1, 0, 0, dist1[i], dist2[i]);
 
     long res = 1e18;
-    for (int i = 0; i < m; i++) {
+    for (int i = 0; i < m; i++)
         if (!edge[i].flag) {
             int a = edge[i].a, b = edge[i].b, w = edge[i].w;
             if (w > dist1[a][b]) res = min(res, sum + w - dist1[a][b]);
-            else if (dist2[a][b] < w) res = min(res, sum + w - dist2[a][b]);
+            else if (w > dist2[a][b]) res = min(res, sum + w - dist2[a][b]);
         }
-    }
 
     printf("%ld\n", res);
     return 0;
