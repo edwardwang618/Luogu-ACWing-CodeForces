@@ -5,7 +5,7 @@ using namespace std;
 const int N = 210, M = (10200 + N) * 2, INF = 1e8;
 int n, m, S, T;
 int h[N], e[M], ne[M], f[M], l[M], idx;
-int q[N], d[N], cur[N], diff[N];
+int q[N], d[N], cur[N], A[N];
 
 void add(int a, int b, int c, int d) {
     e[idx] = b, ne[idx] = h[a], f[idx] = d - c, l[idx] = c, h[a] = idx++;
@@ -64,13 +64,13 @@ int main() {
         int a, b, c, d;
         cin >> a >> b >> c >> d;
         add(a, b, c, d);
-        diff[a] -= c, diff[b] += c;
+        A[a] -= c, A[b] += c;
     }
 
     int tot = 0;
     for (int i = 1; i <= n; i++)
-        if (diff[i] > 0) add(S, i, 0, diff[i]), tot += diff[i];
-        else if (diff[i] < 0) add(i, T, 0, -diff[i]);
+        if (A[i] > 0) add(S, i, 0, A[i]), tot += A[i];
+        else if (A[i] < 0) add(i, T, 0, -A[i]);
 
     if (dinic() < tot) cout << "NO" << endl;
     else {
