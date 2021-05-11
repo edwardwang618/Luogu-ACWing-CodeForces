@@ -2,14 +2,14 @@
 #include <cstring>
 using namespace std;
 
-const int N = 10010, M = 50010;
+const int N = 110, M = 10010;
 int n, m;
 int h[N], e[M], ne[M], idx;
 int dfn[N], low[N], timestamp;
 int stk[N], top;
 bool in_stk[N];
-int id[N], scc_cnt, sz[N];
-int dout[N];
+int id[N], scc_cnt;
+int din[N], dout[N];
 
 void add(int a, int b) {
     e[idx] = b, ne[idx] = h[a], h[a] = idx++;
@@ -23,54 +23,51 @@ void tarjan(int u) {
         if (!dfn[j]) {
             tarjan(j);
             low[u] = min(low[u], low[j]);
-        } else if (in_stk[j]) low[u] = min(low[u], dfn[j]);        
+        } else if (in_stk[j]) low[u] = min(low[u], dfn[j]);
     }
-    
+
     if (dfn[u] == low[u]) {
-        scc_cnt++;
+        ++scc_cnt;
         int y;
         do {
             y = stk[--top];
             in_stk[y] = false;
             id[y] = scc_cnt;
-            sz[scc_cnt]++;
         } while (y != u);
     }
 }
 
 int main() {
-    scanf("%d%d", &n, &m);
-
+    scanf("%d", &n);
     memset(h, -1, sizeof h);
-    while (m--) {
-        int a, b;
-        scanf("%d%d", &a, &b);
-        add(a, b);
+    for (int i = 1; i <= n; i++) {
+        int t;
+        while (cin >> t, t) add(i, t);
     }
 
     for (int i = 1; i <= n; i++) 
         if (!dfn[i])
             tarjan(i);
-        
-    for (int i = 1; i <= n; i++)
+
+    for (int i = 1; i <= n; i++) 
         for (int j = h[i]; ~j; j = ne[j]) {
             int k = e[j];
             int a = id[i], b = id[k];
-            if (a != b) dout[a]++;
-        }
-    
-    int zeros = 0, res = 0;
-    for (int i = 1; i <= scc_cnt; i++)
-        if (!dout[i]) {
-            zeros++;
-            res = sz[i];
-            if (zeros > 1) {
-                res = 0;
-                break;
+            if (a != b) {
+                dout[a]++;
+                din[b]++;
             }
         }
-    
-    printf("%d\n", res);
+
+    int a = 0, b = 0;
+    for (int i = 1; i <= scc_cnt; i++) {
+        if (!din[i]) a++;
+        if (!dout[i]) b++;
+    }
+
+    printf("%d\n", a);
+    if (scc_cnt == 1) printf("0\n");
+    else printf("%d\n", max(a, b));
 
     return 0;
 }
