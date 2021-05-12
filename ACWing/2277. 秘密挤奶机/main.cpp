@@ -67,13 +67,15 @@ int main() {
     scanf("%d%d%d", &n, &m, &K);
     S = 1, T = n;
     memset(h, -1, sizeof h);
+    int r = 0;
     while (m--) {
         int a, b, c;
         scanf("%d%d%d", &a, &b, &c);
         add(a, b, c);
+        r = max(r, c);
     }
 
-    int l = 1, r = 1e6;
+    int l = 1;
     while (l < r) {
         int mid = l + (r - l >> 1);
         if (check(mid)) r = mid;
