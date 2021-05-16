@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#include <queue>
 #include <unordered_set>
 using namespace std;
 
@@ -7,7 +8,6 @@ const int N = 26 * 26, M = 100010;
 int n, V;
 int h[N], e[M], w[M], ne[M], idx;
 double dist[N];
-int stk[N], top;
 int cnt[N];
 bool st[N];
 unordered_set<int> s;
@@ -22,18 +22,17 @@ bool check(double mi) {
     memset(dist, 0, sizeof dist);
 
     V = s.size();
-    top = 0;
-
+    queue<int> q;
     for (int i = 0; i < N; i++) {
         if (h[i] == -1) continue;
 
-        stk[top++] = i;
+        q.push(i);
         st[i] = true;
     }
 
     int count = 0;
-    while (top) {
-        int t = stk[--top];
+    while (q.size()) {
+        int t = q.front(); q.pop();
         st[t] = false;
 
         for (int i = h[t]; ~i; i = ne[i]) {
@@ -42,11 +41,12 @@ bool check(double mi) {
                 dist[j] = dist[t] + w[i] - mi;
                 cnt[j] = cnt[t] + 1;
 
+                if (++count > 5 * V) return true;
                 if (cnt[j] >= V) return true;
 
                 if (!st[j]) {
-                    stk[top++] = j;
-                    st[j] = true;
+                    q.push(j);
+                    st[j] = false;
                 }
             }
         }
