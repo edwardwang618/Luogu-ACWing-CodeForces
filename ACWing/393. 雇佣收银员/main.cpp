@@ -14,7 +14,7 @@ void add(int a, int b, int c) {
     e[idx] = b, ne[idx] = h[a], w[idx] = c, h[a] = idx++;
 }
 
-void build(int s24) {
+void build(int c) {
     memset(h, -1, sizeof h);
     idx = 0;
 
@@ -24,21 +24,24 @@ void build(int s24) {
     }
 
     for (int i = 8; i <= 24; i++) add(i - 8, i, r[i]);
-    for (int i = 1; i <= 7; i++) add(i + 16, i, -s24 + r[i]);
+    for (int i = 1; i <= 7; i++) add(i + 16, i, -c + r[i]);
 
-    add(0, 24, s24);
-    add(24, 0, -s24);
+    add(0, 24, c);
+    add(24, 0, -c);
 }
 
 bool spfa(int s24) {
     build(s24);
     memset(st, 0, sizeof st);
     memset(cnt, 0, sizeof cnt);
-    memset(dist, -0x3f, sizeof dist);
-    dist[0] = 0;
+    memset(dist, 0, sizeof dist);
 
     int hh = 0, tt = 0;
-    q[tt++] = 0;
+    for (int i = 0; i <= 24; i++) {
+        q[tt++] = i;
+        st[i] = true;
+    }
+
     while (hh != tt) {
         int t = q[hh++];
         if (hh == N) hh = 0;
@@ -75,15 +78,15 @@ int main() {
             num[t + 1]++;
         }
 
-        bool success = false;
-        for (int i = 0; i <= 1000; i++) 
-            if (spfa(i)) {
-                cout << i << endl;
-                success = true;
-                break;
-            }
+        int lo = 0, ri = n;
+        while (lo < ri) {
+            int mid = lo + (ri - lo >> 1);
+            if (spfa(mid)) ri = mid;
+            else lo = mid + 1;
+        }
 
-        if (!success) puts("No Solution");
+        if (!spfa(lo)) puts("No Solution");
+        else cout << lo << endl;
     }
 
     return 0;
