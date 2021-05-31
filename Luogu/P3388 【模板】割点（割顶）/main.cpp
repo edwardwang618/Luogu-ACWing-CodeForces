@@ -14,7 +14,6 @@ void add(int a, int b) {
 
 void tarjan(int u, int from) {
     dfn[u] = low[u] = ++timestamp;
-    bool is_cutpoint = false;
     int child = 0;
     for (int i = h[u]; ~i; i = ne[i]) {
         int v = e[i];

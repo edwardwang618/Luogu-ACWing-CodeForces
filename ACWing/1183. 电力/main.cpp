@@ -6,26 +6,26 @@ const int N = 10010, M = 30010;
 int n, m;
 int h[N], e[M], ne[M], idx;
 int dfn[N], low[N], timestamp;
-int root, res;
+int res;
 
 void add(int a, int b) {
     e[idx] = b, ne[idx] = h[a], h[a] = idx++;
 }
 
-void tarjan(int u) {
+void tarjan(int u, int from) {
     dfn[u] = low[u] = ++timestamp;
 
     int cnt = 0;
     for (int i = h[u]; ~i; i = ne[i]) {
         int v = e[i];
         if (!dfn[v]) {
-            tarjan(v);
+            tarjan(v, u);
             low[u] = min(low[u], low[v]);
             if (low[v] >= dfn[u]) cnt++;
         } else low[u] = min(low[u], dfn[v]);
     }
 
-    if (u != root && cnt) cnt++; 
+    if (u != from) cnt++; 
 
     res = max(res, cnt);
 }
@@ -44,10 +44,10 @@ int main() {
         
         res = 0;
         int cnt = 0;
-        for (root = 0; root < n; root++)
-            if (!dfn[root]) {
+        for (int i = 0; i < n; i++)
+            if (!dfn[i]) {
                 cnt++;
-                tarjan(root);
+                tarjan(i, i);
             }
         
         printf("%d\n", res + cnt - 1);
