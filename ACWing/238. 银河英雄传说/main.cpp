@@ -15,9 +15,9 @@ int find(int x) {
 }
 
 void merge(int x, int y) {
-    x = find(x), y = find(y);
-    p[x] = y, d[x] = sz[y];
-    sz[y] += sz[x];
+    int px = find(x), py = find(y);
+    p[px] = py, d[px] = sz[py];
+    sz[py] += sz[px];
 }
 
 int main() {
