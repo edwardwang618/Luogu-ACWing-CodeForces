@@ -69,7 +69,7 @@ int main() {
         if (op[0] == 'C') {
             cin >> d;
             modify(1, l, r, d);
-        } else printf("%lld\n", query(1, l, r));
+        } else printf("%ld\n", query(1, l, r));
     }
     
     return 0;
