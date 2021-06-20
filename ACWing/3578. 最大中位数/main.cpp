@@ -5,12 +5,12 @@ using namespace std;
 
 const int N = 2e5 + 10;
 int n, k;
-long a[N];
+int a[N];
 
-bool check(long mid) {
-    long c = 0;
+bool check(int mid) {
+    int c = 0;
     for (int i = n >> 1; i < n; i++) {
-        c += max(0L, mid - a[i]);
+        c += max(0, mid - a[i]);
         if (c > k) return false;
     }
 
@@ -22,9 +22,9 @@ int main() {
     for (int i = 0; i < n; i++) cin >> a[i];
 
     sort(a, a + n);
-    long l = a[0], r = a[n >> 1] + k;
+    int l = a[0], r = a[n >> 1] + k;
     while (l < r) {
-        long mid = l + (r - l + 1 >> 1);
+        int mid = l + (r - l + 1 >> 1);
         if (check(mid)) l = mid;
         else r = mid - 1;
     }

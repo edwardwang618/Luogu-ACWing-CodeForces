@@ -18,14 +18,14 @@ void kmp(string s, string p) {
     int ne[m];
     buildNext(p, ne);
     for (int i = 0, j = 0; i < n; ) {
-        if (j == -1 || s[i] == p[j]) i++, j++;
-        else j = ne[j];
-
-        if (j == m) {
-            res.push_back(i - j);
-            i--;
-            j = ne[j - 1];
-        }
+        if (j == -1 || s[i] == p[j]) {
+        	i++, j++;
+        	if (j == m) {
+            	res.push_back(i - j);
+	            i--;
+    	        j = ne[j - 1];
+        	}
+        } else j = ne[j];
     }
 }
 
