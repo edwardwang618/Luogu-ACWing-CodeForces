@@ -15,19 +15,6 @@ void pushup(int p) {
     tr[p].size = tr[tr[p].l].size + tr[tr[p].r].size + tr[p].cnt;
 }
 
-int get_node(int key) {
-    tr[++idx].key = key;
-    tr[idx].val = rand();
-    tr[idx].cnt = tr[idx].size = 1;
-    return idx;
-}
-
-void build() {
-    get_node(-INF), get_node(INF);
-    root = 1, tr[1].r = 2;
-    pushup(root);
-}
-
 void zig(int &p) {
     int q = tr[p].l;
     tr[p].l = tr[q].r, tr[q].r = p, p = q;
@@ -38,6 +25,13 @@ void zag(int &p) {
     int q = tr[p].r;
     tr[p].r = tr[q].l, tr[q].l = p, p = q;
     pushup(tr[p].l), pushup(p);
+}
+
+int get_node(int key) {
+    tr[++idx].key = key;
+    tr[idx].val = rand();
+    tr[idx].cnt = tr[idx].size = 1;
+    return idx;
 }
 
 void insert(int &p, int key) {
@@ -60,7 +54,7 @@ void remove(int &p, int key) {
     else {
         if (tr[p].cnt > 1) tr[p].cnt--;
         else if (tr[p].l || tr[p].r) {
-            if (!tr[p].r || tr[tr[p].l].val > tr[tr[p].r].val) {
+            if (!tr[p].r || (!tr[p].l && tr[tr[p].l].val > tr[tr[p].r].val)) {
                 zig(p);
                 remove(tr[p].r, key);
             } else {
@@ -100,18 +94,17 @@ int get_next(int p, int key) {
 }
 
 int main() {
-    build();
     scanf("%d", &n);
     while (n--) {
         int opt, x;
         scanf("%d%d", &opt, &x);
         if (opt == 1) insert(root, x);
         else if (opt == 2) remove(root, x);
-        else if (opt == 3) printf("%d\n", get_rank_by_key(root, x) - 1);
-        else if (opt == 4) printf("%d\n", get_key_by_rank(root, x + 1));
+        else if (opt == 3) printf("%d\n", get_rank_by_key(root, x));
+        else if (opt == 4) printf("%d\n", get_key_by_rank(root, x));
         else if (opt == 5) printf("%d\n", get_prev(root, x));
         else if (opt == 6) printf("%d\n", get_next(root, x));
     }
-    
+
     return 0;
 }
