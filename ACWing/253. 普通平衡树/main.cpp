@@ -18,13 +18,13 @@ void pushup(int p) {
 void zig(int &p) {
     int q = tr[p].l;
     tr[p].l = tr[q].r, tr[q].r = p, p = q;
-    pushup(tr[p].r), pushup(p);
+    pushup(tr[p].r);
 }
 
 void zag(int &p) {
     int q = tr[p].r;
     tr[p].r = tr[q].l, tr[q].l = p, p = q;
-    pushup(tr[p].l), pushup(p);
+    pushup(tr[p].l);
 }
 
 int get_node(int key) {

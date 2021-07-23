@@ -24,7 +24,7 @@ void pushup(int p) {
 void rotate(int& p, int d) {
     int q = tr[p].son[d ^ 1];
     tr[p].son[d ^ 1] = tr[q].son[d], tr[q].son[d] = p, p = q;
-    pushup(p), pushup(tr[p].son[d]);
+    pushup(tr[p].son[d]);
 }
 
 void insert(int& p, int key) {
