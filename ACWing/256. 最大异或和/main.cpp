@@ -10,15 +10,13 @@ int root[N], idx;
 
 void insert(int k, int p, int q) {
     for (int i = POS; i >= 0; i--) {
-        max_id[q] = k;
         int v = s[k] >> i & 1;
 
         if (p) tr[q][v ^ 1] = tr[p][v ^ 1];
         tr[q][v] = ++idx;
         p = tr[p][v], q = tr[q][v];
+        max_id[q] = k;
     }
-
-    max_id[q] = k;
 }
 
 int query(int root, int C, int L) {
