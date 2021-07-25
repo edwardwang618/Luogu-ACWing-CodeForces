@@ -15,14 +15,13 @@ void add(int a, int b) {
 }
 
 void dfs(int u) {
-    for (int& i = h[u]; ~i; ) {
-        // 如果这条边用过了，删除这条边
+    // 注意这里要写i = h[u]
+    for(int i = h[u] ; ~i ; i = h[u]) {
         if (used[i]) {
-            i = ne[i];
+            h[u] = ne[i];
             continue;
         }
 
-        // 标记这条边已使用
         used[i] = true;
         // 如果是无向图，那么这条边的反向边也要标记使用过了
         if (type == 1) used[i ^ 1] = true;
@@ -35,7 +34,7 @@ void dfs(int u) {
         } else t = i + 1;
 
         int j = e[i];
-        i = ne[i];
+        h[u] = ne[i];
         dfs(j);
         res[cnt++] = t;
     }
