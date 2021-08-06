@@ -11,11 +11,11 @@ int main() {
     cin >> T;
     while (T--) {
         cin >> n >> m;
-        for (int i = 0; i < m; ++ i) cin >> a[i];
+        for (int i = 1; i <= m; i++) cin >> a[i];
 
         int res = 0;
-        for (int i = 2; i <= n; ++ i) 
-            res = (res + a[(n - i) % m]) % i;
+        for (int i = 1; i <= n; i++) 
+            res = (res + a[1 + (n - i) % m]) % i;
 
         cout << res << endl;
     }
