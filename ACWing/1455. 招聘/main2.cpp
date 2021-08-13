@@ -1,8 +1,8 @@
 #include <iostream>
 using namespace std;
 
-const int N = 1e7 + 10;
-int a[N], f[N];
+const int N = 1e3 + 10;
+int a[N];
 int n, m;
 
 int main() {
@@ -12,11 +12,11 @@ int main() {
         cin >> n >> m;
         for (int i = 1; i <= m; i++) scanf("%d", &a[i]);
 
-        f[1] = 0;
+        int res = 0;
         for (int i = 2; i <= n; i++) 
-            f[i] = (f[i - 1] + a[(n - i) % m + 1]) % i;
+            res = (res + a[(n - i) % m + 1]) % i;
 
-        printf("%d\n", f[n]);
+        printf("%d\n", res);
     }
 
     return 0;
