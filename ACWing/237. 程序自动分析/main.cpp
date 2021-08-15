@@ -41,7 +41,6 @@ int main() {
             if (query[i].e == 1) {
                 int pa = find(query[i].x), pb = find(query[i].y);
                 p[pa] = pb;
-
             }
 
         bool has_conflict = false;
