@@ -23,7 +23,7 @@ int main() {
         x /= m;
     }
 
-    if (!s.size()) printf("0\n");
+    if (!s.size()) puts("0");
 
     reverse(s.begin(), s.end());
     cout << s << endl;
