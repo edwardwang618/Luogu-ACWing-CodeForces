@@ -4,8 +4,7 @@ using namespace std;
 
 const int N = 100010;
 
-struct Range
-{
+struct Range {
     int l, r;
     bool operator<(const Range &W) const {
         return l < W.l;
