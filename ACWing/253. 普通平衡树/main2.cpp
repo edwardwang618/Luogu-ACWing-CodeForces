@@ -1,5 +1,4 @@
 #include <iostream>
-
 using namespace std;
 
 const int N = 1e5 + 10, INF = 1e8;
@@ -20,7 +19,7 @@ int get_node(int key) {
     return idx;
 }
 
-void push_up(int p) {
+void pushup(int p) {
     tr[p].size = tr[tr[p].l].size + tr[tr[p].r].size + tr[p].cnt;
 }
 
@@ -35,20 +34,19 @@ void split(int p, int key, int &x, int &y) {
             split(tr[p].l, key, x, tr[p].l);
         }
 
-        // 不能更新null节点的size
-        push_up(p);
+        pushup(p);
     }
 }
 
 int merge(int x, int y) {
-    if (!x || !y) return x + y;
+    if (!x || !y) return x ^ y;
     if (tr[x].val > tr[y].val) {
         tr[x].r = merge(tr[x].r, y);
-        push_up(x);
+        pushup(x);
         return x;
     } else {
         tr[y].l = merge(x, tr[y].l);
-        push_up(y);
+        pushup(y);
         return y;
     }
 }
