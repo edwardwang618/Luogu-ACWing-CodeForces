@@ -1,5 +1,4 @@
 #include <iostream>
-
 using namespace std;
 
 const int N = 1e5 + 10;
@@ -45,12 +44,11 @@ void split(int p, int sz, int &x, int &y) {
 
         pushup(p);
     }
-
 }
 
 int merge(int x, int y) {
-    if (!x || !y) return x ^ y;
-    if (tr[x].val < tr[y].val) {
+    if (!x || !y) return x | y;
+    if (tr[x].val > tr[y].val) {
         if (tr[x].reverse) pushdown(x);
         tr[x].r = merge(tr[x].r, y);
         pushup(x);
