@@ -23,7 +23,7 @@ void pushdown(int x) {
         swap(tr[x].s[0], tr[x].s[1]);
         tr[tr[x].s[0]].reverse ^= 1;
         tr[tr[x].s[1]].reverse ^= 1;
-        tr[x].reverse ^= 1;
+        tr[x].reverse = 0;
     }
 }
 
@@ -36,17 +36,17 @@ void rotate(int x) {
     pushup(y), pushup(x);
 }
 
-void splay(int x, int k) {
-    while (tr[x].p != k) {
+void splay(int x, int g) {
+    while (tr[x].p != g) {
         int y = tr[x].p, z = tr[y].p;
-        if (z != k) 
+        if (z != g) 
             if ((tr[y].s[0] == x) ^ (tr[z].s[0] == y)) rotate(x);
             else rotate(y);
         
         rotate(x);
     }
 
-    if (!k) root = x;
+    if (!g) root = x;
 }
 
 void insert(int v) {
