@@ -80,7 +80,7 @@ int main() {
     while (n--) {
         char op[2];
         int k;
-        scanf("%s%d", &op, &k);
+        scanf("%s%d", op, &k);
         if (op[0] == 'I') {
             if (k >= m) {
                 insert(k - delta);
