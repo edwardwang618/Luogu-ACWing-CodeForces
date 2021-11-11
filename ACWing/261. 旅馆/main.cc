@@ -11,9 +11,9 @@ int n, m;
 
 void pushup(Node &u, Node &l, Node &r) {
     u.ld = l.ld;
-    if(l.d == l.r - l.l + 1) u.ld = l.d + r.ld;
+    if (l.d == l.r - l.l + 1) u.ld = l.d + r.ld;
     u.rd = r.rd;
-    if(r.d == r.r - r.l + 1) u.rd = r.d + l.rd;
+    if (r.d == r.r - r.l + 1) u.rd = r.d + l.rd;
     u.d = max(max(l.d, r.d), l.rd + r.ld);
 }
 
@@ -65,7 +65,7 @@ void modify(int u, int l, int r, int c) {
     if (tr[u].l >= l && tr[u].r <= r) {
         if (c == 1) tr[u].d = tr[u].ld = tr[u].rd = tr[u].r - tr[u].l + 1;
         else tr[u].d = tr[u].ld = tr[u].rd = 0;
-        
+
         tr[u].lazy = c;
         return;
     }
