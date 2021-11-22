@@ -26,19 +26,17 @@ int main() {
     for (int i = 1; i <= n; i++) scanf("%d", &a[i]);
 
     for (int i = 1; i <= n; i++) {
-        int k = a[i];
-        larger[i] = sum(n) - sum(k);
-        smaller[i] = sum(k - 1);
-        add(k, 1);
+        larger[i] = sum(n) - sum(a[i]);
+        smaller[i] = sum(a[i] - 1);
+        add(a[i], 1);
     }
 
     memset(tr, 0, sizeof tr);
     long res1 = 0, res2 = 0;
     for (int i = n; i; i--) {
-        int k = a[i];
-        res1 += larger[i] * (long) (sum(n) - sum(k));
-        res2 += smaller[i] * (long) (sum(k - 1));
-        add(k, 1);
+        res1 += larger[i] * (long) (sum(n) - sum(a[i]));
+        res2 += smaller[i] * (long) (sum(a[i] - 1));
+        add(a[i], 1);
     }
 
     printf("%ld %ld\n", res1, res2);
