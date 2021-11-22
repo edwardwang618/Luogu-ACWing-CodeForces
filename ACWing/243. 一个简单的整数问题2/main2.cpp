@@ -20,7 +20,7 @@ long sum(int k, long tr[]) {
 }
 
 long pre_sum(int k) {
-    return sum(k, tr1) * (k + 1) - sum(k, tr2);
+    return sum(k, tr1) * k - sum(k, tr2);
 }
 
 int main() {
@@ -29,7 +29,7 @@ int main() {
 
     for (int i = 1; i <= n; i++) {
         add(i, w[i] - w[i - 1], tr1);
-        add(i, (long) i * (w[i] - w[i - 1]), tr2);
+        add(i, (long) (i - 1) * (w[i] - w[i - 1]), tr2);
     }
 
     while (m--) {
@@ -38,8 +38,8 @@ int main() {
         scanf("%s%d%d", op, &l, &r);
         if (op[0] == 'C') {
             scanf("%d", &d);
-            add(l, d, tr1), add(l, l * d, tr2);
-            add(r + 1, -d, tr1), add(r + 1, (r + 1) * (-d), tr2);
+            add(l, d, tr1), add(l, (l - 1) * d, tr2);
+            add(r + 1, -d, tr1), add(r + 1, r * (-d), tr2);
         } else printf("%ld\n", pre_sum(r) - pre_sum(l - 1));
     }
     
