@@ -27,29 +27,29 @@ int find(double y) {
 
 void pushup(int u) {
     if (tr[u].cnt) tr[u].len = ys[tr[u].r + 1] - ys[tr[u].l];
-    else if (tr[u].l != tr[u].r) tr[u].len = tr[u << 1].len + tr[u << 1 | 1].len;
-    else tr[u].len = 0;
+    else {
+        if (tr[u].l != tr[u].r) tr[u].len = tr[u << 1].len + tr[u << 1 | 1].len;
+        else tr[u].len = 0;
+    }
 }
 
 void build(int u, int l, int r) {
-    if (l == r) tr[u] = {l, r, 0, 0};
-    else {
-        tr[u] = {l, r};
-        int mid = l + (r - l >> 1);
-        build(u << 1, l, mid), build(u << 1 | 1, mid + 1, r);
-    }
+    tr[u] = {l, r};
+    if (l == r) return;
+    int mid = l + r >> 1;
+    build(u << 1, l, mid), build(u << 1 | 1, mid + 1, r);
 }
 
 void modify(int u, int l, int r, int k) {
     if (tr[u].l >= l && tr[u].r <= r) {
         tr[u].cnt += k;
-        pushup(u);
     } else {
-        int mid = tr[u].l + (tr[u].r - tr[u].l >> 1);
+        int mid = tr[u].l + tr[u].r >> 1;
         if (l <= mid) modify(u << 1, l, r, k);
         if (r > mid) modify(u << 1 | 1, l, r, k);
-        pushup(u);
     }
+    
+    pushup(u);
 }
 
 int main() {
@@ -72,7 +72,7 @@ int main() {
 
         double res = 0;
         for (int i = 0; i < n * 2; i++) {
-            if (i > 0) res += tr[1].len * (seg[i].x - seg[i - 1].x);
+            if (i) res += tr[1].len * (seg[i].x - seg[i - 1].x);
             modify(1, find(seg[i].y1), find(seg[i].y2) - 1, seg[i].k);
         }
 
