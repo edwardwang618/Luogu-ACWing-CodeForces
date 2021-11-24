@@ -3,9 +3,9 @@
 #include <unordered_map>
 using namespace std;
 
-const int N = 1e4 + 10;
+const int N = (1e4 + 10) * 2, M = 1e4 + 10;
 int n, m;
-int p[N], d[N];
+int p[N];
 unordered_map<int, int> mp;
 
 int get(int x) {
@@ -14,12 +14,7 @@ int get(int x) {
 }
 
 int find(int x) {
-    if (p[x] != x) {
-        int root = find(p[x]);
-        d[x] ^= d[p[x]];
-        p[x] = root;
-    }
-
+    if (p[x] != x) p[x] = find(p[x]);
     return p[x];
 }
 
@@ -36,18 +31,20 @@ int main() {
         scanf("%d%d%s", &a, &b, type);
         a = get(a - 1), b = get(b);
 
-        int t = 0;
-        if (type[0] == 'o') t = 1;
-
-        int pa = find(a), pb = find(b);
-        if (pa == pb) {
-            if ((d[a] ^ d[b]) != t) {
+        if (type[0] == 'e') {
+            if (find(a) == find(b + M)) {
                 res = i - 1;
                 break;
             }
+            p[find(a)] = find(b);
+            p[find(a + M)] = find(b + M);
         } else {
-            p[pa] = pb;
-            d[pa] = d[a] ^ d[b] ^ t;
+            if (find(a) == find(b)) {
+                res = i - 1;
+                break;
+            }
+            p[find(a)] = find(b + M);
+            p[find(a + M)] = find(b);
         }
     }
 
