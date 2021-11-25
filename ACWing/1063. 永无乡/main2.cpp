@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-const int N = 5e5 + 10;
+const int N = 1e5 + 10;
 int n, m;
 struct Node {
     int l, r;
@@ -64,18 +64,18 @@ int get_id(int id, int rank) {
     return -1;
 }
 
-void insert(int val, int id, int b) {
+void insert(int u, int b) {
     int x, y;
-    split(root[b], val, x, y);
-    root[b] = merge(merge(x, get_node(val, id)), y);
+    split(root[b], tr[u].val, x, y);
+    root[b] = merge(merge(x, u), y);
 }
 
-void addall(int u, int b) {
+void dfs(int u, int b) {
     if (!u) return;
 
-    insert(tr[u].val, tr[u].id, b);
-    addall(tr[u].l, b);
-    addall(tr[u].r, b);
+    dfs(tr[u].l, b);
+    dfs(tr[u].r, b);
+    insert(u, b);
 }
 
 int find(int x) {
@@ -98,7 +98,7 @@ int main() {
         if (x != y) {
             if (tr[root[x]].sz > tr[root[y]].sz) swap(x, y);
             p[x] = y;
-            addall(root[x], y);
+            dfs(root[x], y);
         }
     }
     
@@ -113,7 +113,7 @@ int main() {
             if (x != y) {
                 if (tr[root[x]].sz > tr[root[y]].sz) swap(x, y);
                 p[x] = y;
-                addall(root[x], y);
+                dfs(root[x], y);
             }
         } else {
             int k = y;

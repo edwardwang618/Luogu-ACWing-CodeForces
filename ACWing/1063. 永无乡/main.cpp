@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-const int N = 5e5 + 10;
+const int N = 1e5 + 10;
 int n, m;
 struct Node {
     int s[2], p, v, id;
@@ -44,12 +44,11 @@ void splay(int x, int k, int b) {
     if (!k) root[b] = x;
 }
 
-void insert(int v, int id, int b) {
-    int u = root[b], p = 0;
-    while (u) p = u, u = tr[u].s[v > tr[u].v];
-    u = ++idx;
+void insert(int u, int b) {
+    int c = root[b], v = tr[u].v, p = 0;
+    while (c) p = c, c = tr[c].s[v > tr[c].v];
     if (p) tr[p].s[v > tr[p].v] = u;
-    tr[u].init(v, id, p);
+    tr[u].p = p;
     splay(u, 0, b);
 }
 
@@ -68,9 +67,10 @@ int get_k(int k, int b) {
 
 void dfs(int u, int b) {
     if (!u) return;
-    insert(tr[u].v, tr[u].id, b);
+
     if (tr[u].s[0]) dfs(tr[u].s[0], b);
     if (tr[u].s[1]) dfs(tr[u].s[1], b); 
+    insert(u, b);
 }
 
 int main() {
