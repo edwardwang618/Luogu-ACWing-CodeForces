@@ -94,8 +94,8 @@ int build(int l, int r, int p) {
 
 void dfs(int u) {
     if (!u) return;
-    if (tr[u].s[0]) dfs(tr[u].s[0]);
-    if (tr[u].s[1]) dfs(tr[u].s[1]);
+    dfs(tr[u].s[0]);
+    dfs(tr[u].s[1]);
     nodes[++tt] = u;
 }
 
@@ -112,10 +112,10 @@ int main() {
         if (!strcmp(op, "INSERT")) {
             int posi, tot;
             scanf("%d%d", &posi, &tot);
-            for (int i = 0; i < tot; i++) scanf("%d", &w[i]);
+            for (int i = 1; i <= tot; i++) scanf("%d", &w[i]);
             int l = get_k(posi + 1), r = get_k(posi + 2);
             splay(l, 0), splay(r, l);
-            int u = build(0, tot - 1, r);
+            int u = build(1, tot, r);
             tr[r].s[0] = u;
             pushup(r), pushup(l);
         } else if (!strcmp(op, "DELETE")) {
