@@ -27,11 +27,10 @@ int main() {
         }
 
         for (int i = n; i; i--) {
-            int k = p[i] + 1;
             int l = 1, r = n;
             while (l < r) {
                 int mid = l + r >> 1;
-                if (sum(mid) >= k) r = mid;
+                if (sum(mid) > p[i]) r = mid;
                 else l = mid + 1;
             }
 
