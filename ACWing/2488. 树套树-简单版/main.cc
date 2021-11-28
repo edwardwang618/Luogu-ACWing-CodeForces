@@ -23,6 +23,7 @@ void change(int u, int p, int x) {
     tr[u].s.erase(tr[u].s.find(w[p]));
     tr[u].s.insert(x);
     if (tr[u].l == tr[u].r) return;
+    
     int mid = tr[u].l + tr[u].r >> 1;
     if (p <= mid) change(u << 1, p, x);
     else change(u << 1 | 1, p, x);
