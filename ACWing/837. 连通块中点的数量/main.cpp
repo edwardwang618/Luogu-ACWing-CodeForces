@@ -2,12 +2,12 @@
 using namespace std;
 
 const int N = 100010;
-int p[N], s[N];
+int p[N], sz[N];
 
 void init(int n) {
     for (int i = 1; i <= n; i++) {
         p[i] = i;
-        s[i] = 1;
+        sz[i] = 1;
     }
 }
 
@@ -20,7 +20,7 @@ void merge(int x, int y) {
     int px = find(x), py = find(y);
     if (px == py) return;
     p[px] = py;
-    s[py] += s[px];
+    sz[py] += sz[px];
 }
 
 int main() {
@@ -38,10 +38,11 @@ int main() {
         } else if (op[0] == 'Q') {
             if (op[1] == '1') {
                 cin >> x >> y;
-                cout << (find(x) == find(y) ? "Yes" : "No") << endl;
+                if (find(x) == find(y)) puts("Yes");
+                else puts("No");
             } else if (op[1] == '2') {
                 cin >> x;
-                cout << s[find(x)] << endl;
+                printf("%d\n", sz[find(x)]);
             }
         }
     }

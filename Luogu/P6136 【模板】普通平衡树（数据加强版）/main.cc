@@ -24,16 +24,16 @@ void pushup(int u) {
     tr[u].sz = tr[tr[u].l].sz + tr[tr[u].r].sz + tr[u].cnt;
 }
 
-void split_key(int u, int key, int &x, int &y) {
+void split(int u, int key, int &x, int &y) {
     if (!u) x = y = 0;
     else {
         if (tr[u].v <= key) {
             x = u;
-            split_key(tr[u].r, key, tr[u].r, y);
+            split(tr[u].r, key, tr[u].r, y);
             pushup(x);
         } else {
             y = u;
-            split_key(tr[u].l, key, x, tr[u].l);
+            split(tr[u].l, key, x, tr[u].l);
             pushup(y);
         }
     }
@@ -72,8 +72,8 @@ int merge(int x, int y, int z) {
 }
 
 void insert(int c) {
-    split_key(root, c, y, z);
-    split_key(y, c - 1, x, y);
+    split(root, c, y, z);
+    split(y, c - 1, x, y);
     if (!y) y = get_node(c);
     else {
         tr[y].cnt++;
@@ -84,8 +84,8 @@ void insert(int c) {
 }
 
 void remove(int c) {
-    split_key(root, c, y, z);
-    split_key(y, c - 1, x, y);
+    split(root, c, y, z);
+    split(y, c - 1, x, y);
     tr[y].cnt--;
     tr[y].sz--;
     if (!tr[y].cnt) y = 0;
@@ -93,7 +93,7 @@ void remove(int c) {
 }
 
 int get_rank_by_key(int c) {
-    split_key(root, c - 1, x, y);
+    split(root, c - 1, x, y);
     int rk = tr[x].sz + 1;
     root = merge(x, y);
     return rk;
@@ -108,7 +108,7 @@ int get_key_by_rank(int rk) {
 }
 
 int get_prev(int c) {
-    split_key(root, c - 1, x, y);
+    split(root, c - 1, x, y);
     int u = x, key;
     while (u) key = tr[u].v, u = tr[u].r;
     root = merge(x, y);
@@ -116,7 +116,7 @@ int get_prev(int c) {
 }
 
 int get_next(int c) {
-    split_key(root, c, x, y);
+    split(root, c, x, y);
     int u = y, key;
     while (u) key = tr[u].v, u = tr[u].l;
     root = merge(x, y);
@@ -135,7 +135,7 @@ int main() {
         int op, c;
         scanf("%d%d", &op, &c);
         c ^= last;
-
+        
         if (op == 1) insert(c);
         else if (op == 2) remove(c);
         else {

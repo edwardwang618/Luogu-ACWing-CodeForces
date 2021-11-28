@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-const int N = 100010;
+const int N = 1e5 + 10;
 int p[N];
 
 void init(int n) {
@@ -15,9 +15,7 @@ int find(int x) {
 
 void merge(int x, int y) {
     int px = find(x), py = find(y);
-    if (px == py) return;
-
-    p[px] = py;
+    if (px != py) p[px] = py;
 }
 
 int main() {
@@ -32,7 +30,10 @@ int main() {
         cin >> a >> b;
 
         if (op == 'M') merge(a, b);
-        else if (op == 'Q') cout << (find(a) == find(b) ? "Yes" : "No") << endl;
+        else if (op == 'Q') {
+            if (find(a) == find(b)) puts("Yes");
+            else puts("No");
+        }
     }
 
     return 0;
