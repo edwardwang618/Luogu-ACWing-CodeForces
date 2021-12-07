@@ -40,8 +40,7 @@ int main() {
                 int a = x[i], b = y[i], pa = find(a), pb = find(b);
                 if (a != k && b != k) {
                     if (pa == pb) {
-                        int s = (d[a] - d[b] + 3) % 3;
-                        if (s != comp[i]) {
+                        if ((d[a] - d[b] + 3) % 3 != comp[i]) {
                             line = max(line, i);
                             break;
                         }
