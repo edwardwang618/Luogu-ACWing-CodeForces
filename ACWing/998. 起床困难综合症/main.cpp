@@ -5,7 +5,7 @@ using namespace std;
 int n, m;
 
 int main() {
-    bitset<40> zero, one;
+    bitset<30> zero, one;
     zero.reset();
     one.set();
     scanf("%d%d", &n, &m);
