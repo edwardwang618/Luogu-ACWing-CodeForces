@@ -18,7 +18,7 @@ int qmi(int a, int k) {
 
 int sum(int p, int k) {
     if (k == 1) return 1;
-    if (k % 2 == 0) return (1 + qmi(p, k >> 1)) * sum(p, k / 2) % MOD;
+    if (k % 2 == 0) return (1 + qmi(p, k >> 1)) * sum(p, k >> 1) % MOD;
     return (sum(p, k - 1) + qmi(p, k - 1)) % MOD;
 }
 
