@@ -18,7 +18,8 @@ int pre_man[N][N];
 vector<int> path[N][N][4];
 bool vis[N][N][4], vis_man[N][N];
 PII dist[N][N][4];
-int dx[4] = {1, -1, 0, 0}, dy[4] = {0, 0, 1, -1};
+int dx[4] = {-1, 1, 0, 0}, dy[4] = {0, 0, -1, 1};
+char ops[] = "NSWE";
 
 bool check(int x, int y) {
     return 0 <= x && x < n && 0 <= y && y < m && g[x][y] != '#';
@@ -39,16 +40,15 @@ int bfs_man(PII start, PII end, PII box, vector<int> &seq) {
         auto t = q.front(); q.pop();
         for (int i = 0; i < 4; i++) {
             int x = t.first, y = t.second;
-            int a = x + dx[i ^ 1], b = y + dy[i ^ 1];
+            int a = x + dx[i], b = y + dy[i];
             if (check(a, b) && !vis_man[a][b]) {
                 vis_man[a][b] = true;
-                pre_man[a][b] = i ^ 1;
+                pre_man[a][b] = i;
                 if (a == end.first && b == end.second) {
-                    seq.clear();
                     x = a, y = b;
                     while (pre_man[x][y] != -1) {
                         int dir = pre_man[x][y];
-                        seq.push_back(dir ^ 1);
+                        seq.push_back(dir);
                         x -= dx[dir], y -= dy[dir];
                     }
                     return seq.size();
@@ -69,9 +69,9 @@ bool bfs_box(PII man, PII box, Node &end) {
     for (int i = 0; i < 4; i++) {
         int x = box.first, y = box.second;
         // (a, b)是人要走到的推箱子的位置
-        int a = x + dx[i], b = y + dy[i];
+        int a = x - dx[i], b = y - dy[i];
         // (j, k)是箱子要被推到的位置
-        int j = x - dx[i], k = y - dy[i];
+        int j = x + dx[i], k = y + dy[i];
         vector<int> seq;
         if (check(a, b) && check(j, k) && ~bfs_man(man, {a, b}, box, seq)) {
             dist[j][k][i] = {1, seq.size()};
@@ -92,11 +92,13 @@ bool bfs_box(PII man, PII box, Node &end) {
     while (q.size()) {
         auto t = q.front(); q.pop();
         for (int i = 0; i < 4; i++) {
-            int a = t.x + dx[i], b = t.y + dy[i];
-            int j = t.x - dx[i], k = t.y - dy[i];
+            // ren
+            int a = t.x - dx[i], b = t.y - dy[i];
+            // xiang
+            int j = t.x + dx[i], k = t.y + dy[i];
             if (check(a, b) && check(j, k)) {
                 vector<int> seq;
-                int dis = bfs_man({t.x + dx[t.dir], t.y + dy[t.dir]}, {a, b}, {t.x, t.y}, seq);
+                int dis = bfs_man({t.x - dx[t.dir], t.y - dy[t.dir]}, {a, b}, {t.x, t.y}, seq);
                 if (~dis) {
                     PII td = {dist[t.x][t.y][t.dir].first + 1, dist[t.x][t.y][t.dir].second + dis};
                     if (!vis[j][k][i] || dist[j][k][i] > td) {
@@ -143,7 +145,6 @@ int main() {
         Node end;
         if (!bfs_box(man, box, end)) puts("Impossible.");
         else {
-            char ops[] = "NSWE";
             string res;
             while (!(end.x == box.first && end.y == box.second && end.dir == -1)) {
                 res += ops[end.dir];

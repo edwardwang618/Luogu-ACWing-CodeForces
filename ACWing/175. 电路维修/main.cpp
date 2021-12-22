@@ -19,14 +19,12 @@ int bfs() {
     int dx[] = {-1, -1, 1, 1}, dy[] = {-1, 1, 1, -1};
     int ix[] = {-1, -1, 0, 0}, iy[] = {-1, 0, 0, -1};
 
-    deque<pair<int, int> > dq;
+    deque<pair<int, int>> dq;
     dq.push_back({0, 0});
     dist[0][0] = 0;
 
-    while (!dq.empty()) {
-        auto t = dq.front();
-        dq.pop_front();
-
+    while (dq.size()) {
+        auto t = dq.front(); dq.pop_front();
         int x = t.first, y = t.second;
 
         if (x == n && y == m) return dist[x][y];
