@@ -2,13 +2,13 @@
 #include <cstring>
 #include <queue>
 using namespace std;
+
 struct Ver {
     int d, u, c;
     bool operator<(const Ver &v) const {
         return d > v.d;
     }
 };
-
 const int N = 1010, M = 20010, C = 1010;
 int n, m;
 int h[N], e[M], ne[M], w[M], idx;

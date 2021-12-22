@@ -92,9 +92,7 @@ bool bfs_box(PII man, PII box, Node &end) {
     while (q.size()) {
         auto t = q.front(); q.pop();
         for (int i = 0; i < 4; i++) {
-            // ren
             int a = t.x - dx[i], b = t.y - dy[i];
-            // xiang
             int j = t.x + dx[i], k = t.y + dy[i];
             if (check(a, b) && check(j, k)) {
                 vector<int> seq;
