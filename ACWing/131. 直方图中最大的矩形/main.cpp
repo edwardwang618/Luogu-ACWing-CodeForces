@@ -5,11 +5,8 @@ using namespace std;
 int n, h;
 
 int main() {
-    while (1) {
-        cin >> n;
-        if (!n) break;
-
-        stack<pair<int, long> > stk;
+    while (scanf("%d", &n), n) {
+        stack<pair<int, long>> stk;
         long res = 0;
         for (int i = 0; i < n; i++) {
             long x;
