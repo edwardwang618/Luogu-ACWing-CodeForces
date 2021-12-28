@@ -28,7 +28,7 @@ bool dfs(int idx, int depth, int pre, int max_depth) {
         return false;
     }
 
-    if (h == 0) return true;
+    if (!h) return true;
 
     int x = idx / 3, y = idx % 3;
     for (int i = 0; i < 4; i++) {
@@ -68,8 +68,7 @@ int main() {
         path = "";
         for (int max_depth = dis();; max_depth = next_depth) {
             next_depth = INF;
-            if (dfs(idx, 0, INF, max_depth))
-                break;
+            if (dfs(idx, 0, INF, max_depth)) break;
         }
 
         printf("Case %d: %d\n", k, path.size());

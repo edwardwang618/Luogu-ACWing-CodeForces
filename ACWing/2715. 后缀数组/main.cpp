@@ -8,6 +8,7 @@ char s[N];
 // sa[i]排名第i位的是第几个后缀
 // rk[i]第i个后缀排名是多少
 // height[i]是sa[i]与sa[i - 1]的最长公共前缀长度
+// x是离散化之后的值
 int sa[N], x[N], y[N], c[N], rk[N], height[N];
 
 void get_sa() {
