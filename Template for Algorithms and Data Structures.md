@@ -2835,3 +2835,77 @@ int main() {
 
 例题3（带扩展域并查集）
 
+
+
+## 搜索
+
+### A*
+
+例题1
+
+Q：八数码问题。在$3×3$的棋盘上，摆有八个棋子，每个棋子上标有$1$至$8$的某一数字。棋盘中留有一个空格，空格用$0$来表示。空格周围的棋子可以移到空格中。要求解的问题是：给出一种初始布局（初始状态）和目标布局（为了使题目简单，设目标状态为`123804765`），找到一种最少步骤的移动方法，实现从初始布局到目标布局的转变。题目保证有解。
+
+A：
+
+```cpp
+#include <iostream>
+#include <queue>
+#include <unordered_map>
+using namespace std;
+using PIS = pair<int, string>;
+
+string s, ed = "123804765";
+int d[] = {-1, 0, 1, 0, -1};
+int pos[9];
+unordered_map<string, int> dist;
+priority_queue<PIS, vector<PIS>, greater<>> heap;
+
+// 求s和ed的各个数字的曼哈顿距离之和
+int h(string &s) {
+    int dis = 0;
+    for (int i = 0; i < 9; i++) {
+        if (s[i] == '0') continue;
+        int x = i / 3, y = i % 3;
+        int xx = pos[s[i] - '0'] / 3, yy = pos[s[i] - '0'] % 3;
+        dis += abs(x - xx) + abs(y - yy);
+    }
+
+    return dis;
+}
+
+int Astar() {
+    dist[s] = 0;
+    heap.push({h(s), s});
+    while (heap.size()) {
+        auto t = heap.top(); heap.pop();
+        s = t.second;
+        if (s == ed) return dist[s];
+
+        int idx = 0;
+        while (s[idx] != '0') idx++;
+        int x = idx / 3, y = idx % 3;
+        for (int i = 0; i < 4; i++) {
+            string ss = s;
+            int xx = x + d[i], yy = y + d[i + 1];
+            if (0 <= xx && xx < 3 && 0 <= yy && yy < 3) {
+                swap(ss[idx], ss[xx * 3 + yy]);
+                if (!dist.count(ss) || dist[ss] > dist[s] + 1) {
+                    dist[ss] = dist[s] + 1;
+                    heap.push({dist[ss] + h(ss), ss});
+                }
+            }
+        }
+    }
+
+    return -1;
+}
+
+int main() {
+    cin >> s;
+    for (int i = 0; i < 9; i++) pos[ed[i] - '0'] = i;
+
+    printf("%d\n", Astar());
+    return 0;
+}
+```
+
