@@ -1,14 +1,19 @@
 #include <iostream>
-#include <cmath>
 using namespace std;
 
-long f(long x, long y) {
+inline long f(long x, long y) {
+    if (!x && !y) return 0;
     if (x == 1 && y == 0) return 3;
     if (x == 2 && y == 2) return 4;
-
-    long delta = x - y;
-    if (y > delta) return delta - 2 * floor((double) (delta - y) / 3.0);
-    else return delta - 2 * floor((double) (delta - y) / 4.0);
+    if (y <= x - y) {
+        if (x % 2 == 0) return x / 2 + (x / 2 - y) % 2;
+        else return (x + 1) / 2 + ((x + 1) / 2 - (y + 1)) % 2;
+    }
+    
+    long d = (2 * y - x) / 3;
+    if (!d) d = 1;
+    x += d, y -= d;
+    return f(x, y);
 }
 
 int main() {
