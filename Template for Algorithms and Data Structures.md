@@ -3052,3 +3052,72 @@ int main() {
 }
 ```
 
+
+
+## 动态规划
+
+### 背包模型
+
+例题1（0-1背包）
+
+Q：有$N$件物品和一个容量是$V$的背包。每件物品只能使用一次。第$i$件物品的体积是$v_i$，价值是$w_i$。求解将哪些物品装入背包，可使这些物品的总体积不超过背包容量，且总价值最大。
+输出最大价值。
+
+A：
+
+```cpp
+#include <iostream>
+using namespace std;
+
+const int N = 1010, V = 1010;
+int v[N], w[N];
+int f[V];
+
+int main() {
+	// n是总个数，m是总体积
+    int n, m;
+    cin >> n >> m;
+
+    for (int i = 1; i <= n; i++)
+        cin >> v[i] >> w[i];
+
+    for (int i = 1; i <= n; i++) 
+        for (int j = m; j >= v[i]; j--)
+                f[j] = max(f[j],  f[j - v[i]] + w[i]);   
+
+    cout << f[m] << endl;
+    return 0;
+}
+```
+
+例题2（完全背包）
+
+Q：有$N$件物品和一个容量是$V$的背包。每件物品使用次数不限。第$i$件物品的体积是$v_i$，价值是$w_i$。求解将哪些物品装入背包，可使这些物品的总体积不超过背包容量，且总价值最大。
+输出最大价值。
+
+A：
+
+```cpp
+#include <iostream>
+using namespace std;
+
+const int N = 1010, V = 1010;
+int v[N], w[N];
+int f[V];
+
+int main() {
+    int n, m;
+    cin >> n >> m;
+
+    for (int i = 1; i <= n; i++)
+        cin >> v[i] >> w[i];
+
+    for (int i = 1; i <= n; i++) 
+        for (int j = v[i]; j <= m; j++)
+                f[j] = max(f[j],  f[j - v[i]] + w[i]); 
+
+    cout << f[m] << endl;
+    return 0;
+}
+```
+
