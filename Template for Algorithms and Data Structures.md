@@ -3060,8 +3060,7 @@ int main() {
 
 例题1（0-1背包）
 
-Q：有$N$件物品和一个容量是$V$的背包。每件物品只能使用一次。第$i$件物品的体积是$v_i$，价值是$w_i$。求解将哪些物品装入背包，可使这些物品的总体积不超过背包容量，且总价值最大。
-输出最大价值。
+Q：有$N$件物品和一个容量是$V$的背包。每件物品只能使用一次。第$i$件物品的体积是$v_i$，价值是$w_i$。求解将哪些物品装入背包，可使这些物品的总体积不超过背包容量，且总价值最大。输出最大价值。
 
 A：
 
@@ -3092,8 +3091,7 @@ int main() {
 
 例题2（完全背包）
 
-Q：有$N$件物品和一个容量是$V$的背包。每件物品使用次数不限。第$i$件物品的体积是$v_i$，价值是$w_i$。求解将哪些物品装入背包，可使这些物品的总体积不超过背包容量，且总价值最大。
-输出最大价值。
+Q：有$N$件物品和一个容量是$V$的背包。每件物品使用次数不限。第$i$件物品的体积是$v_i$，价值是$w_i$。求解将哪些物品装入背包，可使这些物品的总体积不超过背包容量，且总价值最大。输出最大价值。
 
 A：
 
@@ -3120,4 +3118,83 @@ int main() {
     return 0;
 }
 ```
+
+例题3（多重背包）
+
+Q：有$N$件物品和一个容量是$V$的背包。第$i$种物品最多用$s_i$次，体积是$v_i$，价值是$w_i$。求解将哪些物品装入背包，可使这些物品的总体积不超过背包容量，且总价值最大。输出最大价值。
+
+A：未优化
+
+```cpp
+#include <iostream>
+using namespace std;
+
+const int N = 110;
+
+int n, m;
+int v[N], w[N], s[N];
+int f[N][N];
+
+int main() {
+    cin >> n >> m;
+    for (int i = 1; i <= n; i++) cin >> v[i] >> w[i] >> s[i];
+
+    for (int i = 1; i <= n; i++) 
+        for (int j = 0; j <= m; j++) 
+            for (int k = 0; k <= s[i] && k * v[i] <= j; k++)
+                f[i][j] = max(f[i][j], f[i - 1][j - k * v[i]] + k * w[i]);
+
+    cout << f[n][m] << endl;
+
+    return 0;
+}
+```
+
+二进制优化
+
+```cpp
+#include <iostream>
+using namespace std;
+
+const int N = 25000, M = 2010;
+int n, m;
+int v[N], w[N];
+int f[N];
+
+int main() {
+    cin >> n >> m;
+
+    int cnt = 0;
+    for (int i = 1; i <= n; i++) {
+        int a, b, s;
+        cin >> a >> b >> s;
+        int k = 1;
+        while (k <= s) {
+            cnt++;
+            v[cnt] = a * k;
+            w[cnt] = b * k;
+            s -= k;
+            k <<= 1;
+        }
+
+        if (s > 0) {
+            cnt++;
+            v[cnt] = a * s;
+            w[cnt] = b * s;
+        }
+    }
+
+    n = cnt;
+    for (int i = 1; i <= n; i++)
+        for (int j = m; j >= 0; j--)
+            if (j >= v[i])
+                f[j] = max(f[j], f[j - v[i]] + w[i]); 
+
+    cout << f[m] << endl;
+
+    return 0;
+}
+```
+
+
 

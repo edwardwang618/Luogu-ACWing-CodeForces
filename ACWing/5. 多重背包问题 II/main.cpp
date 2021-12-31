@@ -2,7 +2,6 @@
 using namespace std;
 
 const int N = 25000, M = 2010;
-
 int n, m;
 int v[N], w[N];
 int f[N];
@@ -32,9 +31,8 @@ int main() {
 
     n = cnt;
     for (int i = 1; i <= n; i++)
-        for (int j = m; j >= 0; j--)
-            if (j >= v[i])
-                f[j] = max(f[j], f[j - v[i]] + w[i]); 
+        for (int j = m; j >= v[i]; j--)
+            f[j] = max(f[j], f[j - v[i]] + w[i]); 
 
     cout << f[m] << endl;
 
