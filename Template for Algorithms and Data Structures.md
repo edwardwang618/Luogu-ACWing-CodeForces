@@ -3196,5 +3196,38 @@ int main() {
 }
 ```
 
+例题4（分组背包）
 
+Q：有$N$组物品和一个容量是$V$的背包。每组物品有若干个，同一组内的物品最多只能选一个。每件物品的体积是$v_{ij}$，价值是$w_{ij}$，其中$i$是组号，$j$是组内编号。求解将哪些物品装入背包，可使物品总体积不超过背包容量，且总价值最大。输出最大价值。
+
+A：
+
+```cpp
+#include <iostream>
+using namespace std;
+
+const int N = 110;
+int v[N][N], w[N][N], s[N];
+int n, m;
+int f[N];
+
+int main() {
+    cin >> n >> m;
+    for (int i = 1; i <= n; i++) {
+        cin >> s[i];
+        for (int j = 1; j <= s[i]; j++) 
+            cin >> w[i][j] >> v[i][j];
+    }
+        
+    for (int i = 1; i <= n; i++) 
+        for (int j = m; j >= 0; j--)
+            for (int k = 1; k <= s[i]; k++)
+                if (j >= w[i][k])
+                    f[j] = max(f[j], f[j - w[i][k]] + v[i][k]);
+
+    cout << f[m] << endl;
+
+    return 0;
+}
+```
 
