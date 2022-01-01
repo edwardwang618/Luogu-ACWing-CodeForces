@@ -1,7 +1,6 @@
 #include<iostream>
-#include<cstring>
-
 using namespace std;
+
 const int N = 110;
 int n, m, r;
 int rp[N], tim[N], rmb[N];
