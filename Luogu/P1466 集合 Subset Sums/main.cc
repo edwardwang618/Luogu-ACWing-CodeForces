@@ -3,7 +3,7 @@ using namespace std;
 
 const int N = 39 * 40 / 2 + 10;
 int n, s;
-int f[N];
+long f[N];
 
 int main() {
     scanf("%d", &n);
