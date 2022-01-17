@@ -34,6 +34,8 @@ int bfs() {
 
         for (int i = 0; i < 4; i++) {
             int nx = x + dx[i], ny = y + dy[i];
+            if (st[nx][ny]) continue;
+            
             if (0 <= nx && nx <= n && 0 <= ny && ny <= m) {
                 int gx = x + ix[i], gy = y + iy[i];
                 int w = (g[gx][gy] != s[i]);

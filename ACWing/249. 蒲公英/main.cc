@@ -8,7 +8,7 @@
 using namespace std;
 using PII = pair<int, int>;
 
-const int N = 40005, T = 205;
+const int N = 40010, T = 210;
 PII b[T];
 int n, m, sz, cnt, len;
 int a[N], lsh[N], blk[N], t[N];
