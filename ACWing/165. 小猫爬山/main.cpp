@@ -25,7 +25,6 @@ void dfs(int u, int k) {
         
     sum[k] = a[u];
     dfs(u + 1, k + 1);
-    sum[k] = 0;
 }
 
 int main() {
