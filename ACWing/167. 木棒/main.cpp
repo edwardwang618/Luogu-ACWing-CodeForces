@@ -8,10 +8,14 @@ int n;
 int a[N], len, sum;
 bool st[N];
 
+// dfs的定义是，正在放第u组，第u组已经放了l的长度，从start开始枚举，问能否放完
+// u是当前在放第几组，从0开始
+// l是第u组已经放了多长，start是第u组在枚举哪个木棒的时候从哪个木棒开始枚举，那个木棒的下标
 bool dfs(int u, int l, int start) {
     if (u * len == sum) return true;
     if (l == len) return dfs(u + 1, 0, 0);
 
+    // 组合型枚举
     for (int i = start; i < n; i++) {
         if (st[i]) continue;
         if (l + a[i] > len) continue;

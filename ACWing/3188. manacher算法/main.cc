@@ -18,7 +18,7 @@ void init() {
 
 void manacher() {
     int mr = 0, mid;
-    for (int i = 1; i < n; i++) {
+    for (int i = 1; i < n - 1; i++) {
         if (i < mr) p[i] = min(p[mid * 2 - i], mr - i);
         else p[i] = 1;
 
