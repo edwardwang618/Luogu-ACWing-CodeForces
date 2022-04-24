@@ -11,11 +11,11 @@ public:
     } while (f != s);
     
     f = 0;
-    do {
+    while (f != s) {
       f = nums[f];
       s = nums[s];
-    } while (f != s);
-    
+    }
+
     return s;
   }
 };

@@ -4,7 +4,6 @@
 using namespace std;
 
 const int N = 510;
-
 int n, m;
 int g[N][N];
 int dist[N];

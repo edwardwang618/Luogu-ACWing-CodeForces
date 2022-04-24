@@ -6,7 +6,6 @@ const int N = 510, M = 10010;
 
 int n, m, k;
 int dist[N], backup[N];
-
 struct Edge {
     int a, b, w;
 } edges[M];

@@ -7,7 +7,6 @@ using namespace std;
 typedef pair<int, int> PII;
 
 const int N = 150010;
-
 int n, m;
 int h[N], e[N], w[N], ne[N], idx;
 int dist[N];

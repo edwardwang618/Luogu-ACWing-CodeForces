@@ -4,7 +4,6 @@
 using namespace std;
 
 const int N = 100010;
-
 int n, m;
 int h[N], w[N], e[N], ne[N], idx;
 int dist[N];

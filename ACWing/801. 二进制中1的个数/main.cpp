@@ -1,9 +1,6 @@
 #include <iostream>
 using namespace std;
 
-const int N = 100010;
-int a[N];
-
 int lowbit(int x) {
     return x & -x;
 }
@@ -20,11 +17,13 @@ int count1(int x) {
 
 int main() {
     int n;
-    cin >> n;
+    scanf("%d", &n);
 
-    for (int i = 0; i < n; i++) cin >> a[i];
-
-    for (int i = 0; i < n; i++) cout << count1(a[i]) << ' ';
+    for (int i = 0; i < n; i++) {
+        int x;
+        scanf("%d", &x);
+        printf("%d ", count1(x));
+    }
 
     return 0;
 }
