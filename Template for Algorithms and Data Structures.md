@@ -311,11 +311,11 @@ int get_last_pos(vector<int> &A, int x) {
 
 ## 位运算
 
-例题1（lowbit的应用）
+例题1
 
 Q：求$32$位整数$x$的二进制表示里$1$的个数。
 
-A1：
+A：lowbit
 
 ```cpp
 int lowbit(int x) {
@@ -333,7 +333,7 @@ int count(int x) {
 }
 ```
 
-A2：倍增法：
+A：倍增法
 
 ```cpp
 int count(int x){
@@ -3018,62 +3018,62 @@ int main() {
 
 ### 最短路
 
-例题（有边数限制的最短路，Bellman-Ford算法）
+例题（非负权边图的最短路）
 
-Q：给定有$n$个点$m$条边的有向图，可能存在重边和自环，边权可能为负，可能存在负环。求$1$号点到$n$号点的最多经过$k$条边的最短距离。如果不存在这样的路径则输出`impossible`。
+Q：给定一个$n$个点$m$条边的有向图，图中可能存在重边和自环，所有边权均非负。请你求出$1$号点到$n$号点的最短距离，如果无法从$1$号点走到$n$号点，则输出$−1$。
 
-A：
+A：朴素版Dijkstra，如果图是稠密图
 
 ```cpp
 #include <iostream>
 #include <cstring>
+#include <algorithm>
 using namespace std;
 
-const int N = 510, M = 10010;
-int n, m, k;
-int dist[N], backup[N];
+const int N = 510;
+int n, m;
+int g[N][N];
+int dist[N];
+bool st[N];
 
-struct Edge {
-    int a, b, w;
-} edges[M];
-
-int bellman_ford() {
+int dijkstra() {
     memset(dist, 0x3f, sizeof dist);
     dist[1] = 0;
 
-    for (int i = 0; i < k; i++) {
-        memcpy(backup, dist, sizeof dist);
-        for (int j = 0; j < m; j++) {
-            int a = edges[j].a, b = edges[j].b, w = edges[j].w;
-            dist[b] = min(dist[b], backup[a] + w);
-        }
+    for (int i = 0; i < n; i++) {
+        int t = -1;
+        for (int j = 1; j <= n; j++) 
+            if (!st[j] && (t == -1 || dist[t] > dist[j])) t = j;
+        
+        if (t == n) break;
+
+        st[t] = true;
+        for (int j = 1; j <= n; j++) 
+            if (!st[j]) dist[j] = min(dist[j], dist[t] + g[t][j]);
     }
 
-    return dist[n] > 0x3f3f3f3f / 2 ? -1 : dist[n];
+    return dist[n] == 0x3f3f3f3f ? -1 : dist[n];
 }
 
 int main() {
-    cin >> n >> m >> k;
-    for (int i = 0; i < m; i++) {
-        int a, b, w;
-        cin >> a >> b >> w;
-        edges[i] = {a, b, w};
+    cin >> n >> m;
+
+    memset(g, 0x3f, sizeof g);
+
+    while (m--) {
+        int a, b, c;
+        cin >> a >> b >> c;
+        if (a == b) g[a][b] = 0;
+        else g[a][b] = min(g[a][b], c);
     }
 
-    int res = bellman_ford();
-
-    if (res == -1) cout << "impossible" << endl;
-    else cout << res << endl;
+    cout << dijkstra() << endl;
 
     return 0;
 }
 ```
 
-例题（含负权边的最短路，SPFA算法）
-
-Q：给定有$n$个点$m$条边的有向图，可能存在重边和自环，边权可能为负，不存在负环。求$1$号点到$n$号点的最多经过$k$条边的最短距离。如果不存在这样的路径则输出`impossible`。
-
-A：
+A：堆优化版Dijkstra，如果图是稀疏图
 
 ```cpp
 #include <iostream>
@@ -3081,9 +3081,11 @@ A：
 #include <queue>
 using namespace std;
 
-const int N = 100010;
+typedef pair<int, int> PII;
+
+const int N = 150010;
 int n, m;
-int h[N], w[N], e[N], ne[N], idx;
+int h[N], e[N], w[N], ne[N], idx;
 int dist[N];
 bool st[N];
 
@@ -3091,27 +3093,28 @@ void add(int a, int b, int c) {
     e[idx] = b, w[idx] = c, ne[idx] = h[a], h[a] = idx++;
 }
 
-int spfa() {
+int dijkstra() {
     memset(dist, 0x3f, sizeof dist);
     dist[1] = 0;
 
-    queue<int> q;
-    q.push(1);
-    st[1] = true;
+    priority_queue<PII, vector<PII>, greater<PII> > heap;
+    heap.push({0, 1});
 
-    while (!q.empty()) {
-        int t = q.front();
-        q.pop();
+    while (!heap.empty()) {
+        auto t = heap.top();
+        heap.pop();
 
-        st[t] = false;
-        for (int i = h[t]; i != -1; i = ne[i]) {
+        int v = t.second, dis = t.first;
+        if (st[v]) continue;
+
+        if (v == n) break;
+        
+        st[v] = true;
+        for (int i = h[v]; i != -1; i = ne[i]) {
             int j = e[i];
-            if (dist[j] > dist[t] + w[i]) {
-                dist[j] = dist[t] + w[i];
-                if (!st[j]) {
-                    q.push(j);
-                    st[j] = true;
-                }
+            if (!st[j] && dist[j] > dis + w[i]) {
+                dist[j] = dis + w[i];
+                heap.push({dist[j], j});
             }
         }
     }
@@ -3130,20 +3133,69 @@ int main() {
         add(a, b, c);
     }
 
-    int t = spfa();
-
-    if (t == -1) cout << "impossible" << endl;
-    else cout << t << endl;
+    cout << dijkstra() << endl;
 
     return 0;
 }
 ```
 
-例题（判断是否存在负环，SPFA算法）
+
+
+例题（有边数限制的最短路）
+
+Q：给定有$n$个点$m$条边的有向图，可能存在重边和自环，边权可能为负，可能存在负环。求$1$号点到$n$号点的最多经过$k$条边的最短距离。如果不存在这样的路径则输出`impossible`。
+
+A：Bellman-Ford算法
+
+```cpp
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+const int N = 510, M = 10010;
+int n, m, k;
+struct Edge {
+  int u, v, w;
+} e[M];
+int dist[2][N];
+
+int bellman_ford() {
+  memset(dist, 0x3f, sizeof dist);
+  dist[0][1] = dist[1][1] = 0;
+    
+  for (int i = 1; i <= k; i++)
+    for (int j = 1; j <= m; j++) {
+      int u = e[j].u, v = e[j].v, w = e[j].w;
+      dist[i & 1][v] = min(dist[i & 1][v], dist[i - 1 & 1][u] + w);
+    }
+  
+  if (dist[k & 1][n] > 0x3f3f3f3f / 2) return 0x3f3f3f3f;
+  else return dist[k & 1][n];
+}
+
+int main() {
+  scanf("%d%d%d", &n, &m, &k);
+  
+  for (int i = 1; i <= m; i++) {
+    int u, v, w;
+    scanf("%d%d%d", &u, &v, &w);
+    e[i] = {u, v, w};
+  }
+  
+  int res = bellman_ford();
+  
+  if (res == 0x3f3f3f3f) puts("impossible");
+  else printf("%d\n", res);
+  
+  return 0;
+}
+```
+
+例题（含负权边的最短路）
 
 Q：给定有$n$个点$m$条边的有向图，可能存在重边和自环，边权可能为负，不存在负环。求$1$号点到$n$号点的最多经过$k$条边的最短距离。如果不存在这样的路径则输出`impossible`。
 
-A：
+A：SPFA
 
 ```cpp
 #include <iostream>
@@ -3151,8 +3203,68 @@ A：
 #include <queue>
 using namespace std;
 
-const int N = 100010;
+const int N = 1e5 + 10;
+int n, m;
+int h[N], e[N], ne[N], w[N], idx;
+queue<int> q;
+int dist[N];
+bool vis[N];
 
+void add(int a, int b, int c) {
+  e[idx] = b, ne[idx] = h[a], w[idx] = c, h[a] = idx++;
+}
+
+int spfa() {
+  memset(dist, 0x3f, sizeof dist);
+  dist[1] = 0;
+  q.push(1);
+  vis[1] = true;
+  while (q.size()) {
+    int u = q.front(); q.pop();
+    vis[u] = false;
+    for (int i = h[u]; ~i; i = ne[i]) {
+      int v = e[i];
+      if (dist[v] > dist[u] + w[i]) {
+        dist[v] = dist[u] + w[i];
+        if (!vis[v]) {
+          q.push(v);
+          vis[v] = true;
+        }
+      }
+    }
+  }
+  
+  return dist[n];
+}
+
+int main() {
+  scanf("%d%d", &n, &m);
+  memset(h, -1, sizeof h);
+  for (int i = 1; i <= m; i++) {
+    int a, b, c;
+    scanf("%d%d%d", &a, &b, &c);
+    add(a, b, c);
+  }
+  
+  int res = spfa();
+  if (res == 0x3f3f3f3f) puts("impossible");
+  else printf("%d\n", res);
+}
+```
+
+例题（判断是否存在负环）
+
+Q：给定有$n$个点$m$条边的有向图，可能存在重边和自环，边权可能为负，不存在负环。求$1$号点到$n$号点的最多经过$k$条边的最短距离。如果不存在这样的路径则输出`impossible`。
+
+A：SPFA
+
+```cpp
+#include <iostream>
+#include <cstring>
+#include <stack>
+using namespace std;
+
+const int N = 100010;
 int n, m;
 int h[N], w[N], e[N], ne[N], idx;
 int dist[N], cnt[N];
@@ -3163,16 +3275,15 @@ void add(int a, int b, int c) {
 }
 
 bool spfa() {
-    queue<int> q;
-
+    stack<int> stk;
     for (int i = 1; i <= n; i++) {
-        q.push(i);
+        stk.push(i);
         st[i] = true;
     }
 
-    while (!q.empty()) {
-        int t = q.front();
-        q.pop();
+    while (stk.size()) {
+        int t = stk.top();
+        stk.pop();
 
         st[t] = false;
         for (int i = h[t]; i != -1; i = ne[i]) {
@@ -3183,7 +3294,7 @@ bool spfa() {
                 if (cnt[j] >= n) return true;
 
                 if (!st[j]) {
-                    q.push(j);
+                    stk.push(j);
                     st[j] = true;
                 }
             }
@@ -3210,11 +3321,11 @@ int main() {
 }
 ```
 
-例题（多点对最短路，Floyd算法）
+例题（多点对最短路）
 
 Q：给定有$n$个点$m$条边的有向图，可能存在重边和自环，边权可能为负，不存在负环。给定$k$次询问，每次询问问点$x$到$y$的最短路长度。如果路径不存在，则输出`impossible`。
 
-A：
+A：Floyd算法
 
 ```cpp
 #include <iostream>
@@ -3232,7 +3343,7 @@ void floyd() {
         for (int i = 1; i <= n; i++) 
             for (int j = 1; j <= n; j++) 
                 d[i][j] = min(d[i][j], d[i][k] + d[k][j]);
-}   
+}
 
 int main() {
     cin >> n >> m >> Q;

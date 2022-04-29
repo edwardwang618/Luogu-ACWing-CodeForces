@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-int count1(int x){
+int count1(int x) {
     x = (x & 0x55555555) + (x >> 1 & 0x55555555);
     x = (x & 0x33333333) + (x >> 2 & 0x33333333);
     x = (x & 0x0F0F0F0F) + (x >> 4 & 0x0F0F0F0F);

@@ -18,7 +18,7 @@ bool dfs(int v) {
         int j = e[i];
         if (!st[j]) {
             st[j] = true;
-            if (match[j] == 0 || dfs(match[j])) {
+            if (!match[j] || dfs(match[j])) {
                 match[j] = v;
                 return true;
             }

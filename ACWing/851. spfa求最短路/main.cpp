@@ -3,59 +3,50 @@
 #include <queue>
 using namespace std;
 
-const int N = 100010;
+const int N = 1e5 + 10;
 int n, m;
-int h[N], w[N], e[N], ne[N], idx;
+int h[N], e[N], ne[N], w[N], idx;
+queue<int> q;
 int dist[N];
-bool st[N];
+bool vis[N];
 
 void add(int a, int b, int c) {
-    e[idx] = b, w[idx] = c, ne[idx] = h[a], h[a] = idx++;
+  e[idx] = b, ne[idx] = h[a], w[idx] = c, h[a] = idx++;
 }
 
 int spfa() {
-    memset(dist, 0x3f, sizeof dist);
-    dist[1] = 0;
-
-    queue<int> q;
-    q.push(1);
-    st[1] = true;
-
-    while (!q.empty()) {
-        int t = q.front();
-        q.pop();
-
-        st[t] = false;
-        for (int i = h[t]; i != -1; i = ne[i]) {
-            int j = e[i];
-            if (dist[j] > dist[t] + w[i]) {
-                dist[j] = dist[t] + w[i];
-                if (!st[j]) {
-                    q.push(j);
-                    st[j] = true;
-                }
-            }
+  memset(dist, 0x3f, sizeof dist);
+  dist[1] = 0;
+  q.push(1);
+  vis[1] = true;
+  while (q.size()) {
+    int u = q.front(); q.pop();
+    vis[u] = false;
+    for (int i = h[u]; ~i; i = ne[i]) {
+      int v = e[i];
+      if (dist[v] > dist[u] + w[i]) {
+        dist[v] = dist[u] + w[i];
+        if (!vis[v]) {
+          q.push(v);
+          vis[v] = true;
         }
+      }
     }
-
-    return dist[n] == 0x3f3f3f3f ? -1 : dist[n];
+  }
+  
+  return dist[n];
 }
 
 int main() {
-    cin >> n >> m;
-
-    memset(h, -1, sizeof h);
-
-    while (m--) {
-        int a, b, c;
-        cin >> a >> b >> c;
-        add(a, b, c);
-    }
-
-    int t = spfa();
-
-    if (t == -1) cout << "impossible" << endl;
-    else cout << t << endl;
-
-    return 0;
+  scanf("%d%d", &n, &m);
+  memset(h, -1, sizeof h);
+  for (int i = 1; i <= m; i++) {
+    int a, b, c;
+    scanf("%d%d%d", &a, &b, &c);
+    add(a, b, c);
+  }
+  
+  int res = spfa();
+  if (res == 0x3f3f3f3f) puts("impossible");
+  else printf("%d\n", res);
 }

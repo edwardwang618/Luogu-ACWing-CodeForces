@@ -3,7 +3,6 @@
 using namespace std;
 
 const int N = 510, INF = 0x3f3f3f3f;
-
 int n, m;
 int g[N][N];
 int dist[N];
@@ -32,9 +31,7 @@ int prim() {
 
 int main() {
     scanf("%d%d", &n, &m);
-    
     memset(g, 0x3f, sizeof g);
-
     while (m--) {
         int a, b, c;
         scanf("%d%d%d", &a, &b, &c);
@@ -42,9 +39,8 @@ int main() {
     }
 
     int t = prim();
-
-    if (t == INF) cout << "impossible" << endl;
-    else cout << t << endl;
+    if (t == INF) puts("impossible");
+    else printf("%d\n", t);
 
     return 0;
 }

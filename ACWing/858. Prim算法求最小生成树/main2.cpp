@@ -6,7 +6,6 @@ using namespace std;
 typedef pair<int, int> PII;
 
 const int N = 100010, M = 2 * N, INF = 0x3f3f3f3f;
-
 int n, m;
 int h[N], w[M], e[M], ne[M], idx;
 int cnt;
@@ -20,25 +19,21 @@ void add(int a, int b, int c) {
 int prim() {
     memset(dist, 0x3f, sizeof dist);
     
-    priority_queue<PII, vector<PII>, greater<PII> > heap;
+    priority_queue<PII, vector<PII>, greater<PII>> heap;
     heap.push({INF, 1});
     dist[1] = 0;
-
     int res = 0;
     while (!heap.empty()) {
         auto t = heap.top();
         heap.pop();
 
         int v = t.second, c = t.first;
-
         if (st[v]) continue;
-
         if (v != 1) {
             res += c;
             cnt++;
             if (cnt == n - 1) break;
         }
-
         st[v] = true;
 
         for (int i = h[v]; i != -1; i = ne[i]) {
@@ -66,9 +61,8 @@ int main() {
     }
 
     int t = prim();
-
-    if (t == INF) cout << "impossible" << endl;
-    else cout << t << endl;
+    if (t == INF) puts("impossible");
+    else printf("%d\n", t);
 
     return 0;
 }

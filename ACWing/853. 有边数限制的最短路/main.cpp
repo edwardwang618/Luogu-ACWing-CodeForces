@@ -3,40 +3,39 @@
 using namespace std;
 
 const int N = 510, M = 10010;
-
 int n, m, k;
-int dist[N], backup[N];
 struct Edge {
-    int a, b, w;
-} edges[M];
+  int u, v, w;
+} e[M];
+int dist[2][N];
 
 int bellman_ford() {
-    memset(dist, 0x3f, sizeof dist);
-    dist[1] = 0;
-
-    for (int i = 0; i < k; i++) {
-        memcpy(backup, dist, sizeof dist);
-        for (int j = 0; j < m; j++) {
-            int a = edges[j].a, b = edges[j].b, w = edges[j].w;
-            dist[b] = min(dist[b], backup[a] + w);
-        }
+  memset(dist, 0x3f, sizeof dist);
+  dist[0][1] = dist[1][1] = 0;
+    
+  for (int i = 1; i <= k; i++)
+    for (int j = 1; j <= m; j++) {
+      int u = e[j].u, v = e[j].v, w = e[j].w;
+      dist[i & 1][v] = min(dist[i & 1][v], dist[i - 1 & 1][u] + w);
     }
-
-    return dist[n] > 0x3f3f3f3f / 2 ? -1 : dist[n];
+  
+  if (dist[k & 1][n] > 0x3f3f3f3f / 2) return 0x3f3f3f3f;
+  else return dist[k & 1][n];
 }
 
 int main() {
-    cin >> n >> m >> k;
-    for (int i = 0; i < m; i++) {
-        int a, b, w;
-        cin >> a >> b >> w;
-        edges[i] = {a, b, w};
-    }
-
-    int res = bellman_ford();
-
-    if (res == -1) cout << "impossible" << endl;
-    else cout << res << endl;
-
-    return 0;
+  scanf("%d%d%d", &n, &m, &k);
+  
+  for (int i = 1; i <= m; i++) {
+    int u, v, w;
+    scanf("%d%d%d", &u, &v, &w);
+    e[i] = {u, v, w};
+  }
+  
+  int res = bellman_ford();
+  
+  if (res == 0x3f3f3f3f) puts("impossible");
+  else printf("%d\n", res);
+  
+  return 0;
 }

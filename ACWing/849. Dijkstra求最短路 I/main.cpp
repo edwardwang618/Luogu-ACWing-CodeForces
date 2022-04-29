@@ -7,7 +7,6 @@ const int N = 510;
 int n, m;
 int g[N][N];
 int dist[N];
-// st[i]存第i个点是否确定了最短路
 bool st[N];
 
 int dijkstra() {

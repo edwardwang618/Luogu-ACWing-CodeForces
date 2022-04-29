@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cstring>
-#include <queue>
+#include <stack>
 using namespace std;
 
 const int N = 100010;
@@ -15,16 +15,15 @@ void add(int a, int b, int c) {
 }
 
 bool spfa() {
-    queue<int> q;
-
+    stack<int> stk;
     for (int i = 1; i <= n; i++) {
-        q.push(i);
+        stk.push(i);
         st[i] = true;
     }
 
-    while (!q.empty()) {
-        int t = q.front();
-        q.pop();
+    while (stk.size()) {
+        int t = stk.top();
+        stk.pop();
 
         st[t] = false;
         for (int i = h[t]; i != -1; i = ne[i]) {
@@ -35,7 +34,7 @@ bool spfa() {
                 if (cnt[j] >= n) return true;
 
                 if (!st[j]) {
-                    q.push(j);
+                    stk.push(j);
                     st[j] = true;
                 }
             }

@@ -1,7 +1,6 @@
 #include <iostream>
 #include <cstring>
 #include <queue>
-#include <vector>
 using namespace std;
 
 typedef pair<int, int> PII;
@@ -10,7 +9,6 @@ const int N = 150010;
 int n, m;
 int h[N], e[N], w[N], ne[N], idx;
 int dist[N];
-// st[i]存第i个点是否确定了最短路
 bool st[N];
 
 void add(int a, int b, int c) {
