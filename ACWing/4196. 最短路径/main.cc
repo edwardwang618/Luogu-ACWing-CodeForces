@@ -18,10 +18,10 @@ void add(int a, int b, int c) {
 
 void dijkstra() {
   memset(dist, 0x3f, sizeof dist);
+  memset(pre, -1, sizeof pre);
   dist[1] = 0;
   priority_queue<PLI, vector<PLI>, greater<>> heap;
   heap.push({0, 1});
-  pre[1] = 1;
   while (heap.size()) {
     auto t = heap.top(); heap.pop();
     int v = t.second;
@@ -49,14 +49,13 @@ int main() {
   }
 
   dijkstra();
-  if (dist[n] == 0x3f3f3f3f3f3f3f3f) puts("-1");
+  if (pre[n] == -1) puts("-1");
   else {
     int cnt = 0;
-    while(n != 1) {
+    while(n != -1) {
       res[cnt++] = n;
       n = pre[n];
     }
-    res[cnt++] = 1;
     for (int i = cnt - 1; i >= 0; i--) printf("%d ", res[i]);
   }
 }
