@@ -7,11 +7,11 @@ const int N = 1e5 + 10, M = 2e5 + 10;
 int n, m;
 int deg[N][2];
 vector<int> G[N];
-int res[M], idx, start[N], cnt[3];
+int res[M], idx, del[N], cnt[3];
 
 void dfs(int u) {
-  for (int i = start[u]; i < G[u].size(); i = start[u]) {
-    start[u] = i + 1;
+  for (int i = del[u]; i < G[u].size(); i = del[u]) {
+    del[u]++;
     dfs(G[u][i]);
   }
 
