@@ -5,20 +5,23 @@ using namespace std;
 const int N = 1e4 + 10, M = 5e4 * 2 + 10;
 int n, m;
 int h[N], e[M], ne[M], idx;
+int stk[M], top;
 int res[M], cnt;
 
 void add(int a, int b) {
   e[idx] = b, ne[idx] = h[a], h[a] = idx++;
 }
 
-void dfs(int u) {
-  for (int i = h[u]; ~i; i = h[u]) {
-    int v = e[i];
-    h[u] = ne[i];
-    dfs(v);
+void euler(int u) {
+  stk[top++] = u;
+  while (top) {
+    u = stk[top - 1];
+    if (~h[u]) {
+        int v = e[h[u]];
+        h[u] = ne[h[u]];
+        stk[top++] = v;
+    } else res[++cnt] = stk[--top];
   }
-
-  res[++cnt] = u;
 }
 
 int main() {
@@ -29,7 +32,7 @@ int main() {
     scanf("%d%d", &a, &b);
     add(a, b), add(b, a);
   }
-
-  dfs(1);
+  
+  euler(1);
   for (int i = cnt; i; i--) printf("%d\n", res[i]);
 }
