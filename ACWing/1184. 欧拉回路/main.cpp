@@ -32,9 +32,9 @@ void dfs(int u) {
             if (i & 1) t = -t;
         } else t = i + 1;
 
-        int j = e[i];
+        int v = e[i];
         h[u] = ne[i];
-        dfs(j);
+        dfs(v);
         res[cnt++] = t;
     }
 }
@@ -56,14 +56,14 @@ int main() {
         for (int i = 1; i <= n; i++)
             if (din[i] + dout[i] & 1) {
                 //无向图含欧拉回路的充要条件是每个点的度都为偶数
-                cout << "NO" << endl;
+                puts("NO");
                 return 0;
             }
     } else {
         for (int i = 1; i <= n; i++)
             if (din[i] != dout[i]) {
                 //有向图含欧拉回路的充要条件是每个点的入度等于出度
-                cout << "NO" << endl;
+                puts("NO");
                 return 0;
             }
     }
@@ -74,11 +74,11 @@ int main() {
             break;
         }
 
-    if (cnt < m) cout << "NO" << endl;
+    if (cnt < m) puts("NO");
     else {
-        cout << "YES" << endl;
+        puts("YES");
         for (int i = cnt - 1; i >= 0; i--)
-            cout << res[i] << " ";
+            printf("%d ", res[i]);
     }
 
     return 0;

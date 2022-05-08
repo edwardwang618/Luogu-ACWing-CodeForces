@@ -1,23 +1,21 @@
 #include <iostream>
 using namespace std;
 
-int b, p, k;
+int a, b, p;
 
-int fast_pow(int b, int p, int k) {
-    long res = 1, t = b;
-    while (p) {
-        if (p & 1) res = res * t % k;
-        p >>= 1;
+int fast_pow(int a, int b, int p) {
+    long res = 1 % p, t = a;
+    while (b) {
+        if (b & 1) res = res * t % p;
+        b >>= 1;
 
-        t = t * t % k;
+        t = t * t % p;
     }
-    
-    return (int) res % k;
+    return res;
 }
 
 int main() {
-    scanf("%d%d%d", &b, &p, &k);
-
-    printf("%d^%d mod %d=%d\n", b, p, k, fast_pow(b, p, k));
+    scanf("%d%d%d", &a, &b, &p);
+    printf("%d^%d mod %d=%d\n", a, b, p, fast_pow(a, b, p));
     return 0;
 }

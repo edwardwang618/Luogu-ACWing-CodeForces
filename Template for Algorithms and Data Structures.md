@@ -3079,6 +3079,7 @@ A：堆优化版Dijkstra，如果图是稀疏图
 #include <iostream>
 #include <cstring>
 #include <queue>
+#include <vector>
 using namespace std;
 
 typedef pair<int, int> PII;
@@ -3425,6 +3426,70 @@ int main() {
 }
 ```
 
+### 快速幂
+
+例题（快速幂）
+
+Q：求$a^k$对$p$取模的值，其中$1\le a, k, p\le 10^9$。
+
+A：
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int a, k, p;
+
+int fast_pow(int a, int k, int p) {
+    // 这里主要防止p = 1并且k = 0的情况。但是本题中不会出现这个问题
+    long res = 1 % p;
+    while (k) {
+        if (k & 1) res = res * a % p;
+        k >>= 1;
+        a = (long) a * a % p;
+    }
+
+    return (int) res;
+}
+
+int main() {
+    scanf("%d%d%d", &a, &k, &p);
+    printf("%d\n", fast_pow(a, k, p));
+    return 0;
+}
+```
+
+例题（龟速乘）
+
+Q：求$a\times b \bmod p$，其中$1\le a, b, p\le 10^{18}$。
+
+A：
+
+```cpp
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+long qadd(long a, long b, long p) {
+    long res = 0;
+    while (b) {
+        if (b & 1) res = (res + a) % p;
+        b >>= 1;
+        a = (a + a) % p;
+    }
+
+    return res;
+}
+
+int main() {
+    long a, b, p;
+    scanf("%ld%ld%ld", &a, &b, &p);
+    printf("%ld\n", qadd(a, b, p));
+
+    return 0;
+}
+```
+
 
 
 ## 动态规划
@@ -3600,6 +3665,47 @@ int main() {
 
     cout << f[m] << endl;
 
+    return 0;
+}
+```
+
+### 状态压缩
+
+例题（最短哈密顿路径）
+
+Q：给定一个$n$阶带权无向图，顶点从$0\sim n-1$标号，求从起点$0$到终点$n-1$的Hamilton路径的最短长度。两个顶点之间路径的长度$w[i][j]$由一个对称方阵给出。
+
+A：
+
+```cpp
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+const int N = 21, M = 1 << N;
+
+int n;
+int w[N][N], f[M][N];
+
+int main() {
+    scanf("%d", &n);
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            scanf("%d", &w[i][j]);
+
+    memset(f, 0x3f, sizeof f);
+    f[1][0] = 0;
+
+    for (int i = 0; i < 1 << n; i++) 
+        for (int j = 0; j < n; j++)
+            // 停留在j
+            if (i >> j & 1)
+                // 枚举从哪里走过来
+                for (int k = 0; k < n; k++)
+                    if (k != j && i >> k & 1)
+                        f[i][j] = min(f[i][j], f[i - (1 << j)][k] + w[k][j]);
+
+    printf("%d\n", f[(1 << n) - 1][n - 1]);
     return 0;
 }
 ```
