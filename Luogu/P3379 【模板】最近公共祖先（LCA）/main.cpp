@@ -1,11 +1,12 @@
 #include <iostream>
 #include <cstring>
+#include <cmath>
 using namespace std;
 
-const int N = 5e5 + 10, M = 2 * N;
-int n, qu, r;
+const int N = 5e5 + 10, M = N << 1;
+int n, m, qu, root;
 int h[N], e[M], ne[M], idx;
-int depth[N], fa[N][25];
+int dep[N], f[N][25];
 int q[N];
 
 void add(int a, int b) {
@@ -13,55 +14,55 @@ void add(int a, int b) {
 }
 
 void bfs() {
-    memset(depth, 0x3f, sizeof depth);
-    depth[0] = 0, depth[r] = 1;
-
+    memset(dep, -1, sizeof dep);
+    dep[root] = 0;
     int hh = 0, tt = 0;
-    q[tt++] = r;
+    q[tt++] = root;
     while (hh < tt) {
         int t = q[hh++];
         for (int i = h[t]; ~i; i = ne[i]) {
-            int j = e[i];
-            if (depth[j] > depth[t] + 1) {
-                depth[j] = depth[t] + 1;
-                q[tt++] = j;
-
-                fa[j][0] = t;
-                for (int k = 1; k <= 21; k++) 
-                    fa[j][k] = fa[fa[j][k - 1]][k - 1];
+            int v = e[i];
+            if (dep[v] == -1) {
+                dep[v] = dep[t] + 1;
+                q[tt++] = v;
+                f[v][0] = t;
+                for (int k = 1; 1 << k <= dep[v]; k++) 
+                    f[v][k] = f[f[v][k - 1]][k - 1];
             }
         }
     }
 }
 
 int lca(int a, int b) {
-    if (depth[a] < depth[b]) swap(a, b);
-    for (int k = 21; k >= 0; k--) 
-        if (depth[fa[a][k]] >= depth[b])
-            a = fa[a][k];
+    if (dep[a] < dep[b]) swap(a, b);
+    for (int k = 0, diff = dep[a] - dep[b]; 1 << k <= diff; k++)
+        if (diff >> k & 1)
+            a = f[a][k];
 
     if (a == b) return a;
-    for (int k = 21; k >= 0; k--)
-        if (fa[a][k] != fa[b][k]) 
-            a = fa[a][k], b = fa[b][k];
 
-    return fa[a][0];
+    for (int k = log2(dep[a]); k >= 0; k--)
+        if (f[a][k] != f[b][k])
+            a = f[a][k], b = f[b][k];
+    
+    return f[a][0];
 }
 
 int main() {
-    scanf("%d%d%d", &n, &qu, &r);
     memset(h, -1, sizeof h);
-    for (int i = 0; i < n - 1; i++) {
+
+    scanf("%d%d%d", &n, &qu, &root);
+    for (int i = 1; i <= n - 1; i++) {
         int a, b;
         scanf("%d%d", &a, &b);
         add(a, b), add(b, a);
     }
 
     bfs();
+
     for (int i = 0; i < qu; i++) {
         int a, b;
         scanf("%d%d", &a, &b);
-
         printf("%d\n", lca(a, b));
     }
 

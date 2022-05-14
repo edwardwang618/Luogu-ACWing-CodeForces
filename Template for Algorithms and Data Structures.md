@@ -3373,6 +3373,243 @@ int main() {
 }
 ```
 
+### 欧拉路径
+
+Q：给定一张图，其可能是无向图，也可能是有向图，求其欧拉回路。返回任意一组合法解即可。如果无解，则输出`NO`。
+
+A：
+
+```cpp
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+// 要建反向边，所以边数要开两倍
+const int N = 100100, M = 400100;
+int h[N], e[M], ne[M], idx;
+int res[M], cnt;
+// 记录某条边是否被访问过（主要是应付无向图的反向边）
+bool used[M];
+// din[i]和dout[i]分别记录顶点i的入度和出度
+int din[N], dout[N];
+int n, m;
+// 记录图的类型，1表示无向图，2表示有向图
+int type;
+
+void add(int a, int b) {
+    e[idx] = b, ne[idx] = h[a], h[a] = idx++;
+}
+
+// 从顶点u开始DFS
+void dfs(int u) {
+	// 注意，这里不是i = ne[i]，而是i = h[u]，因为每次遍历完一条边就顺便删掉了
+    for(int i = h[u]; ~i ;i = h[u]) {
+    	// 删掉当前边
+        h[u] = ne[i];
+        // 如果i是已经用过的某条边的反向边，则直接略过
+        if (used[i]) continue;
+        
+        // 标记这条边已使用。其实这句话可以省去不写，后面
+        // 的代码可以看出这个循环结束后这条边就已经被删了
+        // used[i] = true;
+        
+        // 如果是无向图，那么这条边的反向边也要标记使用过了
+        if (type == 1) used[i ^ 1] = true;
+
+        int t;
+        // 注意边是从1开始计数的
+        if (type == 1) {
+            t = i / 2 + 1;
+            // (0, 1) (2, 3) (4, 5)奇数编号是返回的边
+            if (i & 1) t = -t;
+        } else t = i + 1;
+        
+		// 删掉当前的边，并继续DFS
+        dfs(e[i]);
+        // 回溯之前存路径
+        res[cnt++] = t;
+    }
+}
+
+int main() {
+    scanf("%d%d%d", &type, &n, &m);
+    memset(h, -1, sizeof h);
+
+    for (int i = 0; i < m; i++) {
+        int a, b;
+        scanf("%d%d", &a, &b);
+        add(a, b);
+        // 无向边
+        if (type == 1) add(b, a);
+        din[b]++, dout[a]++;   
+    }
+
+    if (type == 1) {
+        for (int i = 1; i <= n; i++)
+            if (din[i] + dout[i] & 1) {
+                //无向图含欧拉回路的充要条件是每个点的度都为偶数
+                puts("NO");
+                return 0;
+            }
+    } else {
+        for (int i = 1; i <= n; i++)
+            if (din[i] != dout[i]) {
+                //有向图含欧拉回路的充要条件是每个点的入度等于出度
+                puts("NO");
+                return 0;
+            }
+    }
+
+    for (int i = 1; i <= n; i++) 
+        if (~h[i]) {
+            dfs(i);
+            break;
+        }
+
+    if (cnt < m) puts("NO");
+    else {
+		puts("YES");
+        for (int i = cnt - 1; i >= 0; i--)
+            printf("%d ", res[i]);
+    }
+
+    return 0;
+}
+```
+
+Q：给定一个有向图，求其字典序最小的欧拉路径。如果无解，则输出`NO`。
+
+A：
+
+```cpp
+#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+const int N = 1e5 + 10, M = 2e5 + 10;
+int n, m;
+int deg[N][2];
+vector<int> G[N];
+// del[x]是x的出边已经删了多少条，即走过多少条
+int res[M], idx, del[N], cnt[3];
+
+void dfs(int u) {
+  // 按指向点的字典序遍历出边，略过已经删掉的边
+  for (int i = del[u]; i < G[u].size(); i = del[u]) {
+    del[u]++;
+    dfs(G[u][i]);
+  }
+
+  res[idx++] = u;
+}
+
+int main() {
+  scanf("%d%d", &n, &m);
+  for (int i = 1; i <= m; i++) {
+    int a, b;
+    scanf("%d%d", &a, &b);
+    G[a].push_back(b);
+    deg[a][1]++, deg[b][0]++;
+  }
+
+  int S = 1;
+  for (int i = 1; i <= n; i++) {
+    if (deg[i][0] != deg[i][1]) cnt[0]++;
+    // 如果存在出度比入度多1的点，那么如果存在欧拉通路，则起点为这个点
+    if (deg[i][1] - deg[i][0] == 1) cnt[1]++, S = i;
+    if (deg[i][0] - deg[i][1] == 1) cnt[2]++;
+  }
+	
+  // 如果cnt[0]不为0则不存在欧拉回路；如果入度比出度多1的点
+  // 不为1或者出度比入度多1的点不为1，则不存在欧拉通路
+  if (cnt[0] && (cnt[1] != 1 || cnt[2] != 1)) return !puts("No");
+
+  for (int i = 1; i <= n; i++) sort(G[i].begin(), G[i].end());
+  dfs(S);
+  for (int i = idx - 1; i >= 0; i--) printf("%d ", res[i]);
+}
+```
+
+### 最近公共祖先
+
+Q：给定一棵有根的多叉树，再给定若干次询问，每次询问$a$和$b$这两个点的最近公共祖先的节点编号。
+
+A：
+
+```cpp
+#include <iostream>
+#include <cstring>
+#include <cmath>
+using namespace std;
+
+const int N = 5e5 + 10, M = N << 1;
+int n, m, qu, root;
+int h[N], e[M], ne[M], idx;
+int dep[N], f[N][25];
+int q[N];
+
+void add(int a, int b) {
+    e[idx] = b, ne[idx] = h[a], h[a] = idx++;
+}
+
+void bfs() {
+    memset(dep, -1, sizeof dep);
+    dep[root] = 0;
+    int hh = 0, tt = 0;
+    q[tt++] = root;
+    while (hh < tt) {
+        int t = q[hh++];
+        for (int i = h[t]; ~i; i = ne[i]) {
+            int v = e[i];
+            if (dep[v] == -1) {
+                dep[v] = dep[t] + 1;
+                q[tt++] = v;
+                f[v][0] = t;
+                for (int k = 1; 1 << k <= dep[v]; k++) 
+                    f[v][k] = f[f[v][k - 1]][k - 1];
+            }
+        }
+    }
+}
+
+int lca(int a, int b) {
+    if (dep[a] < dep[b]) swap(a, b);
+    for (int k = 0, diff = dep[a] - dep[b]; 1 << k <= diff; k++)
+        if (diff >> k & 1)
+            a = f[a][k];
+
+    if (a == b) return a;
+
+    for (int k = log2(dep[a]); k >= 0; k--)
+        if (f[a][k] != f[b][k])
+            a = f[a][k], b = f[b][k];
+
+    return f[a][0];
+}
+
+int main() {
+    memset(h, -1, sizeof h);
+
+    scanf("%d%d%d", &n, &qu, &root);
+    for (int i = 1; i <= n - 1; i++) {
+        int a, b;
+        scanf("%d%d", &a, &b);
+        add(a, b), add(b, a);
+    }
+
+    bfs();
+
+    for (int i = 0; i < qu; i++) {
+        int a, b;
+        scanf("%d%d", &a, &b);
+        printf("%d\n", lca(a, b));
+    }
+
+    return 0;
+}
+```
+
 
 
 ## 数学
@@ -3683,7 +3920,6 @@ A：
 using namespace std;
 
 const int N = 21, M = 1 << N;
-
 int n;
 int w[N][N], f[M][N];
 
@@ -3695,7 +3931,6 @@ int main() {
 
     memset(f, 0x3f, sizeof f);
     f[1][0] = 0;
-
     for (int i = 0; i < 1 << n; i++) 
         for (int j = 0; j < n; j++)
             // 停留在j
