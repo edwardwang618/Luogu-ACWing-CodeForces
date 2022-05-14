@@ -3373,6 +3373,118 @@ int main() {
 }
 ```
 
+### 拓扑排序
+
+Q：给定一个有向图，点的编号是$1\sim n$，可能存在重边和自环。输出其拓扑序列。若不存在则输出$-1$。
+
+A：
+
+BFS
+
+```cpp
+#include <iostream>
+#include <cstring>
+#include <queue>
+using namespace std;
+
+const int N = 100010;
+int n, m;
+int h[N], e[N], ne[N], idx;
+int d[N];
+bool vis[N];
+int res[N], cnt;
+
+void add(int a, int b) {
+    e[idx] = b, ne[idx] = h[a], h[a] = idx++;
+}
+
+bool bfs() {
+    queue<int> q;
+    for (int i = 1; i <= n; i++) 
+        if (!d[i]) q.push(i);
+
+    while (!q.empty()) {
+        int t = q.front(); q.pop();
+        res[++cnt] = t;
+        for (int i = h[t]; ~i; i = ne[i]) {
+            int j = e[i];
+            d[j]--;
+            if (!d[j]) q.push(j);
+        }
+    }
+
+    return cnt == n;
+}
+
+int main() {
+    memset(h, -1, sizeof h);
+    cin >> n >> m;
+    while (m--) {
+        int a, b;
+        cin >> a >> b;
+        add(a, b);
+        d[b]++;
+    }
+
+    if (!bfs()) puts("-1");
+    else for (int i = 1; i <= n; i++) cout << res[i] << ' ';
+
+    return 0;
+}
+```
+
+DFS
+
+```CPP
+#include <iostream>
+#include <cstring>
+#include <queue>
+using namespace std;
+
+const int N = 100010;
+int n, m;
+int h[N], e[N], ne[N], idx;
+int vis[N];
+int res[N], cnt;
+
+void add(int a, int b) {
+    e[idx] = b, ne[idx] = h[a], h[a] = idx++;
+}
+
+bool dfs(int u) {
+    vis[u] = 0;
+    for (int i = h[u]; i != -1; i = ne[i]) {
+        int j = e[i];
+        if (vis[j] == -1 && !dfs(j)) return false;
+        else if (!vis[j]) return false;
+    }
+    
+    vis[u] = 1;
+    res[++cnt] = u;
+    return true;
+}
+
+int main() {
+    memset(h, -1, sizeof h);
+    cin >> n >> m;
+    while (m--) {
+        int a, b;
+        cin >> a >> b;
+        add(a, b);
+    }
+
+    memset(vis, -1, sizeof vis);
+    for (int i = 1; i <= n; i++)
+        if (vis[i] == -1 && !dfs(i)) {
+            puts("-1");
+            return 0;
+        }
+
+    for (int i = n; i; i--) cout << res[i] << ' ';
+    return 0;
+}
+```
+
 ### 欧拉路径
 
 Q：给定一张图，其可能是无向图，也可能是有向图，求其欧拉回路。返回任意一组合法解即可。如果无解，则输出`NO`。
@@ -3609,6 +3721,10 @@ int main() {
     return 0;
 }
 ```
+
+### 有向图的强联通分量
+
+
 
 
 

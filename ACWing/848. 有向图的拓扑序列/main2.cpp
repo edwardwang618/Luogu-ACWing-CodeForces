@@ -1,14 +1,13 @@
 #include <iostream>
 #include <cstring>
 #include <queue>
-#include <vector>
 using namespace std;
 
 const int N = 100010;
 int n, m;
 int h[N], e[N], ne[N], idx;
 int vis[N];
-vector<int> res;
+int res[N], cnt;
 
 void add(int a, int b) {
     e[idx] = b, ne[idx] = h[a], h[a] = idx++;
@@ -23,15 +22,13 @@ bool dfs(int u) {
     }
     
     vis[u] = 1;
-    res.push_back(u);
+    res[++cnt] = u;
     return true;
 }
 
 int main() {
-    cin >> n >> m;
-
     memset(h, -1, sizeof h);
-
+    cin >> n >> m;
     while (m--) {
         int a, b;
         cin >> a >> b;
@@ -39,15 +36,12 @@ int main() {
     }
 
     memset(vis, -1, sizeof vis);
-
-    for (int i = 1; i <= n; i++) {
+    for (int i = 1; i <= n; i++)
         if (vis[i] == -1 && !dfs(i)) {
             puts("-1");
             return 0;
         }
-    }
 
-    for (int i = n - 1; i >= 0; i--) cout << res[i] << ' ';
-
+    for (int i = n; i; i--) cout << res[i] << ' ';
     return 0;
 }
