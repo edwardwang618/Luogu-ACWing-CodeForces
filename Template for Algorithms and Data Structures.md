@@ -3722,7 +3722,77 @@ int main() {
 }
 ```
 
-### 有向图的强联通分量
+### 有向图的强连通分量
+
+Q：给定一个有向图，$n$个顶点，$m$条边，求其强连通分量，建出缩点后的图。
+
+A：
+
+```cpp
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+const int N = 10010, M = 100010;
+int n, m;
+// hs存缩点后的图
+int h[N], hs[N], e[M], ne[M], idx;
+// dfn[v]存v的访问时间戳，low[v]存v能访问到的点的时间戳最小值，timestamp表示当前时间戳
+int dfn[N], low[N], timestamp;
+int stk[N], top;
+// in_stk[v]表示v是否在栈里
+bool in_stk[N];
+// id[v]表示点v在第几个强连通分量里，scc_cnt表示已经找到了多少个强连通分量
+int id[N], scc_cnt, sz[N];
+
+void add(int a, int b, int h[]) {
+    e[idx] = b, ne[idx] = h[a], h[a] = idx++;
+}
+
+void tarjan(int u) {
+    dfn[u] = low[u] = ++timestamp;
+    stk[top++] = u, in_stk[u] = true;
+    for (int i = h[u]; ~i; i = ne[i]) {
+        int j = e[i];
+        if (!dfn[j]) {
+            tarjan(j);
+            low[u] = min(low[u], low[j]);
+        } else if (in_stk[j]) low[u] = min(low[u], dfn[j]);        
+    }
+    
+    if (dfn[u] == low[u]) {
+        scc_cnt++;
+        int y;
+        do {
+            y = stk[--top];
+            in_stk[y] = false;
+            id[y] = scc_cnt;
+        } while (y != u);
+    }
+}
+
+int main() {
+    scanf("%d%d", &n, &m);
+
+    memset(h, -1, sizeof h);
+    while (m--) {
+        int a, b;
+        scanf("%d%d", &a, &b);
+        add(a, b, h);
+    }
+
+    for (int i = 1; i <= n; i++) 
+        if (!dfn[i])
+            tarjan(i);
+    
+    for (int i = 1; i <= n; i++)
+        for (int j = h[i]; ~j; j = ne[j])
+            if (id[i] != id[e[j]])
+                add(id[i], id[e[j]], hs);
+
+    return 0;
+}
+```
 
 
 

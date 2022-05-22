@@ -3,7 +3,7 @@
 #include <algorithm>
 using namespace std;
 
-const int N = 1010, M = 5e5 + 10;
+const int N = 1010, M = 1e6 + 10;
 int n;
 int h[N], e[M], ne[M], idx;
 int dfn[N], low[N], timestamp;
