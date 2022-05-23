@@ -6,8 +6,7 @@ const int N = 2e5 + 10, M = 1e6 + 10;
 int n;
 int h[N], e[M], ne[M], idx;
 int dfn[N], low[N], timestamp;
-int a, b;
-bool cut[N];
+int a, b, res;
 
 void add(int a, int b) {
   e[idx] = b, ne[idx] = h[a], h[a] = idx++;
@@ -21,7 +20,7 @@ void tarjan(int u, int from) {
       tarjan(v, u);
       low[u] = min(low[u], low[v]);
       if (low[v] >= dfn[u] && u != from)
-        if(dfn[b] >= dfn[v]) cut[u] = true;
+        if(dfn[b] >= dfn[v]) res = min(res, u);
     } else if (v != from) low[u] = min(low[u], dfn[v]);
   }
 }
@@ -33,13 +32,8 @@ int main() {
     add(a, b), add(b, a);
 
   scanf("%d%d", &a, &b);
+  res = n + 1;
   tarjan(a, a);
-
-  for (int i = 1; i <= n; i++)
-    if (cut[i]) {
-      printf("%d\n", i);
-      return 0;
-    }
-
-  puts("No solution");
+  if (res < n + 1) printf("%d\n", res);
+  else puts("No solution");
 }
