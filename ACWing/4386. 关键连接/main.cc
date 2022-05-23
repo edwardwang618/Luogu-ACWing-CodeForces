@@ -26,7 +26,7 @@ void tarjan(int u, int from) {
         if (a > b) swap(a, b);
         ed[cnt++] = {a, b};
       }
-    } else if (v != from) low[u] = min(low[u], low[v]);
+    } else if (v != from) low[u] = min(low[u], dfn[v]);
   }
 }
 

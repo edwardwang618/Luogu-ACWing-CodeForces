@@ -25,7 +25,7 @@ void tarjan(int u) {
     if (!dfn[v]) {
       tarjan(v);
       low[u] = min(low[u], low[v]);
-    } else if (in_stk[v]) low[u] = min(low[u], low[v]);
+    } else if (in_stk[v]) low[u] = min(low[u], dfn[v]);
   }
 
   if (dfn[u] == low[u]) {

@@ -21,8 +21,8 @@ void tarjan(int u, int from) {
             tarjan(v, u);
             low[u] = min(low[u], low[v]);
             if (low[v] >= dfn[u] && u != from) cut[u] = true;
-            if (u == from) child++;
-        } else low[u] = min(low[u], dfn[v]);
+            child++;
+        } else if (v != from) low[u] = min(low[u], dfn[v]);
     }
 
     if (child >= 2 && u == from) cut[u] = true;
