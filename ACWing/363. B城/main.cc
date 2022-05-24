@@ -17,7 +17,7 @@ void tarjan(int u, int from) {
   dfn[u] = low[u] = ++timestamp;
   cnt[u] = 1;
 
-  int s = 0, sum = 0;
+  int sum = 0;
   for (int i = h[u]; ~i; i = ne[i]) {
     int v = e[i];
     if (!dfn[v]) {
@@ -25,15 +25,13 @@ void tarjan(int u, int from) {
       cnt[u] += cnt[v];
       low[u] = min(low[u], low[v]);
       if (low[v] >= dfn[u]) {
-        s++;
         res[u] += (long) cnt[v] * (n - cnt[v]);
         sum += cnt[v];
       }
     } else if (v != from) low[u] = min(low[u], dfn[v]);
   }
 
-  if (u == from && s >= 2 || s >= 1) res[u] += (long) (n - 1 - sum) * (1 + sum) + (n - 1);
-  else res[u] = 2 * (n - 1);
+  res[u] += (long) (n - 1 - sum) * (1 + sum) + (n - 1);
 }
 
 int main() {
