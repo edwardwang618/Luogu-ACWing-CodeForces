@@ -7,6 +7,7 @@ int n, m;
 int h[N], e[M], ne[M], idx;
 int dfn[N], low[N], timestamp;
 bool cut[N];
+int tot;
 
 void add(int a, int b) {
     e[idx] = b, ne[idx] = h[a], h[a] = idx++;
@@ -20,12 +21,14 @@ void tarjan(int u, int from) {
         if (!dfn[v]) {
             tarjan(v, u);
             low[u] = min(low[u], low[v]);
-            if (low[v] >= dfn[u] && u != from) cut[u] = true;
-            child++;
+            if (low[v] >= dfn[u]) child++;
         } else if (v != from) low[u] = min(low[u], dfn[v]);
     }
 
-    if (child >= 2 && u == from) cut[u] = true;
+    if (u == from && child >= 2 || u != from && child) {
+        cut[u] = true;
+        tot++;
+    }
 }
 
 int main() {
@@ -41,15 +44,9 @@ int main() {
         if (!dfn[i])
             tarjan(i, i);
 
-    int tot = 0;
-    for (int i = 1; i <= n; i++)
-        if (cut[i])
-            tot++;
     printf("%d\n", tot);
 
     for (int i = 1; i <= n; i++)
         if (cut[i])
             printf("%d ", i);
-
-    return 0;
 }
