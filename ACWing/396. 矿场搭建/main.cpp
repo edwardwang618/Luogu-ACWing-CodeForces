@@ -3,7 +3,7 @@
 #include <vector>
 using namespace std;
 
-const int N = 1010, M = 510;
+const int N = 1010, M = 510 << 1;
 int n, m;
 int h[N], e[M], ne[M], idx;
 int dfn[N], low[N], timestamp;
@@ -44,7 +44,7 @@ void tarjan(int u, int from) {
         } else low[u] = min(low[u], dfn[v]);
     }
 
-    cut[u] = (u == from && cnt > 1) || (u != from && cnt);
+    cut[u] = u == from && cnt > 1 || u != from && cnt;
 }
 
 int main() {
@@ -67,7 +67,7 @@ int main() {
                 tarjan(i, i);
 
         int res = 0;
-        unsigned long long num = 1;
+        long num = 1;
         for (int i = 1; i <= dcc_cnt; i++) {
             int cnt = 0, sz = dcc[i].size();
             for (int j = 0; j < sz; j++) 
@@ -80,7 +80,7 @@ int main() {
             } else if (cnt == 1) res++, num *= sz - 1;
         }
 
-        printf("Case %d: %d %llu\n", T++, res, num);
+        printf("Case %d: %d %ld\n", T++, res, num);
     }
 
     return 0;
