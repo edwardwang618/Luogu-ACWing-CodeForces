@@ -6,7 +6,6 @@ const int N = 2e5 + 10;
 int n, idx;
 long f[N][20], D;
 
-
 long query(int c) {
   int k = log2(c);
   return max(f[idx][k], f[idx - c + (1 << k)][k]);
