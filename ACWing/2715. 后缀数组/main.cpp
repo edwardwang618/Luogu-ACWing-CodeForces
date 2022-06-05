@@ -42,7 +42,7 @@ void get_sa() {
     swap(rk, y);
     rk[sa[1]] = 1, num = 1;
     for (int i = 2; i <= n; i++)
-      rk[sa[i]] = (y[sa[i]] == y[sa[i - 1]] && y[sa[i] + k] == y[sa[i - 1] + k]) ? num : ++num;
+      rk[sa[i]] = y[sa[i]] == y[sa[i - 1]] && y[sa[i] + k] == y[sa[i - 1] + k] ? num : ++num;
     // 如果离散化后两两不同，说明本轮排好序后，已经没有排名一样的后缀了，说明已经整体排好序，直接退出
     if (num == n) break;
     // 更新离散化的最大值
@@ -51,10 +51,14 @@ void get_sa() {
 }
 
 void get_height() {
+  // 按排名枚举后缀
   for (int i = 1, k = 0; i <= n; i++) {
+  	// 如果排名第1，那高度为0，略过
     if (rk[i] == 1) continue;
+    // 找到排名少1位的后缀是第几个
     int j = sa[rk[i] - 1];
-    if (k) k--;
+	  if (k) k--;
+	  // 直接暴力枚举
     while (i + k <= n && j + k <= n && s[i + k] == s[j + k]) k++;
     he[rk[i]] = k;
   }
@@ -63,7 +67,7 @@ void get_height() {
 int main() {
   scanf("%s", s + 1);
   
-  n = strlen(s + 1), m = 122;
+  n = strlen(s + 1), m = 'z';
   get_sa();
   get_height();
 
