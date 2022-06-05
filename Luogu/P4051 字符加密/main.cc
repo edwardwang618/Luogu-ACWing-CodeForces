@@ -2,7 +2,7 @@
 #include <cstring>
 using namespace std;
 
-const int N = 1e6 + 10;
+const int N = 2e5 + 10;
 int n, m;
 char s[N];
 int sa[N], rk[N], y[N], c[N];
@@ -21,12 +21,10 @@ void get_sa() {
     for (int i = 1; i <= n; i++) c[rk[i]]++;
     for (int i = 2; i <= m; i++) c[i] += c[i - 1];
     for (int i = n; i; i--) sa[c[rk[y[i]]]--] = y[i];
-
     swap(rk, y);
     rk[sa[1]] = num = 1;
     for (int i = 2; i <= n; i++)
       rk[sa[i]] = y[sa[i]] == y[sa[i - 1]] && y[sa[i] + k] == y[sa[i - 1] + k] ? num : ++num;
-    
     if (num == n) break;
     m = num;
   }
@@ -34,8 +32,12 @@ void get_sa() {
 
 int main() {
   scanf("%s", s + 1);
-  n = strlen(s + 1), m = 'z';
-  
+  n = strlen(s + 1), m = 256;
+  for (int i = n + 1; i < n << 1; i++) s[i] = s[i - n];
+  n = 2 * n - 1;
+
   get_sa();
-  for (int i = 1; i <= n; i++) printf("%d ", sa[i]);
+  for (int i = 1; i <= n; i++)
+    if (n - sa[i] + 1 >= (n + 1) / 2)
+      printf("%c", s[sa[i] + (n + 1) / 2 - 1]);
 }
