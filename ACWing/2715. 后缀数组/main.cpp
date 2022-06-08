@@ -20,7 +20,7 @@ void get_sa() {
   for (int i = n; i; i--) sa[c[rk[i]]--] = i;
 
   // 每一轮按长2k的前缀来对所有后缀排序
-  for (int k = 1; k < n; k <<= 1) {
+  for (int k = 1;; k <<= 1) {
     // 先按第二关键字排序
     int num = 0;
     // 长度不够k的那些后缀第二关键字为空，最小，先排它们

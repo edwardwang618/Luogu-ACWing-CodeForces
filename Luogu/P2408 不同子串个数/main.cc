@@ -12,7 +12,7 @@ void get_sa() {
   for (int i = 2; i <= m; i++) c[i] += c[i - 1];
   for (int i = n; i; i--) sa[c[rk[i]]--] = i;
 
-  for (int k = 1; k < n; k <<= 1) {
+  for (int k = 1;; k <<= 1) {
     int num = 0;
     for (int i = n - k + 1; i <= n; i++) y[++num] = i;
     for (int i = 1; i <= n; i++) if (sa[i] > k) y[++num] = sa[i] - k;
