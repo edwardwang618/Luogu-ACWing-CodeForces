@@ -2,7 +2,7 @@
 #include <stack>
 using namespace std;
 
-const int N = 1e6 + 10, P = 1e4;
+const int N = 1e6 + 100, P = 1e4;
 char s[N];
 stack<long> stk;
 
