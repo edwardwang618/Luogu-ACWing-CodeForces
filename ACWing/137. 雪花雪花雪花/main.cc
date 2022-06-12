@@ -18,7 +18,7 @@ bool cmp(int a, int b) {
 }
 
 void get_min(int a[]) {
-  static int b[12];
+  int b[12];
   for (int i = 0; i < 12; i++) b[i] = a[i % 6];
 
   int i = 0, j = 1, k;
