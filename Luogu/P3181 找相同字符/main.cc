@@ -5,7 +5,7 @@ using namespace std;
 const int N = 4e5 + 10;
 int n, m;
 char s[N], s2[N];
-int sa[N], rk[N], y[N], c[300], he[N];
+int sa[N], rk[N], y[N], c[N], he[N];
 int stk[N], top;
 
 void get_sa(char s[]) {

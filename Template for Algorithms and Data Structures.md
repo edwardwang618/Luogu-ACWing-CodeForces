@@ -4,7 +4,7 @@
 
 ## 前缀和
 
-例题1
+### 询问区间和
 
 Q：给定数组$A$，要求应答询问，每次询问问$A[l:r]$的和。
 
@@ -25,7 +25,7 @@ int query(vector<int> &A, int l, int r) {
 }
 ```
 
-例题2
+### 询问子矩阵和
 
 Q：给定二维数组$A$，要求应答询问，每次询问问$A[x_1:x_2,y_1:y_2]$的和。
 
@@ -52,7 +52,7 @@ int query(vector<vector<int>> &A, int x1, int y1, int x2, int y2) {
 
 ## 差分
 
-例题1
+### 区间加数
 
 Q：给定数组$A$，要求应答询问，每次询问要将$A[l:r]$中每个数都加上某个数$x$，最后返回最终的数组。
 
@@ -79,7 +79,7 @@ vector<int> restore() {
 }
 ```
 
-例题2
+### 子矩阵加数
 
 Q：给定二维数组$A$，要求应答询问，每次询问将$A[x_1:x_2,y_1:y_2]$的每个数都加上某个数$x$，最后返回最终的数组。
 
@@ -121,7 +121,7 @@ vector<vector<int>> restore() {
 
 ## 排序
 
-例题1
+### 排序算法
 
 Q：给定数组$A$，要求将其从小到大排序。
 
@@ -209,7 +209,7 @@ void heap_sort(vector<int> &A) {
 }
 ```
 
-例题2（快速选择）
+### 快速选择
 
 Q：给定数组$A$，要求返回其从小到大排序后的下标为$k$的数。
 
@@ -236,7 +236,7 @@ int quick_select(vector<int> &A, int k) {
 }
 ```
 
-例题3（求逆序对个数）
+### 逆序对个数
 
 Q：给定数组$A$，求其逆序对个数。
 
@@ -311,7 +311,7 @@ int get_last_pos(vector<int> &A, int x) {
 
 ## 位运算
 
-例题1
+### 二进制1的个数
 
 Q：求$32$位整数$x$的二进制表示里$1$的个数。
 
@@ -346,7 +346,7 @@ int count(int x){
 }
 ```
 
-例题2（异或运算$\land$的阿贝尔群性质）
+### 异或运算的阿贝尔群性质
 
 Q：给定一个数组$A$，除了某个数$x$只出现了$1$次之外，其余数都恰好出现了$2$次。求$x$。
 
@@ -553,7 +553,7 @@ struct ListNode {
 }
 ```
 
-例题1
+### 求中点
 
 Q：给定一个单链表，求其中点。若其长度为偶数，则返回靠左的中点。
 
@@ -575,7 +575,7 @@ ListNode* solve(ListNode *head) {
 }
 ```
 
-例题2
+### 翻转链表
 
 Q：给定一个单链表，要求将其反转，返回新的头结点。
 
@@ -603,7 +603,7 @@ ListNode* reverse(ListNode *head) {
 }
 ```
 
-例题3
+### 合并有序链表
 
 Q：给定两个升序的单链表，要求将它们合并为一个升序的单链表，返回新链表表头
 
@@ -637,7 +637,7 @@ ListNode* merge(ListNode *l1, ListNode *l2) {
 }
 ```
 
-例题4
+### 链表排序
 
 Q：给定一个单链表，要求将其从小到大排序，返回新链表表头。
 
@@ -686,7 +686,7 @@ ListNode* sort(ListNode *head) {
 }
 ```
 
-例题5
+### 静态链表
 
 Q：实现静态链表，实现在表头插入、删除，和遍历链表的功能。
 
@@ -721,8 +721,6 @@ void traverse() {
 ## 栈
 
 ### 单调栈
-
-例题1
 
 Q：给定数组$A$，要求返回数组$B$，其中$B[i]$是$A[i]$左边最近的比它小的数的下标，若不存在则令$B[i]=-1$。
 
@@ -770,7 +768,7 @@ vector<int> solve(vector<int> &A) {
 }
 ```
 
-例题2
+### 单调栈+二分
 
 Q：给定数组$A$，要求返回数组$B$，其中$B[i]$是$A[i]$左边最远的比它小的数的下标，若不存在则令$B[i]=-1$。
 
@@ -805,8 +803,6 @@ vector<int> solve(vector<int> &A) {
 
 ### 表达式解析
 
-例题1
-
 Q：给定一个只含数字、空格和加减乘除的后缀表达式，求其值。
 
 A：
@@ -818,18 +814,10 @@ void calc(stack<int> &stk, char op) {
     int a = stk.top();
     stk.pop();
     switch (op) {
-        case '+':
-            stk.push(a + b);
-            break;
-        case '-':
-            stk.push(a - b);
-            break;
-        case '*':
-            stk.push(a * b);
-            break;
-        case '/':
-            stk.push(a / b);
-            break;
+        case '+': stk.push(a + b); break;
+        case '-': stk.push(a - b); break;
+        case '*': stk.push(a * b); break;
+        case '/': stk.push(a / b); break;
     }
 }
 
@@ -851,8 +839,6 @@ int solve(string s) {
 }
 ```
 
-例题2
-
 Q：给定一个只含数字、空格、左右小括号和加减乘除的中缀表达式，求其值。
 
 A：
@@ -864,18 +850,10 @@ void calc(stack<int> &stk, stack<char> &ops) {
     int a = stk.top();
     stk.pop();
     switch (ops.top()) {
-        case '+':
-            stk.push(a + b);
-            break;
-        case '-':
-            stk.push(a - b);
-            break;
-        case '*':
-            stk.push(a * b);
-            break;
-        case '/':
-            stk.push(a / b);
-            break;
+        case '+': stk.push(a + b); break;
+        case '-': stk.push(a - b); break;
+        case '*': stk.push(a * b); break;
+        case '/': stk.push(a / b); break;
     }
 
     ops.pop();
@@ -884,11 +862,8 @@ void calc(stack<int> &stk, stack<char> &ops) {
 int solve(string s) {
     stack<int> stk;
     stack<char> ops;
-    unordered_map<char, int> mp = {{'(', 0},
-                                   {'+', 1},
-                                   {'-', 1},
-                                   {'*', 2},
-                                   {'/', 2}};
+    unordered_map<char, int> mp = {{'(', 0}, {'+', 1}, {'-', 1},
+                                   {'*', 2}, {'/', 2}};
 
     for (int i = 0; i < s.size(); i++) {
         char ch = s[i];
@@ -922,8 +897,6 @@ int solve(string s) {
 
 ### 单调队列
 
-例题
-
 Q：给定数组$A$，和正整数$k$，要求返回数组$B$，其中$B[i]$是$A[i:i+k-1]$的最小值。题目保证$k$不大于$A$的长度。
 
 A：
@@ -951,7 +924,7 @@ vector<int> solve(vector<int> &A, int k) {
 
 ### 字符串哈希
 
-例题1
+#### 询问子串是否相等
 
 Q：给定两个等长字符串$s$和$t$， 要求应答若干询问，每次询问问$s[l:r]=t[l:r]$是否成立。
 
@@ -988,7 +961,7 @@ bool query(string &s, string &t, int l, int r) {
 }
 ```
 
-例题2（Rabin-Karp）
+#### Rabin-Karp
 
 Q：给定两个字符串$s$和$p$， 问$p$是否是$s$的子串，如果是，返回$p$在$s$中第一次出现的位置；如果不是，返回$-1$。
 
@@ -1020,7 +993,7 @@ int query(string s, string p) {
 }
 ```
 
-例题3
+#### 询问回文串
 
 Q：给定字符串$s$， 要求应答若干询问，每次询问问$s[l:r]$是否是回文串。
 
@@ -1060,8 +1033,6 @@ bool query(int l, int r) {
 
 ### 序列自动机
 
-例题
-
 Q：给定一个字符串$s$，要求应答若干次询问，每次询问问某个字符串$p$是否是$s$的子序列。题目保证只含英文小写字母。
 
 A：
@@ -1093,11 +1064,110 @@ bool query(string s, string p) {
 }
 ```
 
+### 后缀数组
+
+Q：给定一个字符串$s$，求其后缀数组、名次数组和高度数组。
+
+A：
+
+```cpp
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+const int N = 1e6 + 10;
+int n, m;
+char s[N];
+int sa[N], rk[N], y[N], c[N], he[N];
+
+void get_sa() {
+  for (int i = 1; i <= n; i++) c[rk[i] = s[i]]++;
+  for (int i = 2; i <= m; i++) c[i] += c[i - 1];
+  for (int i = n; i; i--) sa[c[rk[i]]--] = i;
+
+  for (int k = 1;; k <<= 1) {
+    int num = 0;
+    for (int i = n - k + 1; i <= n; i++) y[++num] = i;
+    for (int i = 1; i <= n; i++) if (sa[i] > k) y[++num] = sa[i] - k;
+    for (int i = 1; i <= m; i++) c[i] = 0;
+    for (int i = 1; i <= n; i++) c[rk[i]]++;
+    for (int i = 2; i <= m; i++) c[i] += c[i - 1];
+    for (int i = n; i; i--) sa[c[rk[y[i]]]--] = y[i];
+    swap(rk, y);
+    rk[sa[1]] = num = 1;
+    for (int i = 2; i <= n; i++)
+      rk[sa[i]] = y[sa[i]] == y[sa[i - 1]] && y[sa[i] + k] == y[sa[i - 1] + k] ? num : ++num;
+    if (num == n) break;
+    m = num;
+  }
+}
+
+void get_height() {
+  for (int i = 1, k = 0; i <= n; i++) {
+    if (rk[i] == 1) continue;
+    int j = sa[rk[i] - 1];
+	if (k) k--;
+    while (i + k <= n && j + k <= n && s[i + k] == s[j + k]) k++;
+    he[rk[i]] = k;
+  }
+}
+
+int main() {
+  scanf("%s", s + 1);
+  
+  n = strlen(s + 1), m = 'z';
+  get_sa();
+  get_height();
+
+  for (int i = 1; i <= n; i++) printf("%d ", sa[i]);
+  puts("");
+  for (int i = 1; i <= n; i++) printf("%d ", he[i]);
+  puts("");
+
+  return 0;
+}
+```
+
+### 最小表示法
+
+Q：给定一个长$n$数组$A$，求其所有循环同构里字典序最小的那个。
+
+A：
+
+```cpp
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+const int N = 6e5 + 10;
+int n;
+int a[N];
+
+int get() {
+  int i = 0, j = 1, k;
+  while (i < n && j < n) {
+    k = 0;
+    while (i + k < n && j + k < n && a[i + k] == a[j + k]) k++;
+    if (k == n) break;
+    a[i + k] > a[j + k] ? i += k + 1 : j += k + 1;
+    if (i == j) j++;
+  }
+
+  return min(i, j);
+}
+
+int main() {
+  scanf("%d", &n);
+  for (int i = 0; i < n; i++) scanf("%d", &a[i]);
+  memcpy(a + n, a, (n - 1) * sizeof(int));
+  int idx = get();
+  for (int i = idx; i < idx + n; i++) printf("%d ", a[i]);
+}
+```
+
 
 
 ## RMQ
-
-例题
 
 Q：给定一个数组$A$，要求应答若干次询问，每次询问问$A[l:r]$的最小值是多少。
 
