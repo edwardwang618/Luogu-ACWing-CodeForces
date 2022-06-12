@@ -25,13 +25,9 @@ void get_min(int a[]) {
   while (i < 6 && j < 6) {
     for (k = 0; k < 6 && b[i + k] == b[j + k]; k++);
     if (k == 6) break;
-    if (b[i + k] > b[j + k]) {
-      i += k + 1;
-      if (i == j) i++;
-    } else {
-      j += k + 1;
-      if (i == j) j++;
-    }
+    if (b[i + k] > b[j + k]) i += k + 1;
+    else j += k + 1;
+    if (i == j) j++;
   }
 
   k = min(i, j);

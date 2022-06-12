@@ -7,17 +7,15 @@ int n;
 char a[N], b[N];
 
 int get_min(char s[]) {
-  int i = 0, j = 1;
+  int i = 0, j = 1, k;
   while (i < n && j < n) {
-    int k = 0;
-    while (k < n && s[i + k] == s[j + k]) k++;
+    for (k = 0; k < n && s[i + k] == s[j + k]; k++);
     if (k == n) break;
-    if (s[i + k] > s[j + k]) i += k + 1;
-    else j += k + 1;
+    s[i + k] > s[j + k] ? i += k + 1 : j += k + 1;
     if (i == j) j++;
   }
 
-  int k = min(i, j);
+  k = min(i, j);
   s[k + n] = 0;
   return k;
 }
