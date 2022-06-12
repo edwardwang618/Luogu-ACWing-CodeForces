@@ -18,7 +18,7 @@ int main() {
   }
 
   sort(a + 1, a + 1 + n);
-  a[0].first = INF, a[n + 1].first = -INF;
+  a[0].x = INF, a[n + 1].x = -INF;
   r[0] = 1, l[n + 1] = n;
   for (int i = 1; i <= n; i++) {
     l[i] = i - 1, r[i] = i + 1;
@@ -34,5 +34,5 @@ int main() {
     r[left] = right, l[right] = left;
   }
 
-  for (int i = 2; i <= n; i++) printf("%d %d\n", res[i].first, res[i].second);
+  for (int i = 2; i <= n; i++) printf("%d %d\n", res[i].x, res[i].y);
 }
