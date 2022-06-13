@@ -1,7 +1,6 @@
 #include <iostream>
 #include <cstring>
 #include <deque>
-
 using namespace std;
 
 const int N = 2e4 + 10;
@@ -43,13 +42,13 @@ void get_height() {
 }
 
 void add(int k) {
-  if (!bel[k]) return;
+  // if (!bel[k]) return;
   vis[bel[k]]++;
   if (vis[bel[k]] == 1) cnt++;
 }
 
 void del(int k) {
-  if (!bel[k]) return;
+  // if (!bel[k]) return;
   vis[bel[k]]--;
   if (!vis[bel[k]]) cnt--;
 }
@@ -78,7 +77,7 @@ int main() {
     dq.push_back(i);
 
     if (cnt == nn) {
-      while (cnt == nn && j < i) del(j++);
+      while (cnt == nn) del(j++);
       add(--j);
     }
 
