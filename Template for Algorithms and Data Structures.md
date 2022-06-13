@@ -3088,7 +3088,7 @@ int main() {
 
 ### 最短路
 
-例题（非负权边图的最短路）
+#### 非负权图最短路
 
 Q：给定一个$n$个点$m$条边的有向图，图中可能存在重边和自环，所有边权均非负。请你求出$1$号点到$n$号点的最短距离，如果无法从$1$号点走到$n$号点，则输出$−1$。
 
@@ -3210,9 +3210,7 @@ int main() {
 }
 ```
 
-
-
-例题（有边数限制的最短路）
+#### 有边数限制的最短路
 
 Q：给定有$n$个点$m$条边的有向图，可能存在重边和自环，边权可能为负，可能存在负环。求$1$号点到$n$号点的最多经过$k$条边的最短距离。如果不存在这样的路径则输出`impossible`。
 
@@ -3262,7 +3260,7 @@ int main() {
 }
 ```
 
-例题（含负权边的最短路）
+#### 含负权边图最短路
 
 Q：给定有$n$个点$m$条边的有向图，可能存在重边和自环，边权可能为负，不存在负环。求$1$号点到$n$号点的最多经过$k$条边的最短距离。如果不存在这样的路径则输出`impossible`。
 
@@ -3323,7 +3321,7 @@ int main() {
 }
 ```
 
-例题（判断是否存在负环）
+#### 负环
 
 Q：给定有$n$个点$m$条边的有向图，可能存在重边和自环，边权可能为负，不存在负环。求$1$号点到$n$号点的最多经过$k$条边的最短距离。如果不存在这样的路径则输出`impossible`。
 
@@ -3392,7 +3390,7 @@ int main() {
 }
 ```
 
-例题（多点对最短路）
+#### 多点对最短路
 
 Q：给定有$n$个点$m$条边的有向图，可能存在重边和自环，边权可能为负，不存在负环。给定$k$次询问，每次询问问点$x$到$y$的最短路长度。如果路径不存在，则输出`impossible`。
 
@@ -3442,6 +3440,55 @@ int main() {
     return 0;
 }
 ```
+
+#### 最小环
+
+Q：给定一个无向图，求图中至少含$3$个点的环，环上节点不重复，并且总边权最小。若无解则输出`No solution.`。
+
+A：
+
+```cpp
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+const int N = 110, INF = 0x3f3f3f3f;
+int n, m;
+int g[N][N], d[N][N];
+
+int floyd() {
+  int res = INF;
+  for (int k = 1; k <= n; k++) {
+    for (int i = 1; i < k; i++)
+      for (int j = i + 1; j < k; j++)
+        if (d[i][j] < INF && g[j][k] < INF && g[k][i] < INF)
+          res = min(res, d[i][j] + g[j][k] + g[k][i]);
+    for (int i = 1; i <= n; i++)
+      for (int j = i + 1; j <= n; j++)
+        d[i][j] = d[j][i] = min(d[i][j], d[i][k] + d[k][j]);
+  }
+
+  return res;
+}
+
+int main() {
+  memset(g, 0x3f, sizeof g);
+  scanf("%d%d", &n, &m);
+  for (int i = 1; i <= n; i++) g[i][i] = 0;
+  while (m--) {
+    int a, b, c;
+    scanf("%d%d%d", &a, &b, &c);
+    g[a][b] = g[b][a] = min(g[a][b], c);
+  }
+
+  memcpy(d, g, sizeof g);
+
+  int res = floyd();
+  res < INF ? printf("%d\n", res) : puts("No solution.");
+}
+```
+
+
 
 ### 拓扑排序
 
