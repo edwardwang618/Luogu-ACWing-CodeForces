@@ -1064,6 +1064,82 @@ bool query(string s, string p) {
 }
 ```
 
+### KMP
+
+Q：给定两个字符串$s$和$p$， 问$p$是否是$s$的子串，如果是，返回$p$在$s$中所有出现的位置。字符串下标从$1$开始。
+
+A：朴素版KMP
+
+```cpp
+#include <iostream>
+using namespace std;
+
+const int N = 1e6 + 10;
+int n, m;
+char p[N], s[N];
+int ne[N];
+
+void build_ne() {
+  for (int i = 2, j = 0; i <= m; i++) {
+    while (j && p[i] != p[j + 1]) j = ne[j];
+    if (p[i] == p[j + 1]) j++;
+    ne[i] = j;
+  }
+}
+
+int main() {
+  cin >> m >> p + 1 >> n >> s + 1;
+
+  build_ne();
+
+  for (int i = 1, j = 0; i <= n; i++) {
+    while (j && s[i] != p[j + 1]) j = ne[j];
+    if (s[i] == p[j + 1]) j++;
+    if (j == m) {
+      printf("%d ", i - m + 1);
+      j = ne[j];
+    }
+  }
+}
+```
+
+Q：给定两个字符串$s$和$p$， 问$p$是否是$s$的子串，如果是，返回$p$在$s$中第一次出现的位置。字符串下标从$1$开始。
+
+A：优化版KMP
+
+```cpp
+#include <iostream>
+using namespace std;
+
+const int N = 1e6 + 10;
+int n, m;
+char p[N], s[N];
+int ne[N];
+
+void build_ne() {
+  for (int i = 2, j = 0; i <= m; i++) {
+    while (j && p[i] != p[j + 1]) j = ne[j];
+    if (p[i] == p[j + 1]) j++;
+    ne[i] = i < m && p[i + 1] != p[j + 1] ? j : ne[j];
+  }
+}
+
+int main() {
+  cin >> m >> p + 1 >> n >> s + 1;
+
+  build_ne();
+
+  for (int i = 1, j = 0; i <= n; i++) {
+    while (j && s[i] != p[j + 1]) j = ne[j];
+    if (s[i] == p[j + 1]) j++;
+    if (j == m) {
+      printf("%d ", i - m + 1);
+      j = ne[j];
+    }
+  }
+}
+```
+
 ### 后缀数组
 
 Q：给定一个字符串$s$，求其后缀数组、名次数组和高度数组。
