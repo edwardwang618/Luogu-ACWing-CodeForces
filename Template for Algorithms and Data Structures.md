@@ -3841,6 +3841,8 @@ int main() {
 
 ### 有向图的强连通分量
 
+#### 缩点
+
 Q：给定一个有向图，$n$个顶点，$m$条边，求其强连通分量，建出缩点后的图。
 
 A：
@@ -3913,7 +3915,7 @@ int main() {
 
 ### 无向图的双连通分量
 
-例题（割点）
+#### 割点
 
 Q：给定一个无向图，求割点总数，并将所有割点按编号从小到大输出。
 
@@ -3970,6 +3972,74 @@ int main() {
     for (int i = 1; i <= n; i++)
         if (cut[i])
             printf("%d ", i);
+}
+```
+
+### 二分图
+
+#### 二分图最大匹配
+
+Q：给定一个二分图，其中左半部包含$n_1$个点（编号$1\sim n_1$），右半部包含$n_2$个点（编号$1\sim n_2$），二分图共包含$m$条边。数据保证任意一条边的两个端点都不可能在同一部分中。求该二分图的最大匹配，返回匹配数。
+
+A：匈牙利算法
+
+```cpp
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+const int N = 510, M = 100010;
+
+int n1, n2, m;
+int h[N], e[M], ne[M], idx;
+// match[i]存的是右边的点i与左边哪个点匹配的。match[i] = 0说明还未匹配
+int match[N];
+bool st[N];
+
+void add(int a, int b) {
+    e[idx] = b, ne[idx] = h[a], h[a] = idx++;
+}
+
+// 返回从v出发是否能找到一条增广路
+bool dfs(int v) {
+    for (int i = h[v]; ~i; i = ne[i]) {
+        int j = e[i];
+        if (!st[j]) {
+            st[j] = true;
+            // 如果走到了非匹配点，那已经找到了一条增广路，将其与v匹配并返回true；
+            // 如果走到了匹配点j，那就看从j的匹配点出发能不能走出一条增广路，如果能，
+            // 也可以将v与j匹配并返回true；否则不做新匹配，匹配保持原样
+            if (!match[j] || dfs(match[j])) {
+                match[j] = v;
+                return true;
+            }
+        }
+    }
+	
+	// 否则说明从v出发找不到增广路，返回false
+    return false;
+}
+
+int main() {
+    cin >> n1 >> n2 >> m;
+
+    memset(h, -1, sizeof h);
+
+    while (m--) {
+        int a, b;
+        cin >> a >> b;
+        add(a, b);
+    }
+
+    int res = 0;
+    for (int i = 1; i <= n1; i++) {
+        memset(st, 0, sizeof st);
+        // 如果从i能找到增广路，就能增加匹配数，将匹配数加1
+        if (dfs(i)) res++;
+    }
+
+    cout << res << endl;
+    return 0;
 }
 ```
 
