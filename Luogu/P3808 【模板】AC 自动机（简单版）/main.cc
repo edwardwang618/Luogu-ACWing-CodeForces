@@ -1,12 +1,12 @@
 #include <iostream>
-#include <cstring>
 using namespace std;
 
-const int N = 1e4 + 10, S = 55, M = 1e6 + 10;
+const int N = 1e7 + 10;
 int n;
-int tr[N * S][26], cnt[N * S], idx;
-char s[M];
-int q[N * S], ne[N * S];
+int tr[N][26], cnt[N], idx;
+bool vis[N];
+char s[N];
+int q[N], ne[N];
 
 void insert() {
   int p = 0;
@@ -26,12 +26,13 @@ void build() {
   while (hh < tt) {
     int t = q[hh++];
     for (int i = 0; i < 26; i++) {
-      int p = tr[t][i];
-      if (!p) tr[t][i] = tr[ne[t]][i];
-      else {
-        ne[p] = tr[ne[t]][i];
-        q[tt++] = p;
-      }
+      int c = tr[t][i];
+      if (!c) continue;
+      int j = ne[t];
+      while (j && !tr[j][i]) j = ne[j];
+      if (tr[j][i]) j = tr[j][i];
+      ne[c] = j;
+      q[tt++] = c;
     }
   }
 }
@@ -40,12 +41,14 @@ int query() {
   int res = 0;
   for (int i = 0, j = 0; s[i]; i++) {
     int t = s[i] - 'a';
-    j = tr[j][t];
+    while (j && !tr[j][t]) j = ne[j];
+    if (tr[j][t]) j = tr[j][t];
 
     int p = j;
-    while (p) {
+    while (p && !vis[p]) {
       res += cnt[p];
       cnt[p] = 0;
+      vis[p] = true;
       p = ne[p];
     }
   }
@@ -54,22 +57,13 @@ int query() {
 }
 
 int main() {
-  int T;
-  scanf("%d", &T);
-  while (T--) {
-    memset(tr, 0, sizeof tr);
-    memset(cnt, 0, sizeof cnt);
-    memset(ne, 0, sizeof ne);
-    idx = 0;
-
-    scanf("%d", &n);
-    for (int i = 0; i < n; i++) {
-      scanf("%s", s);
-      insert();
-    }
-
-    build();
+  scanf("%d", &n);
+  for (int i = 0; i < n; i++) {
     scanf("%s", s);
-    printf("%d\n", query());
+    insert();
   }
+
+  build();
+  scanf("%s", s);
+  printf("%d\n", query());
 }

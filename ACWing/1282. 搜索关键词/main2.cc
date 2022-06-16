@@ -26,12 +26,13 @@ void build() {
   while (hh < tt) {
     int t = q[hh++];
     for (int i = 0; i < 26; i++) {
-      int p = tr[t][i];
-      if (!p) tr[t][i] = tr[ne[t]][i];
-      else {
-        ne[p] = tr[ne[t]][i];
-        q[tt++] = p;
-      }
+      int c = tr[t][i];
+      if (!c) continue;
+      int j = ne[t];
+      while (j && !tr[j][i]) j = ne[j];
+      if (tr[j][i]) j = tr[j][i];
+      ne[c] = j;
+      q[tt++] = c;
     }
   }
 }
@@ -40,7 +41,8 @@ int query() {
   int res = 0;
   for (int i = 0, j = 0; s[i]; i++) {
     int t = s[i] - 'a';
-    j = tr[j][t];
+    while (j && !tr[j][t]) j = ne[j];
+    if (tr[j][t]) j = tr[j][t];
 
     int p = j;
     while (p) {
