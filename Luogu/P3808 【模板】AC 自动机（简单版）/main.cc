@@ -4,7 +4,6 @@ using namespace std;
 const int N = 1e7 + 10;
 int n;
 int tr[N][26], cnt[N], idx;
-bool vis[N];
 char s[N];
 int q[N], ne[N];
 
@@ -45,10 +44,9 @@ int query() {
     if (tr[j][t]) j = tr[j][t];
 
     int p = j;
-    while (p && !vis[p]) {
+    while (p && ~cnt[p]) {
       res += cnt[p];
-      cnt[p] = 0;
-      vis[p] = true;
+      cnt[p] = -1;
       p = ne[p];
     }
   }

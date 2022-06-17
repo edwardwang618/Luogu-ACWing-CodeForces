@@ -27,11 +27,8 @@ void build() {
     int t = q[hh++];
     for (int i = 0; i < 26; i++) {
       int p = tr[t][i];
-      if (!p) tr[t][i] = tr[ne[t]][i];
-      else {
-        ne[p] = tr[ne[t]][i];
-        q[tt++] = p;
-      }
+      if (p) ne[p] = tr[ne[t]][i], q[tt++] = p;
+      else tr[t][i] = tr[ne[t]][i];
     }
   }
 }
@@ -43,9 +40,9 @@ int query() {
     j = tr[j][t];
 
     int p = j;
-    while (p) {
+    while (p && ~cnt[p]) {
       res += cnt[p];
-      cnt[p] = 0;
+      cnt[p] = -1;
       p = ne[p];
     }
   }
