@@ -59,12 +59,14 @@ int main() {
     memset(f, 0x3f, sizeof f);
     f[0][0] = 0;
     for (int i = 0; i < m; i++)
-      for (int j = 0; j <= idx; j++)
+      for (int j = 0; j <= idx; j++) {
+        if (word[j] || f[i][j] == 0x3f3f3f3f) continue;
         for (int k = 0; k < 4; k++) {
-          int t = mp[s[i + 1]] != k;
           int p = tr[j][k];
-          if (!word[p]) f[i + 1][p] = min(f[i + 1][p], f[i][j] + t);
+          if (word[p]) continue;
+          f[i + 1][p] = min(f[i + 1][p], f[i][j] + (mp[s[i + 1]] != k));
         }
+      }
 
     int res = 0x3f3f3f3f;
     for (int i = 0; i <= idx; i++) res = min(res, f[m][i]);
