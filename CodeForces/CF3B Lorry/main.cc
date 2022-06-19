@@ -22,15 +22,10 @@ int main() {
   sort(v1 + 1, v1 + 1 + cnt1, greater<>());
   sort(v2 + 1, v2 + 1 + cnt2, greater<>());
 
-  for (int i = 1; i <= cnt2; i++) {
+  for (int i = 1; i <= cnt2; i++)
     pre[i] = v2[i].first + pre[i - 1];
-    if (i << 1 <= v) {
-      res = pre[i];
-      max2 = i;
-    }
-  }
 
-  for (int i = 1, sum = 0; i <= min(cnt1, v); i++) {
+  for (int i = 0, sum = 0; i <= min(cnt1, v); i++) {
     sum += v1[i].first;
     int j = min(v - i >> 1, cnt2);
     if (sum + pre[j] > res) {
