@@ -2440,7 +2440,7 @@ int main() {
 
 Q：给定一个数组$A$，每次允许挑出两个数字$x$和$y$，将它们合并为$x+y$放回数组，合并的代价就是$x+y$，问最后合并只剩下一个数字的时候，最小的总代价是多少。
 
-A：
+A：最小堆
 
 ```cpp
 int solve(vector<int> &A) {
@@ -2458,6 +2458,53 @@ int solve(vector<int> &A) {
     }
 
     return res;
+}
+```
+
+A：双队列 + 快读
+
+```cpp
+#include <iostream>
+using namespace std;
+
+const int M = 1e5 + 10, N = 1e7 + 10;
+int n, a[M];
+long res;
+long q1[N], q2[N];
+int hh1, tt1, hh2, tt2;
+
+void read(int &x) {
+  int si = 1;
+  x = 0;
+  char c = getchar();
+  if (c == '-') si = -1, c = getchar();
+  for (; '0' <= c && c <= '9'; c = getchar())
+    x = x * 10 + c - '0';
+  x *= si;
+}
+
+long find_min() {
+  long x;
+  if (hh2 == tt2 || hh1 < tt1 && q1[hh1] < q2[hh2]) x = q1[hh1++];
+  else x = q2[hh2++];
+  return x;
+}
+
+int main() {
+  read(n);
+  for (int i = 1, x; i <= n; i++) {
+    read(x);
+    a[x]++;
+  }
+
+  for (int i = 1; i < M; i++) while (a[i]) a[i]--, q1[tt1++] = i;
+  for (int i = 1; i < n; i++) {
+    long x = find_min(), y = find_min();
+    res += x + y;
+    q2[tt2++] = x + y;
+  }
+
+  printf("%ld\n", res);
 }
 ```
 
