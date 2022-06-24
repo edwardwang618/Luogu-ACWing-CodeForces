@@ -12,10 +12,10 @@ int main() {
 
   memset(f, -1, sizeof f);
   f[0] = 0;
-  for (int i = 1; i <= n; i++)
-    for (int j = 1; j <= 3; j++)
-      if (i >= a[j] && ~f[i - a[j]])
-        f[i] = max(f[i], f[i - a[j]] + 1);
-  
+  for (int i = 1; i <= 3; i++)
+    for (int j = a[i]; j <= n; j++)
+      if (~f[j - a[i]])
+        f[j] = max(f[j], f[j - a[i]] + 1);
+
   printf("%d\n", f[n]);
 }
