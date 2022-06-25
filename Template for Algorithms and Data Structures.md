@@ -1031,6 +1031,61 @@ bool query(int l, int r) {
 }
 ```
 
+#### 最长回文子串
+
+Q：给定字符串$s$， 求其最长回文子串的长度。
+
+A：二分 + 哈希
+
+```cpp
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+const int N = 2e6 + 10, P = 131;
+char s[N], t[N];
+int n, h[N], rh[N], pow[N];
+
+void init() {
+  pow[0] = 1;
+  h[0] = 0, rh[n + 1] = 0;
+  for (int i = 1; i <= n; i++) h[i] = h[i - 1] * P + s[i], pow[i] = pow[i - 1] * P;
+  for (int i = n; i; i--) rh[i] = rh[i + 1] * P + s[i];
+}
+
+int get_h(int l, int r) {
+  return h[r] - h[l - 1] * pow[r - l + 1];
+}
+
+int get_rh(int l, int r) {
+  return rh[l] - rh[r + 1] * pow[r - l + 1];
+}
+
+bool check(int len) {
+  len = len / 2 + 1;
+  for (int i = len; i + len - 1 <= n; i++)
+    if (get_h(i - len + 1, i) == get_rh(i, i + len - 1)) return true;
+  return false;
+}
+
+int main() {
+  scanf("%s", t + 1);
+  s[++n] = '$';
+  for (int i = 1; t[i]; i++) s[++n] = t[i], s[++n] = '$';
+  init();
+  int l = 1, r = n;
+  while (l < r) {
+    int mid = l + (r - l + 1 >> 1);
+    if (check(mid)) l = mid;
+      else r = mid - 1;
+  }
+
+  printf("%d\n"l / 2);
+}
+```
+
+
+
 ### 序列自动机
 
 Q：给定一个字符串$s$，要求应答若干次询问，每次询问问某个字符串$p$是否是$s$的子序列。题目保证只含英文小写字母。
@@ -1181,8 +1236,8 @@ void get_sa() {
 void get_height() {
   for (int i = 1, k = 0; i <= n; i++) {
     if (rk[i] == 1) continue;
-    int j = sa[rk[i] - 1];
 	if (k) k--;
+    int j = sa[rk[i] - 1];
     while (i + k <= n && j + k <= n && s[i + k] == s[j + k]) k++;
     he[rk[i]] = k;
   }
@@ -1201,6 +1256,91 @@ int main() {
   puts("");
 
   return 0;
+}
+```
+
+Q：给定字符串$s$， 求其最长回文子串的长度。
+
+A：
+
+```cpp
+#include <iostream>
+#include <cstring>
+#include <cmath>
+using namespace std;
+
+const int N = 2e6 + 10, M = 23;
+int n, m;
+char s[N];
+int sa[N], rk[N], y[N], c[N], he[N];
+int f[N][M];
+
+void get_sa() {
+  for (int i = 1; i <= n; i++) c[rk[i] = s[i]]++;
+  for (int i = 2; i <= m; i++) c[i] += c[i - 1];
+  for (int i = n; i; i--) sa[c[rk[i]]--] = i;
+
+  for (int k = 1;; k <<= 1) {
+    int num = 0;
+    for (int i = n - k + 1; i <= n; i++) y[++num] = i;
+    for (int i = 1; i <= n; i++) if (sa[i] > k) y[++num] = sa[i] - k;
+    for (int i = 1; i <= m; i++) c[i] = 0;
+    for (int i = 1; i <= n; i++) c[rk[i]]++;
+    for (int i = 2; i <= m; i++) c[i] += c[i - 1];
+    for (int i = n; i; i--) sa[c[rk[y[i]]]--] = y[i];
+    swap(rk, y);
+    rk[sa[1]] = num = 1;
+    for (int i = 2; i <= n; i++)
+      rk[sa[i]] = y[sa[i]] == y[sa[i - 1]] && y[sa[i] + k] == y[sa[i - 1] + k] ? num : ++num;
+    if (num == n) break;
+    m = num;
+  }
+}
+
+void get_height() {
+  for (int i = 1, k = 0; i <= n; i++) {
+    if (rk[i] == 1) continue;
+    if (k) k--;
+    int j = sa[rk[i] - 1];
+    while (i + k <= n && j + k <= n && s[i + k] == s[j + k]) k++;
+    he[rk[i]] = k;
+  }
+}
+
+void init() {
+  for (int i = 1; i <= n; i++) f[i][0] = he[i];
+  for (int j = 1; j <= log2(n); j++)
+    for (int i = 1; i + (1 << j) - 1 <= n; i++)
+      f[i][j] = min(f[i][j - 1], f[i + (1 << j - 1)][j - 1]);
+}
+
+int query(int l, int r) {
+  if (l > r) swap(l, r);
+  l++;
+  int j = log2(r - l + 1);
+  return min(f[l][j], f[r - (1 << j) + 1][j]);
+}
+
+int main() {
+  scanf("%s", s + 1);
+  n = strlen(s + 1), m = 'z';
+  s[n + 1] = '$';
+  for (int i = 1; i <= n; i++) s[n + 1 + i] = s[n - i + 1];
+  n = n * 2 + 1;
+  s[n + 1] = 0;
+
+  get_sa();
+  get_height();
+
+  init();
+
+  int res = 0;
+  for (int i = 1; i <= n / 2; i++) {
+    res = max(res, query(rk[i], rk[n - i + 1]) * 2 - 1);
+    if (i > 1) res = max(res, query(rk[i], rk[n - i + 2]) * 2);
+  }
+
+  printf("%d\n", res);
 }
 ```
 
