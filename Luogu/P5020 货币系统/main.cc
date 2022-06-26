@@ -4,17 +4,16 @@
 using namespace std;
 
 const int N = 110, M = 25010;
-int n;
-int a[N];
+int n, a[N];
 bool f[M];
 
 int main() {
   int T;
-  cin >> T;
+  scanf("%d", &T);
   while (T--) {
-    cin >> n;
-    for (int i = 1; i <= n; i++) cin >> a[i];
-    sort(a + 1, a + n + 1);
+    scanf("%d", &n);
+    for (int i = 1; i <= n; i++) scanf("%d", &a[i]);
+    sort(a + 1, a + 1 + n);
 
     memset(f, 0, sizeof f);
     f[0] = true;
@@ -22,12 +21,10 @@ int main() {
     int res = 0;
     for (int i = 1; i <= n; i++) {
       if (!f[a[i]]) res++;
-      for (int j = a[i]; j <= a[n]; j++)
-        f[j] |= f[j - a[i]];
+      for (int j = 0; j <= a[n] - a[i]; j++)
+        f[j + a[i]] |= f[j];
     }
 
-    cout << res << endl;
+    printf("%d\n", res);
   }
-
-  return 0;
 }
