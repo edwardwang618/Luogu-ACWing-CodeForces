@@ -4,7 +4,7 @@ using namespace std;
 
 const int N = 110, M = 1e4 + 10;
 int t, n, m;
-int p[N][N], f[N][M];
+int p[N][N], f[M];
 
 int main() {
   scanf("%d%d%d", &t, &n, &m);
@@ -13,14 +13,13 @@ int main() {
       scanf("%d", &p[i][j]);
 
   for (int i = 1; i < t; i++) {
-    memset(f, 0, sizeof f);
+    fill(f, f + m + 1, m);
     for (int j = 1; j <= n; j++)
       for (int c = 0; c <= m; c++) {
-        f[j][c] = f[j - 1][c];
         if (c >= p[i][j] && p[i + 1][j] - p[i][j] > 0) 
-          f[j][c] = max(f[j][c], f[j][c - p[i][j]] + p[i + 1][j] - p[i][j]);
+          f[c] = max(f[c], f[c - p[i][j]] + p[i + 1][j] - p[i][j]);
       }
-    m += f[n][m];
+    m = f[m];
   }
 
   printf("%d\n", m);
