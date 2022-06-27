@@ -1,3 +1,5 @@
+#include <string>
+#include <vector>
 using namespace std;
 
 struct TreeNode {
@@ -10,6 +12,7 @@ struct TreeNode {
 class Solution {
 public:
   bool hasSubtree(TreeNode *pRoot1, TreeNode *pRoot2) {
+    if (!pRoot2) return false;
     string s1, s2;
     dfs(pRoot1, s1);
     dfs(pRoot2, s2);
@@ -21,10 +24,9 @@ public:
 
   bool kmp(string &s, string &p, vector<int> &ne) {
     int n = s.size() - 1, m = p.size() - 1;
-    if (!m) return false;
     for (int i = 1, j = 0; i <= n; i++) {
-      while (j && s[i] != p[j + 1]) j = ne[j];
-      if (s[i] == p[j + 1]) j++;
+      while (j && s[i] != p[j + 1] && p[j + 1] != '$') j = ne[j];
+      if (s[i] == p[j + 1] || p[j + 1] == '$') j++;
       if (j == m) return true;
     }
     return false;
@@ -42,7 +44,11 @@ public:
   }
 
   void dfs(TreeNode *x, string &s) {
-    if (!x) return;
+    if (!x) {
+      s += "$,";
+      return;
+    }
+
     s += to_string(x->val) + ',';
     dfs(x->left, s);
     dfs(x->right, s);
