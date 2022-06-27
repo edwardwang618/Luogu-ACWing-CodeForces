@@ -15,10 +15,9 @@ int main() {
   for (int i = 1; i < t; i++) {
     fill(f, f + m + 1, m);
     for (int j = 1; j <= n; j++)
-      for (int c = 0; c <= m; c++) {
+      for (int c = 0; c <= m; c++)
         if (c >= p[i][j] && p[i + 1][j] - p[i][j] > 0) 
           f[c] = max(f[c], f[c - p[i][j]] + p[i + 1][j] - p[i][j]);
-      }
     m = f[m];
   }
 
