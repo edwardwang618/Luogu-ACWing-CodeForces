@@ -54,7 +54,7 @@ void pushdown(int u) {
 }
 
 void build(int u, int l, int r) {
-  tr[u] = {l, r, nw[r], 0};
+  tr[u] = {l, r, nw[l], 0};
   if (l == r) return;
   int mid = l + r >> 1;
   build(u << 1, l, mid), build(u << 1 | 1, mid + 1, r);
@@ -83,7 +83,6 @@ long query(int u, int l, int r) {
   if (r > mid) res += query(u << 1 | 1, l, r);
   return res;
 }
-
 
 void update_path(int u, int v, int k) {
   while (top[u] != top[v]) {
@@ -124,9 +123,12 @@ int main() {
     scanf("%d%d", &a, &b);
     add(a, b), add(b, a);
   }
-  dfs1(1, -1, 1);
+
+  dfs1(1, 1, 1);
   dfs2(1, 1);
+
   build(1, 1, n);
+  
   scanf("%d", &m);
   while (m--) {
     int t, u, v, k;
