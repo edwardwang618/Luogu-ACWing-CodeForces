@@ -75,7 +75,7 @@ void update(int u, int l, int r, int k) {
 }
 
 long query(int u, int l, int r) {
-  if (l <= tr[u].l && r >= tr[u].r) return tr[u].sum;
+  if (l <= tr[u].l && tr[u].r <= r) return tr[u].sum;
   pushdown(u);
   int mid = tr[u].l + tr[u].r >> 1;
   long res = 0;
@@ -115,8 +115,8 @@ long query_tree(int u) {
 }
 
 int main() {
-  scanf("%d", &n);
   memset(h, -1, sizeof h);
+  scanf("%d", &n);
   for (int i = 1; i <= n; i++) scanf("%d", &w[i]);
   for (int i = 1; i < n; i++) {
     int a, b;
@@ -124,7 +124,7 @@ int main() {
     add(a, b), add(b, a);
   }
 
-  dfs1(1, 1, 1);
+  dfs1(1, 1, 0);
   dfs2(1, 1);
 
   build(1, 1, n);
