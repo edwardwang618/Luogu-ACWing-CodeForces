@@ -6,28 +6,28 @@ const int N = 100010, M = 2 * N;
 int res = N;
 int n;
 int h[N], e[M], ne[M], idx;
-bool visited[N];
+bool vis[N];
 
 void add(int a, int b) {
     e[idx] = b, ne[idx] = h[a], h[a] = idx++;
 }
 
 int dfs(int u) {
-    visited[u] = true;
+    vis[u] = true;
 
-    int count = 1, cur_res = 0;
+    int cnt = 1, cur_res = 0;
     for (int i = h[u]; i != -1; i = ne[i]) {
         int j = e[i];
-        if (!visited[j]) {
+        if (!vis[j]) {
             int s = dfs(j);
             cur_res = max(cur_res, s);
-            count += s;
+            cnt += s;
         }
     }
 
-    cur_res = max(cur_res, n - count);
+    cur_res = max(cur_res, n - cnt);
     res = min(res, cur_res);
-    return count;
+    return cnt;
 }
 
 int main() {
