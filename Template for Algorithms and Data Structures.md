@@ -226,8 +226,8 @@ int quick_select(vector<int> &A, int l, int r, int k) {
     }
 
     if (k <= j) return quick_select(A, l, j, k);
-    else if (k >= i) return quick_select(A, i, r, k);
-    else return A[k];
+    if (k >= i) return quick_select(A, i, r, k);
+    return A[k];
 }
 
 int quick_select(vector<int> &A, int k) {
@@ -1486,7 +1486,6 @@ int query(vector<int> &A, int l, int r) {
 struct TreeNode {
     int val;
     TreeNode *left, *right;
-
     TreeNode(int val) : val(val), left(nullptr), right(nullptr) {}
 }
 ```
@@ -4877,6 +4876,8 @@ int main() {
 }
 ```
 
+### 筛质数
+
 
 
 ### 康托展开
@@ -4988,6 +4989,48 @@ int main() {
     scanf("%ld%ld%ld", &a, &b, &p);
     printf("%ld\n", qadd(a, b, p));
 
+    return 0;
+}
+```
+
+### 中位数
+
+Q：给定$n$个数$a_0,a_1,...,a_{n-1}$，求一个数$x$使得$\sum_i |a_i-x|$最小，返回这个总距离。
+
+A：
+
+```cpp
+#include <iostream>
+using namespace std;
+
+const int N = 100010;
+int a[N];
+
+int quick_select(int l, int r, int idx) {
+	if (l == r) return a[l];
+    int i = l, j = r;
+    int m = a[l + (r - l >> 1)];
+    while (i <= j) {
+        while (a[i] < m) i++;
+        while (a[j] > m) j--;
+        if (i <= j) swap(a[i++], a[j--]);
+    }
+    
+    if (idx <= j) return quick_select(l, j, idx);
+    if (idx >= i) return quick_select(i, r, idx);
+    return a[idx];
+}
+
+int main() {
+    int n;
+    cin >> n;
+    for (int i = 0; i < n; i++) cin >> a[i];
+
+    int res = 0;
+    int x = quick_select(0, n - 1, n / 2);
+    for (int i = 0; i < n; i++) res += abs(a[i] - x);
+
+    cout << res << endl;
     return 0;
 }
 ```

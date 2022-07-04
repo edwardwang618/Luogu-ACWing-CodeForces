@@ -11,16 +11,12 @@ int quick_select(int l, int r, int idx) {
     while (i <= j) {
         while (a[i] < piv) i++;
         while (a[j] > piv) j--;
-        if (i <= j) {
-            swap(a[i], a[j]);
-            i++;
-            j--;
-        }
+        if (i <= j) swap(a[i++], a[j--]);
     }
 
     if (idx <= j) return quick_select(l, j, idx);
-    else if (idx >= i) return quick_select(i, r, idx);
-    else return a[idx];
+    if (idx >= i) return quick_select(i, r, idx);
+    return a[idx];
 }
 
 int main() {
