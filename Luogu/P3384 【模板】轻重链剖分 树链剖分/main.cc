@@ -63,7 +63,7 @@ void build(int u, int l, int r) {
 }
 
 void update(int u, int l, int r, long k) {
-  if (l <= tr[u].l && r >= tr[u].r) {
+  if (l <= tr[u].l && tr[u].r <= r) {
     tr[u].add = (tr[u].add + k) % P;
     tr[u].sum = (tr[u].sum + k * (tr[u].r - tr[u].l + 1)) % P;
     return;
