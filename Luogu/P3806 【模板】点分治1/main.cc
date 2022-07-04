@@ -3,7 +3,7 @@
 #include <unordered_set>
 using namespace std;
 
-const int N = 1e4 + 10, M = N << 1, K = 1e7 + 10;
+const int N = 1e4 + 10, M = N << 1;
 int n, m;
 int h[N], e[M], ne[M], w[M], idx;
 int sz[N], dist[N], pd;

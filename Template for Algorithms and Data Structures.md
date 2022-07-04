@@ -4843,6 +4843,42 @@ int main() {
 
 ## 数学
 
+### 分解质因数
+
+Q：给定一个正整数$n$，求其质数分解，每行格式为$p_i\ i$，表示质因子$p_i$的指数为$i$。
+
+A：
+
+```cpp
+#include <iostream>
+using namespace std;
+
+void divide(int n) {
+  for (int i = 2; i <= n / i; i++) {
+    if (n % i == 0) {
+      int c = 0;
+      while (n % i == 0) {
+        n /= i;
+        c++;
+      }
+
+      printf("%d %d\n", i, c);
+    }
+  }
+
+  if (n > 1) printf("%d %d\n", n, 1);
+}
+
+int main() {
+  int x;
+  cin >> x;
+
+  divide(x);
+}
+```
+
+
+
 ### 康托展开
 
 Q：求$1\sim N$的一个给定全排列在所有$1 \sim N$全排列中的排名。结果对$998244353$取模。
