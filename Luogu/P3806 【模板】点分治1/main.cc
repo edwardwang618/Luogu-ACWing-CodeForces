@@ -10,7 +10,6 @@ int sz[N], dist[N], pd;
 bool vis[N];
 int query[110];
 bool res[110];
-
 unordered_set<int> se;
 
 void add(int a, int b, int c) {
@@ -71,10 +70,11 @@ void dfs(int u) {
         }
     }
     for (int l = 0; l < pd; l++) se.insert(dist[l]);
-    for (int j = 1; j <= m; j++) {
-      if (res[j]) continue;
-      if (se.count(query[j])) res[j] = true;
-    }
+  }
+
+  for (int j = 1; j <= m; j++) {
+    if (res[j]) continue;
+    if (se.count(query[j])) res[j] = true;
   }
 
   for (int i = h[u]; ~i; i = ne[i]) dfs(e[i]);
