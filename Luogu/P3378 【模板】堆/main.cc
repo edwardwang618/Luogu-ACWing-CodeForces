@@ -6,9 +6,9 @@ int n;
 int h[N], sz;
 
 void sift_up(int k) {
-  while (k > 1 && h[k] < h[k >> 1]) {
-    swap(h[k], h[k >> 1]);
-    k >>= 1;
+  while (k > 1 && h[k] < h[k / 2]) {
+    swap(h[k], h[k / 2]);
+    k /= 2;
   }
 }
 

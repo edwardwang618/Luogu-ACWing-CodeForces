@@ -3111,7 +3111,7 @@ int main() {
 
 
 
-## 块状数组（分块）
+## 分块
 
 Q：给定一个长$n$的数组$A$，要求应答两种询问，第一种询问是将$A[l:r]$里的每个元素增加$x$，第二种询问是求子数组$A[l:r]$的和。
 
@@ -5319,6 +5319,31 @@ int main() {
 
     cout << res << endl;
     return 0;
+}
+```
+
+### 博弈论
+
+#### Nim游戏
+
+Q：甲乙两个人玩取石子游戏，有$n$堆石子，两人轮流取，每次取的人可以在任一堆石子里取任意个石子扔掉，可以一次取完，但不能不取。问先取者是否有必胜策略。
+
+A：
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int main() {
+  int n;
+  scanf("%d", &n);
+  int res = 0;
+  while (n--) {
+    int x;
+    scanf("%d", &x);
+    res ^= x;
+  }
+  res ? puts("Yes") : puts("No");
 }
 ```
 
