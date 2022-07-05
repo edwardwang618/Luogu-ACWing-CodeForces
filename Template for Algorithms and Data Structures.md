@@ -4943,7 +4943,169 @@ int main() {
 }
 ```
 
+### 约数
 
+#### 求所有约数
+
+Q：给定一个正整数$n$，求其所有约数，要求从小到大打印出来。
+
+A：
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+vector<int> get_divisors(int n) {
+    vector<int> res;
+    for (int i = 1; i <= n / i; i++) 
+        if (n % i == 0) {
+            res.push_back(i);
+            if (i != n / i) res.push_back(n / i);
+        }
+    
+    sort(res.begin(), res.end());
+    return res;
+}
+
+int main() {
+    int n;
+    cin >> n;
+    while (n--) {
+        int x;
+        cin >> x;
+
+        vector<int> res = get_divisors(x);
+        for (int i : res) cout << i << ' ';
+        cout << endl;
+    }
+
+    return 0;
+}
+```
+
+#### 约数个数
+
+Q：给定一个正整数$n$，求其所有正约数的个数，答案模$10^9+7$。
+
+A：
+
+```cpp
+#include <iostream>
+#include <unordered_map>
+using namespace std;
+
+const int MOD = 1e9 + 7;
+unordered_map<int, int> map;
+
+void divide(int n) {
+    for (int i = 2; i <= n / i; i++) {
+        if (n % i == 0) {
+            int c = 0;
+            while (n % i == 0) {
+                c++;
+                n /= i;
+            }
+            
+            map[i] += c;
+        }
+    }
+
+    if (n >= 2) map[n]++;
+}
+
+int main() {
+    int x;
+    cin >> x;
+
+    divide(x);
+
+    long res = 1;
+    for (auto p : map) res = res * (p.second + 1) % MOD;
+    cout << res << endl;
+
+    return 0;
+}
+```
+
+#### 约数之和
+
+Q：给定一个正整数$n$，求其所有正约数的和，答案模$10^9+7$。
+
+A：
+
+```cpp
+#include <iostream>
+#include <unordered_map>
+using namespace std;
+
+const int MOD = 1e9 + 7;
+unordered_map<int, int> map;
+
+void divide(int n) {
+    for (int i = 2; i <= n / i; i++) {
+        if (n % i == 0) {
+            int c = 0;
+            while (n % i == 0) {
+                c++;
+                n /= i;
+            }
+            
+            map[i] += c;
+        }
+    }
+
+    if (n >= 2) map[n]++;
+}
+
+int main() {
+    int x;
+    cin >> x;
+
+    divide(x);
+
+    long res = 1;
+    for (auto pa : map) {
+        int p = pa.first, a = pa.second;
+        long t = 1;
+        while (a--) t = (t * p + 1) % MOD;
+        res = res * t % MOD;
+    }
+
+    cout << res << endl;
+
+    return 0;
+}
+```
+
+### 最大公约数
+
+Q：给定两个整数$a$和$b$，求其最大公约数。
+
+A：
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int gcd(int a, int b) {
+    return b ? gcd(b, a % b) : a; 
+}
+
+int main() {
+    int n;
+    cin >> n;
+
+    while (n--) {
+        int a, b;
+        cin >> a >> b;
+        cout << gcd(a, b) << endl;
+    }
+
+    return 0;
+}
+```
 
 ### 康托展开
 

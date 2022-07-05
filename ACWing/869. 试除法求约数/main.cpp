@@ -23,10 +23,7 @@ int main() {
         cin >> x;
 
         vector<int> res = get_divisors(x);
-        for (int i : res) {
-            cout << i << ' ';
-        }
-
+        for (int i : res) cout << i << ' ';
         cout << endl;
     }
 

@@ -2,6 +2,7 @@
 #include <unordered_map>
 using namespace std;
 
+const int MOD = 1e9 + 7;
 unordered_map<int, int> map;
 
 void divide(int n) {
@@ -30,12 +31,8 @@ int main() {
         divide(x);
     }
 
-    long res = 1, MOD = 1e9 + 7;
-    for (pair<int, int> p : map) {
-        res *= p.second + 1;
-        res %= MOD;
-    }
-
+    long res = 1;
+    for (auto p : map) res = res * (p.second + 1) % MOD;
     cout << res << endl;
 
     return 0;
