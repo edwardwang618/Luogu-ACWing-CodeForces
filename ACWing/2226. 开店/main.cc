@@ -10,17 +10,16 @@ int h[N], e[M], ne[M], w[M], idx;
 int age[N];
 bool vis[N];
 struct Father {
-    int u, num;
-    long dist;
+  int u, num;
+  long dist;
 };
 vector<Father> f[N];
 struct Son {
-    int age;
-    long dist;
-
-    bool operator<(const Son &t) const {
-      return age < t.age;
-    }
+  int age;
+  long dist;
+  bool operator<(const Son &t) const {
+    return age < t.age;
+  }
 };
 vector<Son> son[N][3];
 
@@ -86,7 +85,7 @@ void dfs(int u) {
 
 long query(int u, int l, int r) {
   long res = 0;
-  for (auto &t: f[u]) {
+  for (auto &t : f[u]) {
     int g = age[t.u];
     if (l <= g && g <= r) res += t.dist;
     for (int i = 0; i < 3; i++) {
