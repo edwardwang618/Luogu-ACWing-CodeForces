@@ -117,10 +117,10 @@ void merge() {
 int main() {
   for (int i = 1; i < M; i++) q[tt++] = i;
   scanf("%d", &n);
-  char op[10];
   str[1] = '>';
   insert(1);
   move(1);
+  char op[10];
   while (n--) {
     int a;
     scanf("%s", op);
