@@ -3119,67 +3119,56 @@ A：
 
 ```cpp
 #include <iostream>
-#include <cstring>
-#include <algorithm>
 #include <cmath>
 using namespace std;
 
-const int N = 1e5 + 10, M = sqrt(N);
+const int N = 100010, M = 350;
 int n, m, len;
-long A[N];
-long sum[N / M + 1], add[N / M + 1];
+long add[M], sum[M];
+int w[N];
+int bel[N];
 
-int get(int i) {
-    return i / len;
+void change(int l, int r, int d) {
+  if (bel[l] == bel[r]) for (int i = l; i <= r; i++) w[i] += d, sum[bel[i]] += d;
+  else {
+    int i = l, j = r;
+    while (bel[i] == bel[l]) w[i++] += d, sum[bel[l]] += d;
+    while (bel[j] == bel[r]) w[j--] += d, sum[bel[r]] += d;
+    for (int k = bel[i]; k <= bel[j]; k++) sum[k] += len * d, add[k] += d;
+  }
 }
 
 long query(int l, int r) {
-    long res = 0;
-    if (get(l) == get(r)) for (int i = l; i <= r; i++) res += A[i] + add[get(l)];
-    else {
-        int i = l, j = r;
-        while (get(i) == get(l)) res += A[i++] + add[get(l)];
-        while (get(j) == get(r)) res += A[j--] + add[get(r)];
-        for (int k = get(i); k <= get(j); k++) res += sum[k];
-    }
-    
-    return res;
-}
+  long res = 0;
+  if (bel[l] == bel[r]) for (int i = l; i <= r; i++) res += w[i] + add[bel[i]];
+  else {
+    int i = l, j = r;
+    while (bel[i] == bel[l]) res += w[i++] + add[bel[l]];
+    while (bel[j] == bel[r]) res += w[j--] + add[bel[r]];
+    for (int k = bel[i]; k <= bel[j]; k++) res += sum[k];
+  }
 
-void modify(int l, int r, long x) {
-    if (get(l) == get(r)) for (int i = l; i <= r; i++) A[i] += x, sum[get(i)] += x;
-    else {
-        int i = l, j = r;
-        while (get(i) == get(l)) A[i++] += x, sum[get(l)] += x;
-        while (get(j) == get(r)) A[j--] += x, sum[get(r)] += x;
-        for (int k = get(i); k <= get(j); k++) add[k] += x, sum[k] += len * x;
-    }
+  return res;
 }
 
 int main() {
-    scanf("%d%d", &n, &m);
-    len = sqrt(n);
-    for (int i = 1; i <= n; i++) {
-        scanf("%ld", &A[i]);
-        sum[get(i)] += A[i];
-    }
+  scanf("%d%d", &n, &m);
+  len = sqrt(n);
+  for (int i = 1; i <= n; i++) {
+    scanf("%d", &w[i]);
+    bel[i] = i / len;
+    sum[bel[i]] += w[i];
+  }
 
-    while (m--) {
-        char op[2];
-        scanf("%s", op);
-        if (*op == 'Q') {
-            int l, r;
-            scanf("%d%d", &l, &r);
-            printf("%ld\n", query(l, r));
-        } else {
-            int l, r;
-            long x;
-            scanf("%d%d%ld", &l, &r, &x);
-            modify(l, r, x);
-        }
-    }
-
-    return 0;
+  char op[2];
+  int l, r, d;
+  while (m--) {
+    scanf("%s%d%d", op, &l, &r);
+    if (op[0] == 'C') {
+      scanf("%d", &d);
+      change(l, r, d);
+    } else printf("%ld\n", query(l, r));
+  }
 }
 ```
 

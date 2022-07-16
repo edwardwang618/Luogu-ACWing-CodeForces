@@ -1,61 +1,63 @@
 #include <iostream>
 #include <queue>
-#include <unordered_map>
+#include <unordered_set>
+
 using namespace std;
-
 const int N = 6;
-
-int n;
 string a[N], b[N];
-int res;
+int n;
 
-bool extend(queue<string>& q, unordered_map<string, int>& da, unordered_map<string, int>& db, string a[], string b[]) {
-    string t = q.front();
-    q.pop();
+bool one_step(queue<string> &qa, unordered_set<string> &sa, unordered_set<string> &sb, string a[], string b[]) {
+  for (int sz = qa.size(); sz; sz--) {
+    string s = qa.front();
+    qa.pop();
+    for (int i = 0; i < s.size(); i++)
+      for (int j = 0; j < n; j++)
+        if (i + a[j].size() <= s.size() && s.substr(i, a[j].size()) == a[j]) {
+          string ne = s.substr(0, i) + b[j] + s.substr(i + a[j].size());
+          if (sb.count(ne)) return true;
+          if (sa.count(ne)) continue;
+          sa.insert(ne);
+          qa.push(ne);
+        }
+  }
 
-    for (int i = 0; i < t.size(); i++)
-        for (int j = 0; j < n; j++)
-            if (t.substr(i, a[j].size()) == a[j]) {
-                string ne = t.substr(0, i) + b[j] + t.substr(i + a[j].size());
-                if (da.count(ne)) continue;
-                da[ne] = da[t] + 1;
-
-                if (db.count(ne)) {
-                    res = da[ne] + db[ne];
-                    return true;
-                }
-
-                q.push(ne);
-            }
-
-    return false;
+  return false;
 }
 
-int bfs(string A, string B) {
-    unordered_map<string, int> da, db;
-    da[A] = db[B] = 0;
+int bfs(string &A, string &B) {
+  if (A == B) return 0;
 
-    queue<string> qa, qb;
-    qa.push(A), qb.push(B);
+  queue<string> qa, qb;
+  unordered_set<string> visa, visb;
+  qa.push(A);
+  visa.insert(A);
+  qb.push(B);
+  visb.insert(B);
 
-    while (qa.size() && qb.size()) {
-        if (qa.size() <= qb.size()) {
-            if (extend(qa, da, db, a, b)) return res;
-        } else if (extend(qb, db, da, b, a)) return res;
-    }
+  int step = 0;
+  while (qa.size() && qb.size()) {
+    step++;
+    if (step > 10) break;
+    if (qa.size() <= qb.size()) {
+      if (one_step(qa, visa, visb, a, b)) return step;
+    } else if (one_step(qb, visb, visa, b, a)) return step;
+  }
 
-    return 11;
+  return 11;
 }
 
 int main() {
-    string A, B;
-    cin >> A >> B;
+  string A, B;
+  cin >> A >> B;
+  while (cin >> a[n] >> b[n]) {
+    n++;
+    if (n == 6) break;
+  }
 
-    while (cin >> a[n] >> b[n]) n++;
+  int step = bfs(A, B);
+  if (step > 10) puts("NO ANSWER!");
+  else printf("%d\n", step);
 
-    int res = bfs(A, B);
-    if (res > 10) cout << "NO ANSWER!" << endl;
-    else cout << res << endl;
-
-    return 0;
+  return 0;
 }
