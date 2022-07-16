@@ -3174,6 +3174,185 @@ int main() {
 
 
 
+## 块状链表
+
+Q：实现一个文本编辑器，可以做如下操作：
+
+1、将光标移到第$k$个字符之后。如果$k=0$，则移到文本开头；
+
+2、在光标处插入长度为$n$的字符串，光标位置不变；
+
+3、删除光标后$n$个字符，光标位置不变；
+
+4、输出光标后$n$个字符，光标位置不变；
+
+5、光标前移一个字符；
+
+6、光标后移一个字符。
+
+题目保证每次操作都合法。插入的时候，插入字符串可能包含空格，可以忽略之，只考虑ASCII码位于$[32, 126]$的字符。
+
+对于每条指令$4$输出答案。
+
+A：
+
+```cpp
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+const int N = 2000, M = 2010;
+int n, x, y;
+struct Node {
+    char s[N + 1];
+    int c, l, r;
+} p[M];
+char str[2000010];
+// 内存复用
+int q[M], tt;
+
+// 0号Node是边界Node，其实起始位置是0号点的下一个节点
+void move(int k) {
+  x = p[0].r;
+  while (k > p[x].c) k -= p[x].c, x = p[x].r;
+  y = k;
+}
+
+void add(int x, int u) {
+  p[u].r = p[x].r, p[p[u].r].l = u;
+  p[x].r = u, p[u].l = x;
+}
+
+void del(int u) {
+  p[p[u].l].r = p[u].r;
+  p[p[u].r].l = p[u].l;
+  p[u].l = p[u].r = p[u].c = 0;
+  q[tt++] = u;
+}
+
+void insert(int k) {
+  if (y < p[x].c) {
+    int u = q[--tt];
+    for (int i = y + 1; i <= p[x].c; i++)
+      p[u].s[++p[u].c] = p[x].s[i];
+    p[x].c = y;
+    add(x, u);
+  }
+  int cur = x;
+  for (int i = 1; i <= k; ) {
+    int u = q[--tt];
+    while (p[u].c < N && i <= k)
+      p[u].s[++p[u].c] = str[i++];
+    add(cur, u);
+    cur = u;
+  }
+}
+
+void remove(int k) {
+  if (p[x].c - y >= k) {
+    for (int i = y + k + 1, j = y + 1; i <= p[x].c; )
+      p[x].s[j++] = p[x].s[i++];
+    p[x].c -= k;
+  } else {
+    k -= p[x].c - y;
+    p[x].c = y;
+    while (p[x].r && k >= p[p[x].r].c) {
+      int u = p[x].r;
+      k -= p[u].c;
+      del(u);
+    }
+    int u = p[x].r;
+    for (int i = 1, j = k + 1; j <= p[u].c; ) p[u].s[i++] = p[u].s[j++];
+    p[u].c -= k;
+  }
+}
+
+void get(int k) {
+  if (p[x].c - y >= k)
+    for (int i = y + 1; i <= y + k; i++) putchar(p[x].s[i]);
+  else {
+    for (int i = y + 1; i <= p[x].c; i++) putchar(p[x].s[i]);
+    k -= p[x].c - y;
+    int cur = x;
+    while (p[cur].r && k >= p[p[x].r].c) {
+      int u = p[cur].r;
+      for (int i = 1; i <= p[u].c; i++) putchar(p[u].s[i]);
+      k -= p[u].c;
+      cur = u;
+    }
+    int u = p[cur].r;
+    for (int i = 1; i <= k; i++) putchar(p[u].s[i]);
+  }
+  puts("");
+}
+
+void prev() {
+  if (y > 1) y--;
+  else {
+    x = p[x].l;
+    y = p[x].c;
+  }
+}
+
+void next() {
+  if (y < p[x].c) y++;
+  else {
+    x = p[x].r;
+    y = 1;
+  }
+}
+
+void merge() {
+  for (int i = p[0].r; i; i = p[i].r) {
+    while (p[i].r && p[i].c + p[p[i].r].c <= N) {
+      int r = p[i].r;
+      for (int j = p[i].c + 1, k = 1; k <= p[r].c; )
+        p[i].s[j++] = p[r].s[k++];
+      if (x == r) x = i, y += p[i].c;
+      p[i].c += p[r].c;
+      del(r);
+    }
+  }
+}
+
+int main() {
+  for (int i = 1; i < M; i++) q[tt++] = i;
+  scanf("%d", &n);
+  char op[10];
+  // 哨兵
+  str[1] = '>';
+  insert(1);
+  move(1);
+  while (n--) {
+    int a;
+    scanf("%s", op);
+    if (!strcmp(op, "Move")) {
+      scanf("%d", &a);
+      move(a + 1);
+    } else if (!strcmp(op, "Insert")) {
+      scanf("%d", &a);
+      int i = 1, k = a;
+      while (a) {
+        str[i] = getchar();
+        if (32 <= str[i] && str[i] <= 126) i++, a--;
+      }
+      insert(k);
+      merge();
+    } else if (!strcmp(op, "Delete")) {
+      scanf("%d", &a);
+      remove(a);
+      merge();
+    } else if (!strcmp(op, "Get")) {
+      scanf("%d", &a);
+      get(a);
+    } else if (!strcmp(op, "Prev")) prev();
+    else next();
+  }
+}
+```
+
+
+
 ## 树链剖分
 
 Q：给定一棵树，树中包含$n$个节点（编号$1∼n$），其中第$i$个节点的权值为$a_i$。初始时，$1$号节点为树的根节点。现在要对该树进行$m$次操作，操作分为以下$4$种类型：
