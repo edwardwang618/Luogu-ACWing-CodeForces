@@ -3395,7 +3395,7 @@ int main() {
     q[i].id = i;
   }
   
-  sort(q, q + m, [](const Query &a, const Query &b) {
+  sort(q, q + m, [&](Query &a, Query &b) {
     int i = a.l / len, j = b.l / len;
     if (i != j) return i < j;
     if (i & 1) return a.r < b.r;
@@ -5031,7 +5031,7 @@ int stk[N], top;
 // in_stk[v]表示v是否在栈里
 bool in_stk[N];
 // id[v]表示点v在第几个强连通分量里，scc_cnt表示已经找到了多少个强连通分量
-int id[N], scc_cnt, sz[N];
+int id[N], scc_cnt;
 
 void add(int a, int b, int h[]) {
     e[idx] = b, ne[idx] = h[a], h[a] = idx++;
@@ -5070,8 +5070,7 @@ int main() {
     }
 
     for (int i = 1; i <= n; i++) 
-        if (!dfn[i])
-            tarjan(i);
+        if (!dfn[i]) tarjan(i);
     
     for (int i = 1; i <= n; i++)
         for (int j = h[i]; ~j; j = ne[j])
