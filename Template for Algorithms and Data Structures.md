@@ -3980,6 +3980,64 @@ int main() {
 
 ## 搜索
 
+### 深度优先搜索
+
+#### 树的重心
+
+Q：给定一棵$n$个节点的树，求其重心。
+
+A：
+
+```cpp
+#include <iostream>
+#include <cstring>
+
+using namespace std;
+
+const int N = 100010, M = 2 * N;
+int n;
+int h[N], e[M], ne[M], idx;
+int res;
+
+void add(int a, int b) {
+  e[idx] = b, ne[idx] = h[a], h[a] = idx++;
+}
+
+int dfs(int u, int from) {
+  int cnt = 1, ms = 0;
+  for (int i = h[u]; ~i; i = ne[i]) {
+    int v = e[i];
+    if (v != from) {
+      int s = dfs(v, u);
+      if (!s) return 0;
+      ms = max(ms, s);
+      cnt += s;
+    }
+  }
+
+  ms = max(ms, n - cnt);
+  if (ms <= n / 2) {
+    res = ms;
+    return 0;
+  }
+
+  return cnt;
+}
+
+int main() {
+  memset(h, -1, sizeof h);
+  scanf("%d", &n);
+  for (int i = 0; i < n - 1; i++) {
+    int a, b;
+    scanf("%d%d", &a, &b);
+    add(a, b), add(b, a);
+  }
+
+  dfs(1, -1);
+  printf("%d\n", res);
+}
+```
+
 ### A*
 
 例题1
@@ -4933,7 +4991,7 @@ int main() {
 
 Q：给定一棵有根的多叉树，再给定若干次询问，每次询问$a$和$b$这两个点的最近公共祖先的节点编号。
 
-A：
+A：倍增
 
 ```cpp
 #include <iostream>
@@ -5003,8 +5061,74 @@ int main() {
         scanf("%d%d", &a, &b);
         printf("%d\n", lca(a, b));
     }
+}
+```
 
-    return 0;
+A：树链剖分
+
+```cpp
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+const int N = 5e5 + 10, M = N << 1;
+int n, qu;
+int h[N], e[M], ne[M], idx;
+int dep[N], son[N], top[N], sz[N], fa[N];
+int root;
+
+void add(int a, int b) {
+  e[idx] = b, ne[idx] = h[a], h[a] = idx++;
+}
+
+void dfs1(int u, int from, int depth) {
+  dep[u] = depth, sz[u] = 1, fa[u] = from;
+  for (int i = h[u]; ~i; i = ne[i]) {
+    int v = e[i];
+    if (v == from) continue;
+    dfs1(v, u, depth + 1);
+    sz[u] += sz[v];
+    if (sz[son[u]] < sz[v]) son[u] = v;
+  }
+}
+
+void dfs2(int u, int from, int t) {
+  top[u] = t;
+  if (!son[u]) return;
+  dfs2(son[u], u, t);
+  for (int i = h[u]; ~i; i = ne[i]) {
+    int v = e[i];
+    if (v == son[u] || v == from) continue;
+    dfs2(v, u, v);
+  }
+}
+
+int lca(int u, int v) {
+  while (top[u] != top[v]) {
+    // 谁的重链头深度深，谁就向上跳
+    if (dep[top[u]] < dep[top[v]]) swap(u, v);
+    u = fa[top[u]];
+  }
+  return dep[u] < dep[v] ? u : v;
+}
+
+int main() {
+  memset(h, -1, sizeof h);
+  scanf("%d%d%d", &n, &qu, &root);
+  for (int i = 1; i <= n - 1; i++) {
+    int a, b;
+    scanf("%d%d", &a, &b);
+    add(a, b), add(b, a);
+  }
+
+  dfs1(root, -1, 0);
+  dfs2(root, -1, root);
+
+  for (int i = 0; i < qu; i++) {
+    int a, b;
+    scanf("%d%d", &a, &b);
+    printf("%d\n", lca(a, b));
+  }
 }
 ```
 
