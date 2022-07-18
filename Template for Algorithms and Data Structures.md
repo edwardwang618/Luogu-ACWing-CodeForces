@@ -5030,8 +5030,8 @@ int dfn[N], low[N], timestamp;
 int stk[N], top;
 // in_stk[v]表示v是否在栈里
 bool in_stk[N];
-// id[v]表示点v在第几个强连通分量里，scc_cnt表示已经找到了多少个强连通分量
-int id[N], scc_cnt;
+// id[v]表示点v在第几个强连通分量里，scc_cnt表示已经找到了多少个强连通分量，sz[v]表示点v所在的缩点的点个数
+int id[N], scc_cnt, sz[N];
 
 void add(int a, int b, int h[]) {
     e[idx] = b, ne[idx] = h[a], h[a] = idx++;
@@ -5055,6 +5055,7 @@ void tarjan(int u) {
             y = stk[--top];
             in_stk[y] = false;
             id[y] = scc_cnt;
+            sz[scc_cnt]++;
         } while (y != u);
     }
 }
