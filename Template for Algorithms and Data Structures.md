@@ -2916,7 +2916,7 @@ int main() {
 
 ## 树状数组
 
-例题1（区间查询、单点修改）
+### 区间查询、单点修改
 
 Q：给定一个长$n$的数组$A$，要求应答两种询问，第一种询问是将$A$的第$i$个元素增加$x$，第二种询问是求子数组$A[l:r]$的和。
 
@@ -2970,7 +2970,7 @@ int main() {
 }
 ```
 
-例题2（区间修改、单点查询）
+### 区间修改、单点查询
 
 Q：给定一个长$n$的数组$A$，要求应答两种询问，第一种询问是将$A[l:r]$的每个数增加$x$，第二种询问是求$A[i]$。
 
@@ -3027,7 +3027,7 @@ int main() {
 }
 ```
 
-例题3（用树状数组实现平衡树）
+### 用树状数组实现平衡树
 
 Q：要求实现一个数据结构，可以进行如下操作：
 
@@ -3131,6 +3131,86 @@ int main() {
     }
 
     return 0;
+}
+```
+
+## 可持久化数据结构
+
+### 主席树
+
+Q：给定一个整数数组$A$，初始版本为版本$0$。接下来做若干次操作：
+
+1、将版本$i$的数组的第$k$个位置修改为数值$v$，并产生新的版本（新版本的编号为当前最新版本的编号加$1$）；
+
+2、询问版本$i$的数组的第$k$个位置的数值是多少，并产生新的版本。
+
+对询问$2$进行输出。
+
+A：
+
+```cpp
+#include <algorithm>
+#include <iostream>
+using namespace std;
+
+const int N = 1e6 + 10;
+int n, m;
+int a[N];
+struct Node {
+  int l, r, v;
+} tr[(N << 2) + N * 20];
+int root[N], idx;
+
+int build(int l, int r) {
+  int p = ++idx;
+  if (l == r) {
+    tr[p].v = a[l];
+    return p;
+  }
+
+  int mid = l + r >> 1;
+  tr[p].l = build(l, mid), tr[p].r = build(mid + 1, r);
+  return p;
+}
+
+int update(int p, int l, int r, int k, int v) {
+  int q = ++idx;
+  tr[q] = tr[p];
+  if (l == r) {
+    tr[q].v = v;
+    return q;
+  }
+
+  int mid = l + r >> 1;
+  if (k <= mid) tr[q].l = update(tr[q].l, l, mid, k, v);
+  else tr[q].r = update(tr[q].r, mid + 1, r, k, v);
+  
+  return q;
+}
+
+int query(int p, int l, int r, int k) {
+  if (l == r) return tr[p].v;
+  int mid = l + r >> 1;
+  if (k <= mid) return query(tr[p].l, l, mid, k);
+  else return query(tr[p].r, mid + 1, r, k);
+}
+
+int main() {
+  scanf("%d%d", &n, &m);
+  for (int i = 1; i <= n; i++) scanf("%d", &a[i]);
+
+  root[0] = build(1, n);
+  for (int i = 1; i <= m; i++) {
+    int vi, op, loc, val;
+    scanf("%d%d%d", &vi, &op, &loc);
+    if (op == 1) {
+      scanf("%d", &val);
+      root[i] = update(root[vi], 1, n, loc, val);
+    } else {
+      printf("%d\n", query(root[vi], 1, n, loc));
+      root[i] = root[vi];
+    }
+  }
 }
 ```
 

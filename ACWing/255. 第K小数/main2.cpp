@@ -2,7 +2,6 @@
 #include <cstring>
 #include <algorithm>
 #include <vector>
-
 using namespace std;
 
 const int N = 1e5 + 10;
