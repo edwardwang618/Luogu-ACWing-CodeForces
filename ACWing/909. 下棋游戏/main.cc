@@ -8,7 +8,6 @@ int n, m;
 int h[N], e[M], ne[M], idx;
 int f[N];
 
-
 void add(int a, int b) {
   e[idx] = b, ne[idx] = h[a], h[a] = idx++;
 }
