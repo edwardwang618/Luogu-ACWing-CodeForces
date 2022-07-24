@@ -1,6 +1,6 @@
 #include <iostream>
 #include <algorithm>
-#define lowbit(x) x & -x
+#define lowbit(x) (x & -x)
 using namespace std;
 
 const int N = 1e6 + 10;

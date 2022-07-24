@@ -1,20 +1,15 @@
 #include <iostream>
 using namespace std;
 
-const int N = 100010;
-int a[N];
+int n;
 
 int main() {
-    int n;
-    cin >> n;
-
-    int res = 0;
-    for (int i = 1; i <= n; i++) {
-        cin >> a[i];
-        res ^= a[i];
-    }
-
-    cout << (res == 0 ? "No" : "Yes") << endl;
-
-    return 0;
+  scanf("%d", &n);
+  int res = 0;
+  while (n--) {
+    int x;
+    scanf("%d", &x);
+    res ^= x;
+  }
+  res ? puts("Yes") : puts("No");
 }

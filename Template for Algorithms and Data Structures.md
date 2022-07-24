@@ -1121,6 +1121,8 @@ bool query(string s, string p) {
 
 ### KMP
 
+#### 询问子串位置
+
 Q：给定两个字符串$s$和$p$， 问$p$是否是$s$的子串，如果是，返回$p$在$s$中所有出现的位置。字符串下标从$1$开始。
 
 A：朴素版KMP
@@ -1192,6 +1194,29 @@ int main() {
       j = ne[j];
     }
   }
+}
+```
+
+#### 最短周期
+
+Q：给定一个非空字符串$s$，问其是否由其某个真子串重复若干次而得。如果是，返回最短周期长度；如果不是，返回$-1$。
+
+A：
+
+```cpp
+bool repeatedSubstringPattern(string s) {
+  int n = s.size();
+  s = ' ' + s;
+  int ne[n + 1];
+  ne[1] = 0;
+  for (int i = 2, j = 0; i <= n; i++) {
+    while (j && s[i] != s[j + 1]) j = ne[j];
+    if (s[i] == s[j + 1]) j++;
+    ne[i] = j;
+  }
+
+  if (ne[n] && n % (n - ne[n]) == 0) return ne[n];
+  else return -1;
 }
 ```
 
@@ -5760,6 +5785,52 @@ int main() {
 }
 ```
 
+### 组合数学
+
+#### 容斥原理
+
+公式：$$|S_1\cup S_2\cup...\cup S_n|=\sum_i |S_i|-\sum_{i_1<i_2}|S_{i_1}\cap S_{i_2}|+\sum_{i_1<i_2<i_3}|S_{i_1}\cap S_{i_2}\cap S_{i_3}|-...\\ +(-1)^{n-1}|S_1\cup S_2\cup...\cup S_n|$$
+
+Q：给定一个正整数$n$和$m$个不同的素数$p_1,...,p_m$，求$1\sim n$中能被这些素数其一整除的整数有多少个。
+
+A：
+
+```cpp
+#include <iostream>
+using namespace std;
+
+const int N = 20;
+int n, m;
+int p[N];
+
+int main() {
+  cin >> n >> m;
+  for (int i = 0; i < m; i++) cin >> p[i];
+
+  int res = 0;
+  for (int i = 1; i < 1 << m; i++) {
+    int prod = 1, cnt = 0;
+    for (int j = 0; j < m; j++)
+      if (i >> j & 1) {
+        cnt++;
+        if ((long)prod * p[j] > n) {
+          prod = -1;
+          break;
+        }
+        prod *= p[j];
+      }
+
+    if (prod != -1)
+      if (cnt % 2)
+        res += n / prod;
+      else
+        res -= n / prod;
+  }
+
+  cout << res << endl;
+}
+```
+
 ### 博弈论
 
 #### Nim游戏
@@ -5781,6 +5852,51 @@ int main() {
     scanf("%d", &x);
     res ^= x;
   }
+  res ? puts("Yes") : puts("No");
+}
+```
+
+#### SG函数
+
+Q：甲乙两个人玩取石子游戏，有$n$堆石子和一个数字构成的集合$S$，两人轮流取，每次取的人可以在任一堆石子里取$S$中的数个石子扔掉，不能不取。问先取者是否有必胜策略。
+
+A：
+
+```cpp
+#include <cstring>
+#include <iostream>
+#include <unordered_set>
+using namespace std;
+
+const int N = 110, M = 10010;
+int k, n;
+int s[N], f[M];
+
+int sg(int x) {
+  if (f[x] != -1) return f[x];
+
+  unordered_set<int> set;
+  for (int i = 0; i < k; i++)
+    if (x >= s[i]) set.insert(sg(x - s[i]));
+
+  for (int i = 0;; i++)
+    if (!set.count(i)) return f[x] = i;
+}
+
+int main() {
+  cin >> k;
+  for (int i = 0; i < k; i++) cin >> s[i];
+  cin >> n;
+
+  memset(f, -1, sizeof f);
+
+  int res = 0;
+  for (int i = 0; i < n; i++) {
+    int x;
+    cin >> x;
+    res ^= sg(x);
+  }
+
   res ? puts("Yes") : puts("No");
 }
 ```
