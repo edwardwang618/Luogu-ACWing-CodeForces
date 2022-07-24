@@ -3163,27 +3163,24 @@ int root[N], idx;
 
 int build(int l, int r) {
   int p = ++idx;
-  if (l == r) {
-    tr[p].v = a[l];
-    return p;
+  if (l == r) tr[p].v = a[l];
+  else {
+    int mid = l + r >> 1;
+    tr[p].l = build(l, mid), tr[p].r = build(mid + 1, r);
   }
-
-  int mid = l + r >> 1;
-  tr[p].l = build(l, mid), tr[p].r = build(mid + 1, r);
   return p;
 }
 
 int update(int p, int l, int r, int k, int v) {
   int q = ++idx;
   tr[q] = tr[p];
-  if (l == r) {
-    tr[q].v = v;
-    return q;
-  }
 
-  int mid = l + r >> 1;
-  if (k <= mid) tr[q].l = update(tr[q].l, l, mid, k, v);
-  else tr[q].r = update(tr[q].r, mid + 1, r, k, v);
+  if (l == r) tr[q].v = v;
+  else {
+    int mid = l + r >> 1;
+    if (k <= mid) tr[q].l = update(tr[q].l, l, mid, k, v);
+    else tr[q].r = update(tr[q].r, mid + 1, r, k, v);
+  }
   
   return q;
 }
