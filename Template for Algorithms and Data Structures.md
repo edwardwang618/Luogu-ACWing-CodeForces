@@ -4084,6 +4084,118 @@ int main() {
 
 ### 深度优先搜索
 
+#### 排列组合
+
+Q：求$1\sim n$的所有组合，每个组合占一行，数字从小到大排列。
+
+A：
+
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int n;
+vector<int> a;
+bool vis[20];
+
+void dfs(int u) {
+    for (int i = 0; i < a.size(); i++)
+        printf("%d ", a[i]);
+    puts("");
+    
+    for (int i = u; i <= n; i++) {
+        a.push_back(i);
+        dfs(i + 1);
+        a.pop_back();
+    }
+}
+
+int main() {
+    scanf("%d", &n);
+    dfs(1);
+    
+    return 0;
+}
+```
+
+Q：在$1\sim n$中任意选$m$个数，求所有方案。每个方案占一行，数字从小到大排列。方案之间按字典序排列。题目保证$m\le n$。
+
+A：
+
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int n, m;
+vector<int> a;
+
+void dfs(int u, int cnt) {
+    if (cnt == m) {
+        for (int x : a) printf("%d ", x);
+        puts("");
+        return;
+    }
+    
+    if (u == n + 1) return;
+    
+    a.push_back(u);
+    dfs(u + 1, cnt + 1);
+    a.pop_back();
+    dfs(u + 1, cnt);
+}
+
+int main() {
+    scanf("%d%d", &n, &m);
+    dfs(1, 0);
+    return 0;
+}
+```
+
+Q：求$1\sim n$的所有排列，每个排列占一行。排列之间按字典序排列。
+
+A：
+
+```cpp
+#include <iostream>
+using namespace std;
+
+const int N = 10;
+int n;
+int a[N];
+bool st[N];
+
+void dfs(int idx) {
+    if (idx == n) {
+        for (int i = 0; i < n; i++)
+            cout << a[i] << ' ';
+        cout << endl;
+        return;
+    }
+
+    for (int i = 1; i <= n; i++) {
+        if (st[i]) continue;
+
+        a[idx] = i;
+        st[i] = true;
+        dfs(idx + 1);
+        st[i] = false;
+    }
+}
+
+int main() {
+    cin >> n;
+    dfs(0);
+
+    return 0;
+}
+```
+
+Q：（带重复排列）
+
+
+
 #### 树的重心
 
 Q：给定一棵$n$个节点的树，求其重心。
