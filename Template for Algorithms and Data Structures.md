@@ -6090,6 +6090,148 @@ int main() {
 }
 ```
 
+### 计算几何
+
+公式及常用代码：
+
+```cpp
+#include <cmath>
+double pi = acos(-1);
+
+const double eps = 1e-8;
+int sign(double x) {
+    if (fabs(x) < eps) return 0;
+    if (x < 0) return -1;
+    return 1;
+}
+int cmp(double x, double y) {
+    if (fabs(x - y) < eps) return 0;
+    if (x < y) return -1;
+    return 1;
+}
+```
+
+设三角形三条边长为$a,b,c$，对应的角为$A,B, C$，则：
+
+余弦定理：$a^2=b^2+c^2-2bc\cos A$。
+
+正弦定理：$\frac{a}{\sin A}=\frac{b}{\sin B}=\frac{c}{\sin C}$
+
+$\vec{a}=(x_1,y_1), \vec{b}=(x_2,y_2)$
+
+点积：$\vec{a}\cdot \vec{b}=|\vec{a}||\vec{b}|\cos \theta=x_1x_2+y_1y_2$
+
+叉积：$|\vec{a}\times \vec{b}|=|\vec{a}||\vec{b}||\sin \theta|=|x_1y_2-x_2y_1|$
+
+```cpp
+Point operator-(Point &a, Point &b) {
+  return {a.x - b.x, a.y - b.y};
+}
+
+double dot(Point a, Point b) {
+    return a.x * b.x + a.y * b.y;
+}
+double cross(Point a, Point b) {
+    return a.x * b.y - a.y * b.x;
+}
+double get_length(Point a) {
+    return sqrt(dot(a, a));
+}
+double get_angle(Point a, Point b) {
+    return acos(dot(a, b) / get_length(a) / get_length(b));
+}
+double area(Point a, Point b, Point c) {
+    return cross(b - a, c - a);
+}
+```
+
+将$\vec{a}$逆时针旋转$\theta$，得：
+
+$$\vec{b} = \vec{a}\begin{pmatrix} \cos\theta & \sin\theta \\-\sin\theta & \cos\theta \end{pmatrix}=(x_1,y_1)\begin{pmatrix} \cos\theta & \sin\theta \\-\sin\theta & \cos\theta \end{pmatrix}=(x_1\cos\theta-y_1\sin\theta, x_1\sin\theta+y_1\cos\theta)$$
+
+```cpp
+Point rotate(Point a, double theta) {
+    return {a.x * cos(theta) - a.y * sin(theta), a.x * sin(theta) + a.y * cos(theta)};
+}
+```
+
+直线的表示：
+
+一般式：$ax+by+c=0$
+
+点向式：$\vec{p}+t\vec{v}$
+
+斜截式：$y=kx+b$
+
+判断点在直线上：验证$(\vec{a}-\vec{p})\times \vec{v}=\vec{0}$
+
+求两条直线的交点：
+
+```cpp
+using Vector = Point;
+Vector operator*(double t, Vector& v) {
+    return {t * v.x, t * v.y};
+}
+Vector operator*(Vector& v, double t) {
+    return t * v;
+}
+bool operator==(Point a, Point b) {
+    return !cmp(a.x, b.x) && !cmp(a.y, b.y);
+}
+Point get_line_intersection(Point p, Vector v, Point q, Vector w) {
+    auto u = p - q;
+    double t = cross(w, u) / cross(v, w);
+    return p + t * v;
+}
+// p到直线a->b的距离
+double distance_to_line(Point p, Point a, Point b) {
+    Vector v1 = b - a, v2 = p - a;
+    return fabs(cross(v1, v2) / get_length(v1));
+}
+double distance_to_segment(Point p, Point a, Point b) {
+    if (a == b) return get_length(p - a);
+    Vector v1 = b - a, v2 = p - a, v3 = p - b;
+    if (sign(dot(v1, v2)) < 0) return get_length(v2);
+    if (sign(dot(v1, v3)) > 0) return get_length(v3);
+    return distance_to_line(p, a, b);
+}
+Point get_line_projection(Point p, Point a, Point b) {
+    Vector v = b - a;
+    return a + v * (dot(v, p - a)) / dot(v, v));
+}
+bool on_segment(Point p, Point a, Point b) {
+    return !sign(cross(p - a, p - b)) && sign(dot(p - a, p - b)) == -1;
+}
+bool segment_intersection(Point a1, Point a2, Point b1, Point b2) {
+    double c1 = cross(a2 - a1, b1 - a1), c2 = cross(a2 - a1, b2 - a1);
+    double c3 = cross(b2 - b1, a2 - b1), c4 = cross(b2 - b1, a1 - b1);
+    return sign(c1) * sign(c2) <= 0 && sign(c3) * sign(c4) <= 0;
+}
+```
+
+求凸多边形面积，其点按逆时针方向排列
+
+```cpp
+double polygon_area(Point p[], int n) {
+    double s = 0;
+    for (int i = 1; i + 1 < n; i++)
+        s += cross(p[i] - p[0], p[i + 1] - p[i]);
+   	return s / 2;
+}
+```
+
+判断一个点是否在一个多边形内：
+
+射线法：从该点任意做一条和所有边都不平行的射线，若交点个数为奇数，则在内，否则在外。
+
+判断一个点是否在一个凸多边形内：
+
+设每个点（边）逆时针排列，则只需要判断该点在每条边的左侧即可。
+
+皮克定理：
+
+设某个多边形的每个点都是整点，则其面积$s=a+\frac{b}{2}-1$，$a$为多边形内的整点个数，$b$是多边形边上的整点个数。
+
 
 
 ## 动态规划
