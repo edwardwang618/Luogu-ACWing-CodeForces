@@ -4254,13 +4254,13 @@ int main() {
 
 #### 剪枝
 
-Q：乔治拿来一组等长的木棒，将它们随机地砍断，使得每一节木棍的长度都不超过50 5050个长度单位。然后他又想把这些木棍恢复到为裁截前的状态，但忘记了初始时有多少木棒以及木棒的初始长度。请你设计一个程序，帮助乔治计算木棒的可能最小长度。每一节木棍的长度都用大于零的整数表示。
+Q：有一组等长的木棒，将它们随机地砍断，使得每一节木棍的长度都不超过$50$。想把这些木棍恢复到为裁截前的状态，但忘记了初始时有多少木棒以及木棒的初始长度。求木棒的可能最小长度。每一节木棍的长度都用大于零的整数表示。
 A：法1
 
 ```cpp
-#include <algorithm>
-#include <cstring>
 #include <iostream>
+#include <cstring>
+#include <algorithm>
 using namespace std;
 
 const int N = 70;
@@ -6142,6 +6142,78 @@ int main() {
   }
 
   cout << res << endl;
+}
+```
+
+#### 错排问题
+
+Q：某人写了$n$封信和$n$个信封，如果所有的信都装错了信封，求所有信都装错信封共有多少种不同情况。
+
+A：
+
+```cpp
+#include <iostream>
+using namespace std;
+const int N = 30;
+int n;
+long f[N];
+
+int main() {
+  scanf("%d", &n);
+  f[1] = 0, f[2] = 1;
+  for (int i = 3; i <= n; i++)
+    f[i] = (i - 1) * (f[i - 1] + f[i - 2]);
+  printf("%ld\n", f[n]);
+}
+```
+
+Q：某人写了$n$封信和$n$个信封，如果恰好有$m$封信装对了信封，求所有信都装错信封共有多少种不同情况。答案模$10^9+7$后返回。
+
+A：
+
+```cpp
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+const int N = 1e6 + 10, P = 1e9 + 7;
+long fac[N], f[N], inv[N];
+int n, m;
+
+long fast_pow(long x, int p) {
+  long res = 1;
+  while (p) {
+    if (p & 1) res = res * x % P;
+    x = x * x % P;
+    p >>= 1;
+  }
+  return res;
+}
+
+long inverse(int i) {
+  if (~inv[i]) return inv[i];
+  return inv[i] = fast_pow(fac[i], P - 2);
+}
+
+long comb(int n, int m) {
+  return fac[n] * inverse(m) % P * inverse(n - m) % P;
+}
+
+int main() {
+  memset(inv, -1, sizeof inv);
+  f[0] = 1, f[1] = 0;
+  fac[0] = fac[1] = 1;
+  for (int i = 2; i < N; i++) {
+    f[i] = (i - 1) * (f[i - 1] + f[i - 2]) % P;
+    fac[i] = fac[i - 1] * i % P;
+  }
+
+  int T;
+  scanf("%d", &T);
+  while (T--) {
+    scanf("%d%d", &n, &m);
+    printf("%ld\n", comb(n, m) * f[n - m] % P);
+  }
 }
 ```
 

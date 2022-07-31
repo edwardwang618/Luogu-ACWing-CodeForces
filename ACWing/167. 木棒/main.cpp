@@ -1,6 +1,6 @@
+#include <iostream>
 #include <algorithm>
 #include <cstring>
-#include <iostream>
 using namespace std;
 
 const int N = 70;
