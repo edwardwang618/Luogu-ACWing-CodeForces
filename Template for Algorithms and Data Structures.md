@@ -4252,6 +4252,131 @@ int main() {
 }
 ```
 
+#### 剪枝
+
+Q：乔治拿来一组等长的木棒，将它们随机地砍断，使得每一节木棍的长度都不超过50 5050个长度单位。然后他又想把这些木棍恢复到为裁截前的状态，但忘记了初始时有多少木棒以及木棒的初始长度。请你设计一个程序，帮助乔治计算木棒的可能最小长度。每一节木棍的长度都用大于零的整数表示。
+A：法1
+
+```cpp
+#include <algorithm>
+#include <cstring>
+#include <iostream>
+using namespace std;
+
+const int N = 70;
+int n;
+int a[N], len, sum;
+bool st[N];
+
+// dfs的定义是，正在放第u组，第u组已经放了l的长度，从start开始枚举，问能否放完
+// u是当前在放第几组，从0开始
+// l是第u组已经放了多长，start是第u组在枚举哪个木棒的时候从哪个木棒开始枚举，那个木棒的下标
+bool dfs(int u, int l, int start) {
+  if (u * len == sum) return true;
+  if (l == len) return dfs(u + 1, 0, 0);
+
+  // 组合型枚举
+  for (int i = start; i < n; i++) {
+    if (st[i]) continue;
+    if (l + a[i] > len) continue;
+    if (i > start && !st[i - 1] && a[i] == a[i - 1]) continue;
+
+    st[i] = true;
+    if (dfs(u, l + a[i], i + 1)) return true;
+    st[i] = false;
+
+    if (!l || l + a[i] == len) return false;
+  }
+
+  return false;
+}
+
+int main() {
+  while (cin >> n, n) {
+    sum = len = 0;
+    memset(st, 0, sizeof st);
+    for (int i = 0; i < n; i++) {
+      scanf("%d", &a[i]);
+      sum += a[i];
+    }
+
+    sort(a, a + n, greater<int>());
+    for (len = a[0]; len <= sum; len++)
+      if (sum % len == 0 && dfs(0, 0, 0)) {
+        printf("%d\n", len);
+        break;
+      }
+  }
+
+  return 0;
+}
+```
+
+A：法2
+
+```cpp
+#include <algorithm>
+#include <cstring>
+#include <iostream>
+using namespace std;
+
+const int N = 70;
+int n;
+int a[N], len, sum;
+// s[i]是第i组已经拼出的长度，g[i]是下标为i的小木棍放在了的组的下标
+int s[N], g[N];
+
+// u是当前枚举到了的小木棍的下标，cnt是已经有多少个非空组
+bool dfs(int u, int cnt) {
+  // 如果枚举完了，看一下cnt是否是sum / len，
+  // 如果是，说明得出了一个解，返回true
+  if (u == n) {
+    return cnt * len == sum;
+  }
+
+  // 如果开的组数过大，说明无解，返回false
+  if (cnt > sum / len) return false;
+
+  int start = 0;
+  // 如果当前小木棍和上一个小木棍等长，则其从上一个小木棍所在组及其之后开始枚举
+  if (u && a[u] == a[u - 1]) start = g[u - 1];
+
+  for (int i = start; i <= cnt; i++) {
+    if (s[i] + a[u] > len) continue;
+
+    s[i] += a[u];
+    g[u] = i;
+    if (dfs(u + 1, cnt + (i == cnt ? 1 : 0))) return true;
+    s[i] -= a[u];
+
+    // 如果a[u]放在首尾无解，则该分支无解
+    if (!s[i] || s[i] + a[u] == len) return false;
+  }
+
+  return false;
+}
+
+int main() {
+  while (cin >> n, n) {
+    sum = len = 0;
+    memset(s, 0, sizeof s);
+    for (int i = 0; i < n; i++) {
+      scanf("%d", &a[i]);
+      sum += a[i];
+    }
+
+    sort(a, a + n, greater<int>());
+    for (len = a[0]; len <= sum; len++)
+      if (sum % len == 0 && dfs(0, 0)) {
+        printf("%d\n", len);
+        break;
+      }
+  }
+
+  return 0;
+}
+```
+
 ### A*
 
 例题1

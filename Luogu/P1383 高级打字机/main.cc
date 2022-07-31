@@ -4,8 +4,8 @@ using namespace std;
 const int N = 1e5 + 10;
 int n;
 struct Node {
-    int l, r;
-    char ch;
+  int l, r;
+  char ch;
 } tr[(N << 2) + N * 17];
 int root[N], idx, len[N], ver;
 

@@ -10,11 +10,11 @@ int n, m;
 PLL a[N], b[N];
 int res[N];
 
-inline PLL operator-(PLL a, PLL b) {
+PLL operator-(PLL a, PLL b) {
   return {a.x - b.x, a.y - b.y};
 }
 
-inline long cross(PLL a, PLL b) {
+long cross(PLL a, PLL b) {
   return a.x * b.y - a.y * b.x;
 }
 
