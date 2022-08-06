@@ -48,7 +48,7 @@ int main() {
     else {
       x = find(x);
       if (!cmp(l[x], r[x])) swap(l[x], r[x]);
-      p[x] = l[x], p[l[x]] = l[x];
+      p[x] = p[l[x]] = l[x];
       merge(l[x], r[x]);
     }
   }
