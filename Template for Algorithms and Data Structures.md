@@ -4080,6 +4080,79 @@ int main() {
 
 
 
+## 左偏树
+
+Q：一开始有$n$个小根堆，每个堆包含且仅包含一个数。接下来需要支持两种操作：
+1、`1 x y`：将第$x$个数和第$y$个数所在的小根堆合并（若第$x$或第$y$个数已经被删除或第$x$和第$y$个数在用一个堆内，则无视此操作）。
+2、`2 x`：输出第$x$个数所在的堆最小数，并将这个最小数删除（若有多个最小数，优先删除先输入的；若第$x$个数已经被删除，则输出$-1$并无视删除操作）。
+
+A：
+
+```cpp
+#include <iostream>
+using namespace std;
+
+const int N = 1e5 + 10;
+int n, m;
+int v[N], d[N], l[N], r[N];
+int p[N];
+
+bool cmp(int x, int y) {
+  if (v[x] != v[y]) return v[x] < v[y];
+  return x < y;
+}
+
+int find(int x) {
+  if (p[x] != x) p[x] = find(p[x]);
+  return p[x];
+}
+
+int merge(int x, int y) {
+  if (!x || !y) return x ^ y;
+  if (!cmp(x, y)) swap(x, y);
+  r[x] = merge(r[x], y);
+  if (d[r[x]] > d[l[x]]) swap(l[x], r[x]);
+  d[x] = d[r[x]] + 1;
+  return x;
+}
+
+int main() {
+  scanf("%d%d", &n, &m);
+  for (int i = 1; i <= n; i++) {
+    p[i] = i;
+    d[i] = 1;
+    scanf("%d", &v[i]);
+  }
+
+  while (m--) {
+    int t, x, y;
+    scanf("%d%d", &t, &x);
+    if (t == 1) {
+      scanf("%d", &y);
+      if (!d[x] || !d[y]) continue;
+      x = find(x), y = find(y);
+      if (x == y) continue;
+      if (!cmp(x, y)) swap(x, y);
+      p[y] = x;
+      merge(x, y);
+    } else {
+      if (!d[x]) {
+        puts("-1");
+        continue;
+      }
+      x = find(x);
+      printf("%d\n", v[x]);
+      d[x] = 0;
+      if (r[x] && !cmp(l[x], r[x])) swap(l[x], r[x]);
+      p[x] = p[l[x]] = l[x];
+      merge(l[x], r[x]);
+    }
+  }
+}
+```
+
+
+
 ## 搜索
 
 ### 深度优先搜索
