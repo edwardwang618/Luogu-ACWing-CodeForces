@@ -2,26 +2,24 @@
 using namespace std;
 
 int euler(int x) {
-    int res = x;
-    for (int i = 2; i <= x / i; i++) {
-        if (x % i == 0) {
-            res = res / i * (i - 1);
-            while (x % i == 0) x /= i;
-        }
+  int res = x;
+  for (int i = 2; i <= x / i; i++) {
+    if (x % i == 0) {
+      res = res / i * (i - 1);
+      while (x % i == 0) x /= i;
     }
+  }
 
-    if (x >= 2) res = res / x * (x - 1);
-    return res;
+  if (x >= 2) res = res / x * (x - 1);
+  return res;
 }
 
 int main() {
-    int n;
-    cin >> n;
-    while (n--) {
-        int a;
-        cin >> a;
-        cout << euler(a) << endl;
-    }
-
-    return 0;
+  int n;
+  cin >> n;
+  while (n--) {
+    int a;
+    cin >> a;
+    cout << euler(a) << endl;
+  }
 }

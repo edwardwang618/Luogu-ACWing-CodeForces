@@ -5989,6 +5989,88 @@ int main() {
 }
 ```
 
+### 欧拉函数
+
+#### 欧拉函数
+
+公式：设$n$为正整数，欧拉函数$\phi(n)=|\{1\le k\le n:(k,n)=1\}|$，设$n$的质因子分解为$n=p_{1}^{k_1}p_{2}^{k_2}...p_{s}^{k_s}$有公式：$\phi(n)=n\prod_{i=1}^s (1-\frac{1}{p_i})$。若素数$p|n$，则$\phi(pn)=p\phi(n)$；否则$\phi(pn)=(p-1)\phi(n)$。
+
+Q：给定正整数$n$，求$\phi(n)$。
+
+A：
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int euler(int x) {
+  int res = x;
+  for (int i = 2; i <= x / i; i++) {
+    if (x % i == 0) {
+      res = res / i * (i - 1);
+      while (x % i == 0) x /= i;
+    }
+  }
+
+  if (x >= 2) res = res / x * (x - 1);
+  return res;
+}
+
+int main() {
+  int n;
+  cin >> n;
+  cout << euler(n) << endl;
+}
+```
+
+Q：给定正整数$n$，求$\sum_{i=1}^n\phi(i)$。
+
+A：欧拉筛法
+
+```cpp
+#include <iostream>
+using namespace std;
+
+const int N = 1000010;
+int n;
+int primes[N], cnt;
+int phi[N];
+bool st[N];
+
+long get_eulers(int n) {
+  phi[1] = 1;
+  for (int i = 2; i <= n; i++) {
+    if (!st[i]) {
+      primes[cnt++] = i;
+      phi[i] = i - 1;
+    }
+    for (int j = 0; primes[j] <= n / i; j++) {
+      st[primes[j] * i] = true;
+      if (i % primes[j] == 0) {
+        phi[i * primes[j]] = phi[i] * primes[j];
+        break;
+      }
+      phi[i * primes[j]] = phi[i] * (primes[j] - 1);
+    }
+  }
+
+  long res = 0;
+  for (int i = 1; i <= n; i++) res += phi[i];
+  return res;
+}
+
+int main() {
+  cin >> n;
+  cout << get_eulers(n) << endl;
+}
+```
+
+#### 欧拉定理、费马小定理
+
+定理：设$(a,n)=1$，$a,n$都是正整数，则$a^{\phi(n)}\equiv 1(\mod n)$。特殊地，设$p$为素数且$p$不整除$a$，则$a^{p-1}\equiv 1(\mod p)$。
+
+
+
 ### 最大公约数
 
 Q：给定两个整数$a$和$b$，求其最大公约数。
@@ -6068,11 +6150,9 @@ int main() {
 
 ### 快速幂
 
-例题（快速幂）
-
 Q：求$a^k$对$p$取模的值，其中$1\le a, k, p\le 10^9$。
 
-A：
+A：快速幂
 
 ```cpp
 #include <iostream>
@@ -6099,11 +6179,42 @@ int main() {
 }
 ```
 
-例题（龟速乘）
+Q：设$p$为素数，给定一个正整数$a$，求$a$在模$p$意义下的逆元。若不存在逆元则输出`impossible`。
+
+A：快速幂求逆元
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int fast_pow(int a, int k, int p) {
+    long res = 1;
+    while (k) {
+        if (k & 1) res = res * a % p;
+        
+        k >>= 1;
+        a = (long) a * a % p;
+    }
+
+    return (int) res;
+}
+
+int main() {
+    int a, p;
+    scanf("%d%d", &a, &p);
+        
+    if (a % p == 0) printf("impossible\n");
+    else {
+    	int res = fast_pow(a, p - 2, p);
+	    printf("%d\n", res);
+    }
+    return 0;
+}
+```
 
 Q：求$a\times b \bmod p$，其中$1\le a, b, p\le 10^{18}$。
 
-A：
+A：龟速乘
 
 ```cpp
 #include <iostream>
@@ -6176,7 +6287,7 @@ int main() {
 
 #### 容斥原理
 
-公式：$$|S_1\cup S_2\cup...\cup S_n|=\sum_i |S_i|-\sum_{i_1<i_2}|S_{i_1}\cap S_{i_2}|+\sum_{i_1<i_2<i_3}|S_{i_1}\cap S_{i_2}\cap S_{i_3}|-...\\ +(-1)^{n-1}|S_1\cup S_2\cup...\cup S_n|$$
+公式：$|S_1\cup S_2\cup...\cup S_n|=\sum_i |S_i|-\sum_{i_1<i_2}|S_{i_1}\cap S_{i_2}|+\sum_{i_1<i_2<i_3}|S_{i_1}\cap S_{i_2}\cap S_{i_3}|-...\\ +(-1)^{n-1}|S_1\cup S_2\cup...\cup S_n|$
 
 Q：给定一个正整数$n$和$m$个不同的素数$p_1,...,p_m$，求$1\sim n$中能被这些素数其一整除的整数有多少个。
 
