@@ -6069,13 +6069,62 @@ int main() {
 
 定理：设$(a,n)=1$，$a,n$都是正整数，则$a^{\phi(n)}\equiv 1(\mod n)$。特殊地，设$p$为素数且$p$不整除$a$，则$a^{p-1}\equiv 1(\mod p)$。
 
+定理：设$b\ge \phi(n)$，则$a^b\equiv a^{b \mod \phi(n)+\phi(n)}(\mod n)$。
 
+Q：给定正整数$a,b,m$，求$a^b\mod m$。
+
+A：
+
+```cpp
+#include <iostream>
+using namespace std;
+
+long a, b, m;
+
+long fast_pow() {
+  long res = 1;
+  while (b) {
+    if (b & 1) res = res * a % m;
+    b >>= 1L;
+    a = a * a % m;
+  }
+  return res;
+}
+
+int main() {
+  scanf("%ld%ld", &a, &m);
+  long phi = m, tmp = m;
+  for (int i = 2; i <= tmp / i; i++) {
+    if (tmp % i == 0) {
+      phi = phi / i * (i - 1);
+      while (tmp % i == 0) tmp /= i;
+    }
+  }
+
+  if (tmp > 1) phi = phi / tmp * (tmp - 1);
+
+  char ch;
+  bool flag = false;
+  while (!isdigit(ch = getchar()));
+  for (; isdigit(ch); ch = getchar()) {
+    b = b * 10 + ch - '0';
+    if (b >= phi) {
+      flag = true;
+      b %= phi;
+    }
+  }
+  if (flag) b += phi;
+  printf("%ld\n", fast_pow());
+}
+```
 
 ### 最大公约数
 
+#### 最大公约数
+
 Q：给定两个整数$a$和$b$，求其最大公约数。
 
-A：
+A：欧几里得算法
 
 ```cpp
 #include <iostream>
@@ -6096,6 +6145,72 @@ int main() {
     }
 
     return 0;
+}
+```
+
+#### 裴蜀定理
+
+Q：给定两个整数$a$和$b$，求一组解$(x,y)$使得$ax+by=\gcd(a,b)$。
+
+A：扩展欧几里得算法
+
+```cpp
+#include <iostream>
+using namespace std;
+
+void exgcd(int a, int b, int& x, int& y) {
+  if (!b) {
+    x = 1, y = 0;
+    return;
+  }
+
+  exgcd(b, a % b, y, x);
+  y -= a / b * x;
+}
+
+int main() {
+  int n;
+  cin >> n;
+
+  while (n--) {
+    int a, b, x, y;
+    cin >> a >> b;
+    exgcd(a, b, x, y);
+
+    printf("%d %d\n", x, y);
+  }
+}
+```
+
+#### 线性同余方程
+
+Q：给定正整数$a,b,m$，求一个解$x$使得$ax\equiv b(\mod m)$。
+
+A：
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int exgcd(int a, int b, int& x, int& y) {
+  if (!b) {
+    x = 1, y = 0;
+    return a;
+  }
+
+  int d = exgcd(b, a % b, y, x);
+  y -= a / b * x;
+  return d;
+}
+
+int main() {
+  int a, b, m;
+  scanf("%d%d%d", &a, &b, &m);
+  int x, y;
+  int d = exgcd(a, m, x, y);
+
+  if (b % d == 0) printf("%d\n", (long)x * (b / d) % m);
+  else puts("impossible");
 }
 ```
 
