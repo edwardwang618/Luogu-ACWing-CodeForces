@@ -309,6 +309,65 @@ int get_last_pos(vector<int> &A, int x) {
 
 
 
+## 双指针
+
+Q：给定两个升序数组$A$和$B$，给定一个数$x$，要求两个下标$i,j$使得$A[i]+B[j]=x$。题目保证解唯一。
+
+A：
+
+```cpp
+#include <iostream>
+using namespace std;
+
+const int N = 100010;
+int n, m, x;
+int a[N], b[N];
+
+int main() {
+  cin >> n >> m >> x;
+  for (int i = 0; i < n; i++) scanf("%d", &a[i]);
+  for (int i = 0; i < m; i++) scanf("%d", &b[i]);
+
+  for (int i = 0, j = m - 1; i < n; i++) {
+    while (j >= 0 && a[i] + b[j] > x) j--;
+    if (a[i] + b[j] == x) {
+      printf("%d %d\n", i, j);
+      break;
+    }
+  }
+}
+```
+
+Q：给定一个长$n$数组，找到最长的不含重复数字的子数组，输出其长度。
+
+A：
+
+```cpp
+#include <iostream>
+#include <unordered_map>
+using namespace std;
+
+const int N = 100010;
+int n, a[N];
+
+int main() {
+  cin >> n;
+  for (int i = 0; i < n; i++) scanf("%d", &a[i]);
+
+  int res = 0;
+  unordered_map<int, int> map;
+  for (int i = 0, j = 0; i < n; i++) {
+    map[a[i]]++;
+    while (j < i && map[a[i]] > 1) map[a[j++]]--;
+    res = max(res, i - j + 1);
+  }
+
+  cout << res << endl;
+}
+```
+
+
+
 ## 位运算
 
 ### 二进制1的个数

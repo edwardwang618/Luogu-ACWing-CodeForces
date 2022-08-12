@@ -30,7 +30,7 @@ int main() {
   while (!isdigit(ch = getchar()));
   for (; isdigit(ch); ch = getchar()) {
     b = b * 10 + ch - '0';
-    if (b >= phi) {
+    if (b > phi) {
       flag = true;
       b %= phi;
     }

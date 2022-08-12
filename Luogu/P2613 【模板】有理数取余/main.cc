@@ -1,5 +1,4 @@
 #include <iostream>
-
 using namespace std;
 
 const int P = 19260817;
