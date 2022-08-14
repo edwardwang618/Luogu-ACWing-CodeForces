@@ -10,8 +10,7 @@ int dfn[N], low[N], timestamp;
 int stk[N], top;
 bool in_stk[N];
 int id[N], scc_cnt, sz[N];
-int ind[N];
-int dist[N];
+int ind[N], dist[N];
 queue<int> q;
 
 void add(int a, int b, int c, int h[]) {
