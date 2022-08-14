@@ -25,8 +25,8 @@ int main() {
       int k;
       for (k = j; k <= i; k++)
         if (w[k] - w[j - 1] >= w[i] - w[k]) break;
-      
       k = min(k, i);
+
       for (int l = j; l <= i; l++)
         g[j][i] += abs(dis[k] - dis[l]) * (w[l] - w[l - 1]);
     }
