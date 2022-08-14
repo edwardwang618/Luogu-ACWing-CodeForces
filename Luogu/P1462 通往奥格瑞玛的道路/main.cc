@@ -22,9 +22,8 @@ int dijkstra(int maxf) {
   while (heap.size()) {
     auto t = heap.top(); heap.pop();
     int u = t.second;
-    long d = t.first;
     if (vis[u]) continue;
-    if (u == n) return dist[u];
+    if (u == n) break;
     vis[u] = true;
     for (int i = h[u]; ~i; i = ne[i]) {
       int v = e[i];
@@ -36,7 +35,7 @@ int dijkstra(int maxf) {
     }
   }
 
-  return -1;
+  return dist[n];
 }
 
 int main() {
@@ -56,8 +55,7 @@ int main() {
 
   while (l < r) {
     int mid = l + (r - l >> 1);
-    int d = dijkstra(mid);
-    if (~d && d <= b) r = mid;
+    if (dijkstra(mid) <= b) r = mid;
     else l = mid + 1;
   }
 

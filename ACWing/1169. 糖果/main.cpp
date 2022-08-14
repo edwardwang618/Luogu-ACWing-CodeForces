@@ -14,7 +14,6 @@ void add(int a, int b, int c) {
 }
 
 bool spfa() {
-    memset(dist, -0x3f, sizeof dist);
     dist[0] = 0;
     stk[top++] = 0;
     st[0] = true;
