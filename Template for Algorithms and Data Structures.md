@@ -827,11 +827,9 @@ vector<int> solve(vector<int> &A) {
 }
 ```
 
-### 单调栈+二分
-
 Q：给定数组$A$，要求返回数组$B$，其中$B[i]$是$A[i]$左边最远的比它小的数的下标，若不存在则令$B[i]=-1$。
 
-A：
+A：单调栈 + 二分
 
 ```cpp
 int bin_search(vector<int> &stk, int r, int x, vector<int> &A) {
@@ -2795,11 +2793,9 @@ int main() {
 
 ## 线段树
 
-例题1（区间查询、单点修改）
-
 Q：给定一个长$n$的数组$A$，要求应答两种询问，第一种询问是将$A$的第$i$个元素增加$x$，第二种询问是求子数组$A[l:r]$的和。
 
-A：
+A：区间查询、单点修改
 
 ```cpp
 #include <iostream>
@@ -2872,11 +2868,9 @@ int main() {
 }
 ```
 
-例题2（区间查询、区间修改）
-
 Q：给定一个长$n$的数组$A$，要求应答两种询问，第一种询问是将$A[l:r]$里的每个元素增加$x$，第二种询问是求子数组$A[l:r]$的和。
 
-A：
+A：区间查询、区间修改
 
 ```cpp
 #include <iostream>
@@ -2968,6 +2962,93 @@ int main() {
     }
 
     return 0;
+}
+```
+
+Q：给定一个长$n$的数组$A$，要求应答三种询问，第一种询问是将$A[l:r]$里的每个元素乘以$x$，第二种询问是将$A[l:r]$里的每个元素加上$x$，第三种询问是求子数组$A[l:r]$的和。要求输出所有第三种询问的答案。
+
+A：双懒标记
+
+```cpp
+#include <iostream>
+using namespace std;
+
+const int N = 1e5 + 10;
+int n, m;
+long p, a[N];
+struct Node {
+  int l, r;
+  long sum;
+  long mul, add;
+} tr[N << 2];
+
+void pushup(int u) {
+  tr[u].sum = (tr[u << 1].sum + tr[u << 1 | 1].sum) % p;
+}
+
+void update(Node &u, long mul, long add) {
+  u.mul = (u.mul * mul) % p;
+  u.add = (u.add * mul + add) % p;
+  u.sum = (u.sum * mul + add * (u.r - u.l + 1)) % p;
+}
+
+void pushdown(int u) {
+  update(tr[u << 1], tr[u].mul, tr[u].add);
+  update(tr[u << 1 | 1], tr[u].mul, tr[u].add);
+  tr[u].mul = 1, tr[u].add = 0;
+}
+
+void build(int u, int l, int r) {
+  tr[u] = {l, r, 0, 1, 0};
+  if (l == r) {
+    tr[u].sum = a[l];
+    return;
+  }
+  int mid = l + r >> 1;
+  build(u << 1, l, mid), build(u << 1 | 1, mid + 1, r);
+  pushup(u);
+}
+
+void modify(int u, int l, int r, long mul, long add) {
+  if (l <= tr[u].l && tr[u].r <= r) {
+    update(tr[u], mul, add);
+    return;
+  }
+
+  pushdown(u);
+  int mid = tr[u].l + tr[u].r >> 1;
+  if (l <= mid) modify(u << 1, l, r, mul, add);
+  if (r > mid) modify(u << 1 | 1, l, r, mul, add);
+  pushup(u);
+}
+
+long query(int u, int l, int r) {
+  if (l <= tr[u].l && tr[u].r <= r) return tr[u].sum;
+
+  pushdown(u);
+  long res = 0;
+  int mid = tr[u].l + tr[u].r >> 1;
+  if (l <= mid) res = (res + query(u << 1, l, r)) % p;
+  if (r > mid) res = (res + query(u << 1 | 1, l, r)) % p;
+  return res;
+}
+
+int main() {
+  scanf("%d%d%ld", &n, &m, &p);
+  for (int i = 1; i <= n; i++) scanf("%ld", &a[i]);
+  build(1, 1, n);
+  while (m--) {
+    int op, l, r;
+    long x;
+    scanf("%d%d%d", &op, &l, &r);
+    if (op == 1) {
+      scanf("%ld", &x);
+      modify(1, l, r, x, 0);
+    } else if (op == 2) {
+      scanf("%ld", &x);
+      modify(1, l, r, 1, x);
+    } else printf("%ld\n", query(1, l, r));
+  }
 }
 ```
 
