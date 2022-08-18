@@ -7007,13 +7007,116 @@ double polygon_area(Point p[], int n) {
 
 ## 动态规划
 
-### 背包模型
+### 线性动态规划
 
-例题1（0-1背包）
+Q：给定一个数组$a$，求其最长严格上升子序列长度。
+
+A：动态规划
+
+```cpp
+#include <iostream>
+using namespace std;
+
+const int N = 1010;
+int a[N], f[N];
+int n;
+
+int main() {
+    cin >> n;
+    for (int i = 1; i <= n; i++) cin >> a[i];
+
+    int res = 0;
+    for (int i = 1; i <= n; i++) {
+        f[i] = 1;
+        for (int j = 1; j < i; j++)
+            if (a[j] < a[i]) 
+                f[i] = max(f[i], f[j] + 1);
+
+        res = max(res, f[i]);
+    }
+
+    cout << res << endl;
+
+    return 0;
+}
+```
+
+A：偏序集分解定理
+
+```cpp
+#include <iostream>
+using namespace std;
+
+const int N = 100010;
+int n;
+int a[N], f[N];
+
+int binary_search(int r, int t) {
+    if (r < 0) return -1;
+
+    int l = 0;
+    while (l < r) {
+        int m = l + (r - l >> 1);
+        if (f[m] >= t) r = m;
+        else l = m + 1;
+    }
+
+    return f[l] >= t ? l : -1;
+}
+
+int main() {
+    cin >> n;
+    for (int i = 0; i < n; i++) cin >> a[i];
+
+    int idx = 0;
+    for (int i = 0; i < n; i++) {
+        int pos = binary_search(idx - 1, a[i]);
+        if (pos == -1) f[idx++] = a[i];
+        else f[pos] = a[i];
+    }
+
+    cout << idx << endl;
+
+    return 0;
+}
+```
+
+Q：给定两个字符串$s$和$t$，求它们的最长公共子序列长度。
+
+A：
+
+```cpp
+#include <iostream>
+using namespace std;
+
+const int N = 1010;
+string s, t;
+int n, m;
+int f[N][N];
+
+int main() {
+    cin >> n >> m;
+    cin >> s >> t;
+
+    s = ' ' + s;
+    t = ' ' + t;
+
+    for (int i = 1; i <= n; i++)
+        for (int j = 1; j <= m; j++) 
+            if (s[i] == t[j]) f[i][j] = 1 + f[i - 1][j - 1];
+            else f[i][j] = max(f[i - 1][j], f[i][j - 1]);
+
+    cout << f[n][m] << endl;
+
+    return 0;
+}
+```
+
+### 背包模型
 
 Q：有$N$件物品和一个容量是$V$的背包。每件物品只能使用一次。第$i$件物品的体积是$v_i$，价值是$w_i$。求解将哪些物品装入背包，可使这些物品的总体积不超过背包容量，且总价值最大。输出最大价值。
 
-A：
+A：0-1背包
 
 ```cpp
 #include <iostream>
@@ -7040,11 +7143,9 @@ int main() {
 }
 ```
 
-例题2（完全背包）
-
 Q：有$N$件物品和一个容量是$V$的背包。每件物品使用次数不限。第$i$件物品的体积是$v_i$，价值是$w_i$。求解将哪些物品装入背包，可使这些物品的总体积不超过背包容量，且总价值最大。输出最大价值。
 
-A：
+A：完全背包
 
 ```cpp
 #include <iostream>
@@ -7070,11 +7171,9 @@ int main() {
 }
 ```
 
-例题3（多重背包）
-
 Q：有$N$件物品和一个容量是$V$的背包。第$i$种物品最多用$s_i$次，体积是$v_i$，价值是$w_i$。求解将哪些物品装入背包，可使这些物品的总体积不超过背包容量，且总价值最大。输出最大价值。
 
-A：未优化
+A：多重背包，未优化
 
 ```cpp
 #include <iostream>
@@ -7101,7 +7200,7 @@ int main() {
 }
 ```
 
-A：二进制优化
+A：多重背包，二进制优化
 
 ```cpp
 #include <iostream>
@@ -7139,11 +7238,9 @@ int main() {
 }
 ```
 
-例题4（分组背包）
-
 Q：有$N$组物品和一个容量是$V$的背包。每组物品有若干个，同一组内的物品最多只能选一个。每件物品的体积是$v_{ij}$，价值是$w_{ij}$，其中$i$是组号，$j$是组内编号。求解将哪些物品装入背包，可使物品总体积不超过背包容量，且总价值最大。输出最大价值。
 
-A：
+A：分组背包
 
 ```cpp
 #include <iostream>
@@ -7176,11 +7273,9 @@ int main() {
 
 ### 状态压缩
 
-例题（最短哈密顿路径）
-
 Q：给定一个$n$阶带权无向图，顶点从$0\sim n-1$标号，求从起点$0$到终点$n-1$的Hamilton路径的最短长度。两个顶点之间路径的长度$w[i][j]$由一个对称方阵给出。
 
-A：
+A：最短哈密顿路径
 
 ```cpp
 #include <iostream>
