@@ -56,5 +56,4 @@ int main() {
   printf("%ld\n", res);
   for (int i = n - 1; i; i--) a[i] = min(a[i], a[i + 1]);
   for (int i = 1; i <= n; i++) printf("%ld ", a[i] + i);
-  return 0;
 }
