@@ -2262,6 +2262,8 @@ void pop() {
   sift_down(1);
 }
 
+#define top() h[1]
+
 int main() {
   scanf("%d", &n);
   while (n--) {
@@ -2270,7 +2272,7 @@ int main() {
     if (op == 1) {
       scanf("%d", &x);
       push(x);
-    } else if (op == 2) printf("%d\n", h[1]);
+    } else if (op == 2) printf("%d\n", top());
     else pop();
   }
 }
