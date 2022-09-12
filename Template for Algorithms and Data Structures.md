@@ -130,82 +130,151 @@ A：
 快速排序
 
 ```cpp
-void quick_sort(vector<int> &A, int l, int r) {
-    if (l == r) return;
-    int i = l, j = r, piv = A[l + (r - l >> 1)];
-    while (i <= j) {
-        while (A[i] < piv) i++;
-        while (A[j] > piv) j--;
-        if (i <= j) swap(A[i++], A[j--]);
-    }
+#include <iostream>
+using namespace std;
 
-    quick_sort(A, l, j);
-    quick_sort(A, i, r);
+const int N = 100010;
+int a[N];
+
+void quick_sort(int l, int r) {
+  if (l >= r) return;
+
+  int piv = a[l + (r - l >> 1)];
+  int i = l, j = r;
+  while (i <= j) {
+    while (a[i] < piv) i++;
+    while (a[j] > piv) j--;
+    if (i <= j) swap(a[i++], a[j--]);
+  }
+
+  quick_sort(l, j), quick_sort(i, r);
 }
 
-void quick_sort(vector<int> &A) {
-    int n = A.size();
-    quick_sort(A, 0, n - 1);
+int main() {
+  int n;
+  scanf("%d", &n);
+  for (int i = 0; i < n; i++) scanf("%d", &a[i]);
+
+  quick_sort(0, n - 1);
+  for (int i = 0; i < n; i++) printf("%d ", a[i]);
 }
 ```
 
 归并排序
 
 ```cpp
-vector<int> tmp;
+#include <iostream>
+using namespace std;
 
-void merge_sort(vector<int> &A, int l, int r) {
-    if (l >= r) return;
-    int mid = l + (r - l >> 1);
-    merge_sort(A, l, mid);
-    merge_sort(A, mid + 1, r);
-    int i = l, j = mid + 1, idx = l;
-    while (i <= mid && j <= r) {
-        if (A[i] <= A[j]) tmp[idx++] = A[i++];
-        else tmp[idx++] = A[j++];
-    }
+const int N = 100010;
+int n;
+int a[N], tmp[N];
 
-    while (i <= mid) tmp[idx++] = A[i++];
-    while (j <= r) tmp[idx++] = A[j++];
-    for (int k = l; k <= r; k++) A[k] = tmp[k];
+void merge_sort(int l, int r) {
+  if (l >= r) return;
+
+  int m = l + (r - l >> 1);
+  merge_sort(l, m), merge_sort(m + 1, r);
+
+  int k = l, i = l, j = m + 1;
+  while (i <= m && j <= r) {
+    if (a[i] <= a[j]) tmp[k++] = a[i++];
+    else tmp[k++] = a[j++];
+  }
+
+  while (i <= m) tmp[k++] = a[i++];
+  while (j <= r) tmp[k++] = a[j++];
+
+  for (i = l; i <= r; i++) a[i] = tmp[i];
 }
 
-void merge_sort(vector<int> &A) {
-    int n = A.size();
-    tmp = vector<int>(n, 0);
-    merge_sort(A, 0, n - 1);
+int main() {
+  scanf("%d", &n);
+  for (int i = 0; i < n; i++) scanf("%d", &a[i]);
+
+  merge_sort(0, n - 1);
+  for (int i = 0; i < n; i++) printf("%d ", a[i]);
 }
 ```
 
 堆排序
 
 ```cpp
-void sift_down(vector<int> &A, int idx, int n) {
-    int x = A[idx];
-    while (idx * 2 + 1 < n) {
-        int s = idx * 2 + 1;
-        if (s + 1 < n && A[s + 1] > A[s]) s++;
-        if (A[s] > x) A[idx] = A[s];
-        else break;
-        
-        idx = s;
-    }
+#include <iostream>
+using namespace std;
 
-    A[idx] = x;
+const int N = 100010;
+int a[N];
+
+void sift_down(int i, int n) {
+  int x = a[i];
+  while (i << 1 <= n) {
+    int j = i << 1;
+    if (j + 1 <= n && a[j + 1] > a[j]) j++;
+    if (a[j] > x) a[i] = a[j];
+    else break;
+
+    i = j;
+  }
+
+  a[i] = x;
 }
 
-void heapify(vector<int> &A) {
-    int n = A.size();
-    for (int i = n - 2 >> 1; i >= 0; i--) sift_down(A, i, n);
+void heapify(int n) {
+  for (int i = n >> 1; i; i--) sift_down(i, n);
 }
 
-void heap_sort(vector<int> &A) {
-    heapify(A);
-    int n = A.size();
-    for (int i = n - 1; i > 0; i--) {
-        swap(A[0], A[i]);
-        sift_down(A, 0, i);
-    }
+void heap_sort(int n) {
+  heapify(n);
+  for (int i = n; i; i--) {
+    swap(a[1], a[i]);
+    sift_down(1, i - 1);
+  }
+}
+
+int main() {
+  int n;
+  scanf("%d", &n);
+  for (int i = 1; i <= n; i++) scanf("%d", &a[i]);
+
+  heap_sort(n);
+  for (int i = 1; i <= n; i++) printf("%d ", a[i]);
+}
+```
+
+基数排序
+
+```cpp
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+const int N = 1e5 + 10;
+int n, a[N];
+int tmp[N], cnt[15];
+
+int max_num() {
+  int M = 0;
+  for (int i = 1; i <= n; i++) M = max(M, a[i]);
+  return M;
+}
+
+void radix_sort(int M) {
+  for (int rad = 1; rad <= M; rad *= 10) {
+    memset(cnt, 0, sizeof cnt);
+    for (int i = 1; i <= n; i++) cnt[a[i] / rad % 10]++;
+    for (int i = 1; i < 10; i++) cnt[i] += cnt[i - 1];
+    for (int i = n; i; i--) tmp[cnt[a[i] / rad % 10]--] = a[i];
+    for (int i = 1; i <= n; i++) a[i] = tmp[i];
+  }
+}
+
+int main() {
+  scanf("%d", &n);
+  for (int i = 1; i <= n; i++) scanf("%d", &a[i]);
+
+  radix_sort(max_num());
+  for (int i = 1; i <= n; i++) printf("%d ", a[i]);
 }
 ```
 
@@ -7129,19 +7198,16 @@ int v[N], w[N];
 int f[V];
 
 int main() {
-	// n是总个数，m是总体积
-    int n, m;
-    cin >> n >> m;
+  int n, m;
+  cin >> n >> m;
 
-    for (int i = 1; i <= n; i++)
-        cin >> v[i] >> w[i];
+  for (int i = 1; i <= n; i++) cin >> v[i] >> w[i];
 
-    for (int i = 1; i <= n; i++) 
-        for (int j = m; j >= v[i]; j--)
-                f[j] = max(f[j],  f[j - v[i]] + w[i]);   
+  for (int i = 1; i <= n; i++)
+    for (int j = m; j >= v[i]; j--) 
+      f[j] = max(f[j], f[j - v[i]] + w[i]);
 
-    cout << f[m] << endl;
-    return 0;
+  cout << f[m] << endl;
 }
 ```
 
