@@ -7093,22 +7093,20 @@ int a[N], f[N];
 int n;
 
 int main() {
-    cin >> n;
-    for (int i = 1; i <= n; i++) cin >> a[i];
+  cin >> n;
+  for (int i = 1; i <= n; i++) cin >> a[i];
 
-    int res = 0;
-    for (int i = 1; i <= n; i++) {
-        f[i] = 1;
-        for (int j = 1; j < i; j++)
-            if (a[j] < a[i]) 
-                f[i] = max(f[i], f[j] + 1);
+  int res = 0;
+  for (int i = 1; i <= n; i++) {
+	f[i] = 1;
+	for (int j = 1; j < i; j++)
+	  if (a[j] < a[i]) 
+		f[i] = max(f[i], f[j] + 1);
 
-        res = max(res, f[i]);
-    }
+    res = max(res, f[i]);
+  }
 
-    cout << res << endl;
-
-    return 0;
+  cout << res << endl;
 }
 ```
 
@@ -7123,32 +7121,30 @@ int n;
 int a[N], f[N];
 
 int binary_search(int r, int t) {
-    if (r < 0) return -1;
+  if (r < 0) return -1;
 
-    int l = 0;
-    while (l < r) {
-        int m = l + (r - l >> 1);
-        if (f[m] >= t) r = m;
-        else l = m + 1;
-    }
+  int l = 0;
+  while (l < r) {
+      int m = l + (r - l >> 1);
+      if (f[m] >= t) r = m;
+      else l = m + 1;
+  }
 
-    return f[l] >= t ? l : -1;
+  return f[l] >= t ? l : -1;
 }
 
 int main() {
-    cin >> n;
-    for (int i = 0; i < n; i++) cin >> a[i];
+  cin >> n;
+  for (int i = 0; i < n; i++) cin >> a[i];
 
-    int idx = 0;
-    for (int i = 0; i < n; i++) {
-        int pos = binary_search(idx - 1, a[i]);
-        if (pos == -1) f[idx++] = a[i];
-        else f[pos] = a[i];
-    }
+  int idx = 0;
+  for (int i = 0; i < n; i++) {
+    int pos = binary_search(idx - 1, a[i]);
+    if (pos == -1) f[idx++] = a[i];
+    else f[pos] = a[i];
+  }
 
-    cout << idx << endl;
-
-    return 0;
+  cout << idx << endl;
 }
 ```
 
@@ -7166,20 +7162,51 @@ int n, m;
 int f[N][N];
 
 int main() {
-    cin >> n >> m;
-    cin >> s >> t;
+  cin >> n >> m;
+  cin >> s >> t;
 
-    s = ' ' + s;
-    t = ' ' + t;
+  s = ' ' + s;
+  t = ' ' + t;
 
-    for (int i = 1; i <= n; i++)
-        for (int j = 1; j <= m; j++) 
-            if (s[i] == t[j]) f[i][j] = 1 + f[i - 1][j - 1];
-            else f[i][j] = max(f[i - 1][j], f[i][j - 1]);
+  for (int i = 1; i <= n; i++)
+	for (int j = 1; j <= m; j++) 
+	  if (s[i] == t[j]) f[i][j] = 1 + f[i - 1][j - 1];
+	  else f[i][j] = max(f[i - 1][j], f[i][j - 1]);
 
-    cout << f[n][m] << endl;
+  cout << f[n][m] << endl;
+}
+```
 
-    return 0;
+### 区间动态规划
+
+Q：$N$堆石子排成一排，编号$1\sim N$，第$i$堆石子的质量是$a[i]$，每次可以合并相邻的两堆，合并的代价为两堆石子质量之和。问最后要合并成一堆所需要的最小代价。
+
+A：
+
+```cpp
+#include <iostream>
+using namespace std;
+
+const int N = 310;
+int n;
+int s[N];
+int f[N][N];
+
+int main() {
+  cin >> n;
+  for (int i = 1; i <= n; i++) cin >> s[i];
+
+  for (int i = 1; i <= n; i++) s[i] += s[i - 1];
+
+  for (int len = 2; len <= n; len++)
+    for (int i = 1; i + len - 1 <= n; i++) {
+      int l = i, r = i + len - 1;
+      f[l][r] = 1e9;
+      for (int k = l; k < r; k++)
+        f[l][r] = min(f[l][r], f[l][k] + f[k + 1][r] + s[r] - s[l - 1]);
+    }
+
+  cout << f[1][n] << endl;
 }
 ```
 
@@ -7224,18 +7251,16 @@ int v[N], w[N];
 int f[V];
 
 int main() {
-    int n, m;
-    cin >> n >> m;
+  int n, m;
+  cin >> n >> m;
 
-    for (int i = 1; i <= n; i++)
-        cin >> v[i] >> w[i];
+  for (int i = 1; i <= n; i++) cin >> v[i] >> w[i];
 
-    for (int i = 1; i <= n; i++) 
-        for (int j = v[i]; j <= m; j++)
-                f[j] = max(f[j],  f[j - v[i]] + w[i]); 
+  for (int i = 1; i <= n; i++)
+    for (int j = v[i]; j <= m; j++) 
+      f[j] = max(f[j], f[j - v[i]] + w[i]);
 
-    cout << f[m] << endl;
-    return 0;
+  cout << f[m] << endl;
 }
 ```
 
@@ -7248,23 +7273,20 @@ A：多重背包，未优化
 using namespace std;
 
 const int N = 110;
-
 int n, m;
 int v[N], w[N], s[N];
 int f[N][N];
 
 int main() {
-    cin >> n >> m;
-    for (int i = 1; i <= n; i++) cin >> v[i] >> w[i] >> s[i];
+  cin >> n >> m;
+  for (int i = 1; i <= n; i++) cin >> v[i] >> w[i] >> s[i];
 
-    for (int i = 1; i <= n; i++) 
-        for (int j = 0; j <= m; j++) 
-            for (int k = 0; k <= s[i] && k * v[i] <= j; k++)
-                f[i][j] = max(f[i][j], f[i - 1][j - k * v[i]] + k * w[i]);
+  for (int i = 1; i <= n; i++)
+    for (int j = 0; j <= m; j++)
+      for (int k = 0; k <= s[i] && k * v[i] <= j; k++)
+        f[i][j] = max(f[i][j], f[i - 1][j - k * v[i]] + k * w[i]);
 
-    cout << f[n][m] << endl;
-
-    return 0;
+  cout << f[n][m] << endl;
 }
 ```
 
@@ -7280,29 +7302,28 @@ int v[N], w[N], cnt;
 int f[N];
 
 int main() {
-    cin >> n >> m;
-    for (int i = 1; i <= n; i++) {
-        int a, b, s;
-        cin >> a >> b >> s;
-        for (int k = 1; k <= s; k <<= 1) {
-            v[++cnt] = a * k;
-            w[cnt] = b * k;
-            s -= k;
-        }
-
-        if (s) {
-            v[++cnt] = a * s;
-            w[cnt] = b * s;
-        }
+  cin >> n >> m;
+  for (int i = 1; i <= n; i++) {
+    int a, b, s;
+    cin >> a >> b >> s;
+    for (int k = 1; k <= s; k <<= 1) {
+      v[++cnt] = a * k;
+      w[cnt] = b * k;
+      s -= k;
     }
 
-    n = cnt;
-    for (int i = 1; i <= n; i++)
-        for (int j = m; j >= v[i]; j--)
-            f[j] = max(f[j], f[j - v[i]] + w[i]);
+    if (s) {
+      v[++cnt] = a * s;
+      w[cnt] = b * s;
+    }
+  }
 
-    cout << f[m] << endl;
-    return 0;
+  n = cnt;
+  for (int i = 1; i <= n; i++)
+    for (int j = m; j >= v[i]; j--) 
+      f[j] = max(f[j], f[j - v[i]] + w[i]);
+
+  cout << f[m] << endl;
 }
 ```
 
@@ -7320,22 +7341,18 @@ int n, m;
 int f[N];
 
 int main() {
-    cin >> n >> m;
-    for (int i = 1; i <= n; i++) {
-        cin >> s[i];
-        for (int j = 1; j <= s[i]; j++) 
-            cin >> w[i][j] >> v[i][j];
-    }
-        
-    for (int i = 1; i <= n; i++) 
-        for (int j = m; j >= 0; j--)
-            for (int k = 1; k <= s[i]; k++)
-                if (j >= w[i][k])
-                    f[j] = max(f[j], f[j - w[i][k]] + v[i][k]);
+  cin >> n >> m;
+  for (int i = 1; i <= n; i++) {
+    cin >> s[i];
+    for (int j = 1; j <= s[i]; j++) cin >> w[i][j] >> v[i][j];
+  }
 
-    cout << f[m] << endl;
+  for (int i = 1; i <= n; i++)
+    for (int j = m; j >= 0; j--)
+      for (int k = 1; k <= s[i]; k++)
+        if (j >= w[i][k]) f[j] = max(f[j], f[j - w[i][k]] + v[i][k]);
 
-    return 0;
+  cout << f[m] << endl;
 }
 ```
 

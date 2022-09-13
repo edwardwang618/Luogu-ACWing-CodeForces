@@ -7,22 +7,19 @@ int n, m;
 int f[N][N];
 
 int main() {
-    cin >> n >> m;
-    for (int i = 1; i <= n; i++) {
-        cin >> s[i];
-        for (int j = 1; j <= s[i]; j++) 
-            cin >> w[i][j] >> v[i][j];
+  cin >> n >> m;
+  for (int i = 1; i <= n; i++) {
+    cin >> s[i];
+    for (int j = 1; j <= s[i]; j++) cin >> w[i][j] >> v[i][j];
+  }
+
+  for (int i = 1; i <= n; i++)
+    for (int j = 0; j <= m; j++) {
+      f[i][j] = f[i - 1][j];
+      for (int k = 1; k <= s[i]; k++)
+        if (j >= w[i][k])
+          f[i][j] = max(f[i][j], f[i - 1][j - w[i][k]] + v[i][k]);
     }
-        
-    for (int i = 1; i <= n; i++) 
-        for (int j = 0; j <= m; j++) {
-            f[i][j] = f[i - 1][j];
-            for (int k = 1; k <= s[i]; k++)
-                if (j >= w[i][k])
-                    f[i][j] = max(f[i][j], f[i - 1][j - w[i][k]] + v[i][k]);
-        }
 
-    cout << f[n][m] << endl;
-
-    return 0;
+  cout << f[n][m] << endl;
 }
