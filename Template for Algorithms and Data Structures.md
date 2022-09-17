@@ -5077,58 +5077,54 @@ int main() {
 
 Q：给定一个$n$个点$m$条边的有向图，图中可能存在重边和自环，所有边权均非负。请你求出$1$号点到$n$号点的最短距离，如果无法从$1$号点走到$n$号点，则输出$−1$。
 
-A：朴素版Dijkstra，如果图是稠密图
+A：朴素版Dijkstra，稠密图
 
 ```cpp
 #include <iostream>
 #include <cstring>
-#include <algorithm>
 using namespace std;
 
-const int N = 510;
+const int N = 510, INF = 0x3f3f3f3f;
 int n, m;
-int g[N][N];
-int dist[N];
+int g[N][N], dist[N];
 bool st[N];
 
 int dijkstra() {
-    memset(dist, 0x3f, sizeof dist);
-    dist[1] = 0;
+  memset(dist, 0x3f, sizeof dist);
+  dist[1] = 0;
 
-    for (int i = 0; i < n; i++) {
-        int t = -1;
-        for (int j = 1; j <= n; j++) 
-            if (!st[j] && (t == -1 || dist[t] > dist[j])) t = j;
-        
-        if (t == n) break;
+  for (int i = 0; i < n; i++) {
+    int t = -1;
+    for (int j = 1; j <= n; j++)
+      if (!st[j] && (t == -1 || dist[t] > dist[j])) t = j;
 
-        st[t] = true;
-        for (int j = 1; j <= n; j++) 
-            if (!st[j]) dist[j] = min(dist[j], dist[t] + g[t][j]);
-    }
+    if (t == n) break;
 
-    return dist[n] == 0x3f3f3f3f ? -1 : dist[n];
+    st[t] = true;
+    for (int j = 1; j <= n; j++)
+      if (!st[j]) dist[j] = min(dist[j], dist[t] + g[t][j]);
+  }
+
+  return dist[n] == INF ? -1 : dist[n];
 }
 
 int main() {
-    cin >> n >> m;
+  cin >> n >> m;
 
-    memset(g, 0x3f, sizeof g);
+  memset(g, 0x3f, sizeof g);
 
-    while (m--) {
-        int a, b, c;
-        cin >> a >> b >> c;
-        if (a == b) g[a][b] = 0;
-        else g[a][b] = min(g[a][b], c);
-    }
+  while (m--) {
+    int a, b, c;
+    cin >> a >> b >> c;
+    if (a == b) g[a][b] = 0;
+    else g[a][b] = min(g[a][b], c);
+  }
 
-    cout << dijkstra() << endl;
-
-    return 0;
+  cout << dijkstra() << endl;
 }
 ```
 
-A：堆优化版Dijkstra，如果图是稀疏图
+A：堆优化版Dijkstra，稀疏图
 
 ```cpp
 #include <iostream>
