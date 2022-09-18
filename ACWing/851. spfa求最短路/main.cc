@@ -47,6 +47,5 @@ int main() {
   }
   
   int res = spfa();
-  if (res == 0x3f3f3f3f) puts("impossible");
-  else printf("%d\n", res);
+  res == 0x3f3f3f3f ? puts("impossible") : printf("%d\n", res);
 }

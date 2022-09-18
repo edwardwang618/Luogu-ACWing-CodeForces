@@ -5183,6 +5183,72 @@ int main() {
 }
 ```
 
+#### 分层图最短路
+
+Q：给定一个非负权无向图，顶点个数$n$，边的个数$m$。从$1$出发走到$n$，总共有$k$次机会，每一步可以使用一次机会，让走的边的长度缩短到一半。问最短距离有多长。题目保证边长都是偶数，图连通。$k$次机会可以不用完。
+
+A：
+
+```cpp
+#include <iostream>
+#include <cstring>
+#include <queue>
+#define x first
+#define y second
+using namespace std;
+using PLII = pair<long, pair<int, int>>;
+
+const int N = 55, M = 2010;
+int n, m, K;
+int h[N], e[M], ne[M], w[M], idx;
+long dist[N][N];
+bool vis[N][N];
+
+void add(int a, int b, int c) {
+  e[idx] = b, ne[idx] = h[a], w[idx] = c, h[a] = idx++;
+}
+
+long dijkstra() {
+  memset(dist, 0x3f, sizeof dist);
+  memset(vis, 0, sizeof vis);
+  dist[1][K] = 0;
+  priority_queue<PLII, vector<PLII>, greater<PLII>> heap;
+  heap.push({0, {1, K}});
+  while (heap.size()) {
+    auto t = heap.top(); heap.pop();
+    int u = t.y.x, k = t.y.y;
+    if (u == n) return t.x;
+    if (vis[u][k]) continue;
+    vis[u][k] = true;
+    for (int i = h[u]; ~i; i = ne[i]) {
+      int v = e[i];
+      if (!vis[v][k] && dist[v][k] > dist[u][k] + w[i]) {
+        dist[v][k] = dist[u][k] + w[i];
+        heap.push({dist[v][k], {v, k}});
+      }
+      if (k && !vis[v][k - 1] && dist[v][k - 1] > dist[u][k] + w[i] / 2) {
+        dist[v][k - 1] = dist[u][k] + w[i] / 2;
+        heap.push({dist[v][k - 1], {v, k - 1}});
+      }
+    }
+  }
+
+  return -1;
+}
+
+int main() {
+  memset(h, -1, sizeof h);
+  scanf("%d%d%d", &n, &m, &K);
+  for (int i = 1; i <= m; i++) {
+    int a, b, c;
+    scanf("%d%d%d", &a, &b, &c);
+    add(a, b, c), add(b, a, c);
+  }
+
+  printf("%ld\n", dijkstra());
+}
+```
+
 #### 有边数限制的最短路
 
 Q：给定有$n$个点$m$条边的有向图，可能存在重边和自环，边权可能为负，可能存在负环。求$1$号点到$n$号点的最多经过$k$条边的最短距离。如果不存在这样的路径则输出`impossible`。
@@ -5286,8 +5352,7 @@ int main() {
   }
   
   int res = spfa();
-  if (res == 0x3f3f3f3f) puts("impossible");
-  else printf("%d\n", res);
+  res == 0x3f3f3f3f ? puts("impossible") : printf("%d\n", res);
 }
 ```
 
@@ -5298,8 +5363,8 @@ Q：给定有$n$个点$m$条边的有向图，可能存在重边和自环，边�
 A：SPFA
 
 ```cpp
-#include <iostream>
 #include <cstring>
+#include <iostream>
 #include <stack>
 using namespace std;
 
@@ -5310,53 +5375,50 @@ int dist[N], cnt[N];
 bool st[N];
 
 void add(int a, int b, int c) {
-    e[idx] = b, w[idx] = c, ne[idx] = h[a], h[a] = idx++;
+  e[idx] = b, w[idx] = c, ne[idx] = h[a], h[a] = idx++;
 }
 
 bool spfa() {
-    stack<int> stk;
-    for (int i = 1; i <= n; i++) {
-        stk.push(i);
-        st[i] = true;
-    }
+  stack<int> stk;
+  for (int i = 1; i <= n; i++) {
+    stk.push(i);
+    st[i] = true;
+  }
 
-    while (stk.size()) {
-        int t = stk.top();
-        stk.pop();
+  while (stk.size()) {
+    int t = stk.top();
+    stk.pop();
 
-        st[t] = false;
-        for (int i = h[t]; i != -1; i = ne[i]) {
-            int j = e[i];
-            if (dist[j] > dist[t] + w[i]) {
-                dist[j] = dist[t] + w[i];
-                cnt[j] = cnt[t] + 1;
-                if (cnt[j] >= n) return true;
+    st[t] = false;
+    for (int i = h[t]; i != -1; i = ne[i]) {
+      int j = e[i];
+      if (dist[j] > dist[t] + w[i]) {
+        dist[j] = dist[t] + w[i];
+        cnt[j] = cnt[t] + 1;
+        if (cnt[j] >= n) return true;
 
-                if (!st[j]) {
-                    stk.push(j);
-                    st[j] = true;
-                }
-            }
+        if (!st[j]) {
+          stk.push(j);
+          st[j] = true;
         }
+      }
     }
+  }
 
-    return false;
+  return false;
 }
 
 int main() {
-    cin >> n >> m;
+  memset(h, -1, sizeof h);
+  cin >> n >> m;
 
-    memset(h, -1, sizeof h);
+  while (m--) {
+    int a, b, c;
+    cin >> a >> b >> c;
+    add(a, b, c);
+  }
 
-    while (m--) {
-        int a, b, c;
-        cin >> a >> b >> c;
-        add(a, b, c);
-    }
-
-    cout << (spfa() ? "Yes" : "No") << endl;
-
-    return 0;
+  spfa() ? puts("Yes") : puts("No");
 }
 ```
 
@@ -5364,7 +5426,7 @@ int main() {
 
 Q：给定有$n$个点$m$条边的有向图，可能存在重边和自环，边权可能为负，不存在负环。给定$k$次询问，每次询问问点$x$到$y$的最短路长度。如果路径不存在，则输出`impossible`。
 
-A：Floyd算法
+A：Floyd
 
 ```cpp
 #include <iostream>
