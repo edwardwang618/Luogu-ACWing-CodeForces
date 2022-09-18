@@ -1,8 +1,6 @@
 #include <iostream>
 #include <cstring>
-#include <queue>
 using namespace std;
-using PII = pair<int, int>;
 
 const int N = 110, M = 1010, MOD = 1e5;
 int n, m;
