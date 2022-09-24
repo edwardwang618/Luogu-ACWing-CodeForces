@@ -211,9 +211,8 @@ void sift_down(int i, int n) {
   while (i << 1 <= n) {
     int j = i << 1;
     if (j + 1 <= n && a[j + 1] > a[j]) j++;
-    if (a[j] > x) a[i] = a[j];
-    else break;
-
+    if (a[j] <= x) break;
+    a[i] = a[j];
     i = j;
   }
 
@@ -239,6 +238,44 @@ int main() {
 
   heap_sort(n);
   for (int i = 1; i <= n; i++) printf("%d ", a[i]);
+}
+```
+
+堆排序，在$n$个数里从小到大输出前$m$小的数
+
+```cpp
+#include <iostream>
+using namespace std;
+
+const int N = 100010;
+int n, m;
+int h[N], &sz = h[0];
+
+void sift_down(int u) {
+  int x = h[u];
+  while (u << 1 <= sz) {
+    int t = u << 1;
+    if (t + 1 <= sz && h[t + 1] < h[t]) t++;
+    if (x < h[t]) break;
+    h[u] = h[t];
+    u = t;
+  }
+  h[u] = x;
+}
+
+int main() {
+  cin >> n >> m;
+
+  for (int i = 1; i <= n; i++) cin >> h[i];
+  sz = n;
+
+  for (int i = n / 2; i > 0; i--) sift_down(i);
+
+  while (m--) {
+    cout << h[1] << ' ';
+    h[1] = h[sz--];
+    sift_down(1);
+  }
 }
 ```
 
@@ -1317,7 +1354,7 @@ int main() {
     if (s[i] == p[j + 1]) j++;
     if (j == m) {
       printf("%d ", i - m + 1);
-      j = ne[j];
+      break;
     }
   }
 }
@@ -2149,41 +2186,39 @@ const int N = 100010;
 int son[N][26], cnt[N], idx;
 
 void insert(string s) {
-    int p = 0;
-    for (int i = 0; i < s.size(); i++) {
-        int u = s[i] - 'a';
-        if (!son[p][u]) son[p][u] = ++idx;
-        p = son[p][u];
-    }
+  int p = 0;
+  for (int i = 0; i < s.size(); i++) {
+    int u = s[i] - 'a';
+    if (!son[p][u]) son[p][u] = ++idx;
+    p = son[p][u];
+  }
 
-    cnt[p]++;
+  cnt[p]++;
 }
 
 int query(string s) {
-    int p = 0;
-    for (int i = 0; i < s.size(); i++) {
-        int u = s[i] - 'a';
-        if (!son[p][u]) return 0;
-        p = son[p][u];
-    }
+  int p = 0;
+  for (int i = 0; i < s.size(); i++) {
+    int u = s[i] - 'a';
+    if (!son[p][u]) return 0;
+    p = son[p][u];
+  }
 
-    return cnt[p];
+  return cnt[p];
 }
 
 int main() {
-    int n;
-    cin >> n;
-    while (n--) {
-        char op;
-        string s;
-        cin >> op;
-        cin >> s;
+  int n;
+  cin >> n;
+  while (n--) {
+    char op;
+    string s;
+    cin >> op;
+    cin >> s;
 
-        if (op == 'I') insert(s);
-        else if (op == 'Q') cout << query(s) << endl;
-    }
-
-    return 0;
+    if (op == 'I') insert(s);
+    else if (op == 'Q') cout << query(s) << endl;
+  }
 }
 ```
 
@@ -2191,44 +2226,42 @@ A：动态链表写法：
 
 ```cpp
 class Trie {
-public:
+ public:
+  struct Node {
+	Node* ne[26];
+	int cnt;
+	Node() : cnt(0) {
+	  fill(ne, ne + 26, nullptr);
+	}
+  };
 
-    struct Node {
-        vector<Node*> ne;
-        int cnt;
-        Node() {
-            ne = vector<Node*>(26, nullptr);
-            cnt = 0;
-        }
-    };
+  Node* root;
 
-    Node* root;
-
-    Trie() {
-        root = new Node();
-    }
+  Trie() {
+	root = new Node();
+  }
     
-    void insert(string s) {
-        Node* cur = root;
-        for (char ch : s) {
-            int u = ch - 'a';
-            if (!cur->ne[u]) cur->ne[u] = new Node();
-            cur = cur->ne[u];
-        }
+  void insert(string s) {
+	Node* cur = root;
+	for (char ch : s) {
+	  int u = ch - 'a';
+	  if (!cur->ne[u]) cur->ne[u] = new Node();
+	  cur = cur->ne[u];
+	}
 
-		cnt++;
-    }
+	cur->cnt++;
+  }
     
-    int query(string s) {
-        Node* cur = root;
-        for (char ch : s) {
-            int u = ch - 'a';
-            if (!cur->ne[u]) return 0;
-            cur = cur->ne[u];
-        }
-
-        return cur->cnt;
+  int query(string s) {
+	Node* cur = root;
+	for (char ch : s) {
+	  int u = ch - 'a';
+	  if (!cur->ne[u]) return 0;
+	  cur = cur->ne[u];
     }
+
+    return cur->cnt;
+  }
 };
 ```
 
@@ -4304,7 +4337,7 @@ int main() {
 
 ## 并查集
 
-例题1（询问连通性 + 集合点个数）
+例题1
 
 Q：一开始一共$n$个数，编号$1\sim n$，每个数各自在一个集合中。现在要进行$m$个操作，每次操作是下面三种之一：
 
@@ -4314,7 +4347,7 @@ Q：一开始一共$n$个数，编号$1\sim n$，每个数各自在一个集合�
 
 3、问$a$所在集合的点的个数。
 
-A：
+A：询问连通性 + 集合点个数
 
 ```cpp
 #include <iostream>
@@ -4324,46 +4357,44 @@ const int N = 100010;
 int p[N], sz[N];
 
 int find(int x) {
-    if (p[x] != x) p[x] = find(p[x]);
-    return p[x];
+  if (p[x] != x) p[x] = find(p[x]);
+  return p[x];
+}
+
+void merge(int x, int y) {
+  int px = find(x), py = find(y);
+  if (px == py) return;
+  p[px] = py;
+  sz[py] += sz[px];
 }
 
 int main() {
-    int n, m;
-    cin >> n >> m;
+  int n, m;
+  cin >> n >> m;
+  for (int i = 1; i <= n; i++) {
+    p[i] = i;
+    sz[i] = 1;
+  }
 
-    for (int i = 1; i <= n; i++) {
-        p[i] = i;
-        sz[i] = 1;
+  while (m--) {
+    char op[2];
+    int x, y;
+    cin >> op;
+    if (op[0] == 'C') {
+      cin >> x >> y;
+      merge(x, y);
+    } else if (op[0] == 'Q') {
+      if (op[1] == '1') {
+        // 问是否在同一集合中
+        cin >> x >> y;
+        find(x) == find(y) ? puts("Yes") : puts("No");
+      } else if (op[1] == '2') {
+        // 问x所在集合的大小
+        cin >> x;
+        printf("%d\n", sz[find(x)]);
+      }
     }
-    
-    while (m--) {
-        char op[2];
-        int x, y;
-        cin >> op;
-        if (op[0] == 'C') {
-            cin >> x >> y;
-            merge(x, y);
-            int px = find(x), py = find(y);
-    		if (px != py) {
-    			p[px] = py;
-    			sz[py] += sz[px];
-            }
-        } else if (op[0] == 'Q') {
-            if (op[1] == '1') {
-                // 问是否在同一个集合中
-                cin >> x >> y;
-                if (find(x) == find(y)) puts("Yes");
-                else puts("No");
-            } else if (op[1] == '2') {
-                // 问所在集合的点个数
-                cin >> x;
-                printf("%d\n", sz[find(x)]);
-            }
-        }
-    }
-
-    return 0;
+  }
 }
 ```
 

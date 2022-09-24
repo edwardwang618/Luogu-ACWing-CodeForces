@@ -16,9 +16,8 @@ double dijkstra() {
 
     if (t == y) return dist[y];
     vis[t] = true;
-    for (int j = 1; j <= n; j++) {
+    for (int j = 1; j <= n; j++)
       if (!vis[j]) dist[j] = max(dist[j], dist[t] * g[t][j]);
-    }
   }
 
   return -1;
