@@ -269,7 +269,7 @@ int main() {
   for (int i = 1; i <= n; i++) cin >> h[i];
   sz = n;
 
-  for (int i = n / 2; i > 0; i--) sift_down(i);
+  for (int i = n / 2; i; i--) sift_down(i);
 
   while (m--) {
     cout << h[1] << ' ';
