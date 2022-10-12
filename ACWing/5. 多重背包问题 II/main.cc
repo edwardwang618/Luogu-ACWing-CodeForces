@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-const int N = 15000, M = 2010;
+const int N = 15000;
 int n, m;
 int v[N], w[N], cnt;
 int f[N];

@@ -1227,7 +1227,8 @@ int get_rh(int l, int r) {
 bool check(int len) {
   len = len / 2 + 1;
   for (int i = len; i + len - 1 <= n; i++)
-    if (get_h(i - len + 1, i) == get_rh(i, i + len - 1)) return true;
+    if (get_h(i - len + 1, i) == get_rh(i, i + len - 1)) 
+      return true;
   return false;
 }
 
@@ -1240,10 +1241,10 @@ int main() {
   while (l < r) {
     int mid = l + (r - l + 1 >> 1);
     if (check(mid)) l = mid;
-      else r = mid - 1;
+    else r = mid - 1;
   }
 
-  printf("%d\n"l / 2);
+  printf("%d\n", l / 2);
 }
 ```
 
