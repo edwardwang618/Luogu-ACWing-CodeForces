@@ -3610,7 +3610,7 @@ long add[M], sum[M];
 int w[N];
 int bel[N];
 
-void change(int l, int r, int d) {
+void modify(int l, int r, int d) {
   if (bel[l] == bel[r]) for (int i = l; i <= r; i++) w[i] += d, sum[bel[i]] += d;
   else {
     int i = l, j = r;
@@ -3648,7 +3648,7 @@ int main() {
     scanf("%s%d%d", op, &l, &r);
     if (op[0] == 'C') {
       scanf("%d", &d);
-      change(l, r, d);
+      modify(l, r, d);
     } else printf("%ld\n", query(l, r));
   }
 }
