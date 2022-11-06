@@ -3157,6 +3157,95 @@ int main() {
 }
 ```
 
+Q：给定直角坐标系中的若干个矩形，求其合并的面积。重合部分只算一次。
+
+A：扫描线
+
+```cpp
+#include <iostream>
+#include <cstring>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+const int N = 100010;
+int n;
+struct Segment {
+  double x, y1, y2;
+  int k;
+  bool operator<(const Segment &t) const { return x < t.x; }
+} seg[N * 2];
+struct Node {
+  int l, r;
+  int cnt;
+  double len;
+} tr[N * 8];
+vector<double> ys;
+
+int find(double y) { 
+  return lower_bound(ys.begin(), ys.end(), y) - ys.begin(); 
+}
+
+void pushup(int u) {
+  if (tr[u].cnt)
+    tr[u].len = ys[tr[u].r + 1] - ys[tr[u].l];
+  else {
+    if (tr[u].l != tr[u].r)
+      tr[u].len = tr[u << 1].len + tr[u << 1 | 1].len;
+    else
+      tr[u].len = 0;
+  }
+}
+
+void build(int u, int l, int r) {
+  tr[u] = {l, r};
+  if (l == r) return;
+  int mid = l + r >> 1;
+  build(u << 1, l, mid), build(u << 1 | 1, mid + 1, r);
+}
+
+void modify(int u, int l, int r, int k) {
+  if (tr[u].l >= l && tr[u].r <= r) {
+    tr[u].cnt += k;
+  } else {
+    int mid = tr[u].l + tr[u].r >> 1;
+    if (l <= mid) modify(u << 1, l, r, k);
+    if (r > mid) modify(u << 1 | 1, l, r, k);
+  }
+
+  pushup(u);
+}
+
+int main() {
+  int T = 1;
+  while (cin >> n, n) {
+    ys.clear();
+    for (int i = 0, j = 0; i < n; i++) {
+      double x1, y1, x2, y2;
+      scanf("%lf%lf%lf%lf", &x1, &y1, &x2, &y2);
+      seg[j++] = {x1, y1, y2, 1};
+      seg[j++] = {x2, y1, y2, -1};
+      ys.push_back(y1), ys.push_back(y2);
+    }
+
+    sort(ys.begin(), ys.end());
+    ys.erase(unique(ys.begin(), ys.end()), ys.end());
+    build(1, 0, ys.size() - 2);
+
+    sort(seg, seg + n * 2);
+
+    double res = 0;
+    for (int i = 0; i < n * 2; i++) {
+      if (i) res += tr[1].len * (seg[i].x - seg[i - 1].x);
+      modify(1, find(seg[i].y1), find(seg[i].y2) - 1, seg[i].k);
+    }
+
+    printf("Test case #%d\n", T++);
+    printf("Total explored area: %.2lf\n\n", res);
+  }
+}
+```
+
 
 
 ## 树状数组
@@ -7013,6 +7102,8 @@ int main() {
 
 ### 计算几何
 
+#### 基础知识
+
 公式及常用代码：
 
 ```cpp
@@ -7152,6 +7243,79 @@ double polygon_area(Point p[], int n) {
 皮克定理：
 
 设某个多边形的每个点都是整点，则其面积$s=a+\frac{b}{2}-1$，$a$为多边形内的整点个数，$b$是多边形边上的整点个数。
+
+#### 凸包
+
+Q：给定若干点，求其凸包的周长。
+
+A：
+
+```cpp
+#include <iostream>
+#include <algorithm>
+#include <cmath>
+#define x first
+#define y second
+using namespace std;
+using PDD = pair<double, double>;
+
+const int N = 10010;
+int n;
+PDD q[N];
+int stk[N];
+bool used[N];
+
+double get_dist(PDD a, PDD b) {
+  double dx = a.x - b.x, dy = a.y - b.y;
+  return sqrt(dx * dx + dy * dy);
+}
+
+PDD operator-(PDD &a, PDD &b) {
+  return {a.x - b.x, a.y - b.y};
+}
+
+double cross(PDD a, PDD b) {
+  return a.x * b.y - a.y * b.x;
+}
+
+double area(PDD a, PDD b, PDD c) {
+  return cross(b - a, c - a);
+}
+
+double andrew() {
+  int top = 0;
+  for (int i = 0; i < n; i++) {
+    while (top >= 2 && area(q[stk[top - 2]], q[stk[top - 1]], q[i]) >= 0)
+      used[stk[--top]] = false;
+    stk[top++] = i;
+    used[i] = true;
+  }
+
+  used[0] = false;
+  for (int i = n - 1; i >= 0; i--) {
+    if (used[i]) continue;
+    while (top >= 2 && area(q[stk[top - 2]], q[stk[top - 1]], q[i]) >= 0)
+      top--;
+    stk[top++] = i;
+  }
+
+  double res = 0;
+  for (int i = 1; i < top; i++)
+    res += get_dist(q[stk[i - 1]], q[stk[i]]);
+
+  return res;
+}
+
+int main() {
+  scanf("%d", &n);
+  for (int i = 0; i < n; i++) scanf("%lf%lf", &q[i].x, &q[i].y);
+  sort(q, q + n);
+  int idx = 1;
+  for (int i = 1; i < n; i++) if (q[i] != q[idx - 1]) q[idx++] = q[i];
+  n = idx;
+  printf("%.2lf\n", andrew());
+}
+```
 
 
 

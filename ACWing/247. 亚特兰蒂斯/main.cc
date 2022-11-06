@@ -7,78 +7,76 @@ using namespace std;
 const int N = 100010;
 int n;
 struct Segment {
-    double x, y1, y2;
-    int k;
-    bool operator<(const Segment &t) const {
-        return x < t.x;
-    }
+  double x, y1, y2;
+  int k;
+  bool operator<(const Segment &t) const { return x < t.x; }
 } seg[N * 2];
 struct Node {
-    int l, r;
-    int cnt;
-    double len;
+  int l, r;
+  int cnt;
+  double len;
 } tr[N * 8];
-
 vector<double> ys;
 
-int find(double y) {
-    return lower_bound(ys.begin(), ys.end(), y) - ys.begin();
+int find(double y) { 
+  return lower_bound(ys.begin(), ys.end(), y) - ys.begin(); 
 }
 
 void pushup(int u) {
-    if (tr[u].cnt) tr[u].len = ys[tr[u].r + 1] - ys[tr[u].l];
-    else {
-        if (tr[u].l != tr[u].r) tr[u].len = tr[u << 1].len + tr[u << 1 | 1].len;
-        else tr[u].len = 0;
-    }
+  if (tr[u].cnt)
+    tr[u].len = ys[tr[u].r + 1] - ys[tr[u].l];
+  else {
+    if (tr[u].l != tr[u].r)
+      tr[u].len = tr[u << 1].len + tr[u << 1 | 1].len;
+    else
+      tr[u].len = 0;
+  }
 }
 
 void build(int u, int l, int r) {
-    tr[u] = {l, r};
-    if (l == r) return;
-    int mid = l + r >> 1;
-    build(u << 1, l, mid), build(u << 1 | 1, mid + 1, r);
+  tr[u] = {l, r};
+  if (l == r) return;
+  int mid = l + r >> 1;
+  build(u << 1, l, mid), build(u << 1 | 1, mid + 1, r);
 }
 
 void modify(int u, int l, int r, int k) {
-    if (tr[u].l >= l && tr[u].r <= r) {
-        tr[u].cnt += k;
-    } else {
-        int mid = tr[u].l + tr[u].r >> 1;
-        if (l <= mid) modify(u << 1, l, r, k);
-        if (r > mid) modify(u << 1 | 1, l, r, k);
-    }
-    
-    pushup(u);
+  if (tr[u].l >= l && tr[u].r <= r) {
+    tr[u].cnt += k;
+  } else {
+    int mid = tr[u].l + tr[u].r >> 1;
+    if (l <= mid) modify(u << 1, l, r, k);
+    if (r > mid) modify(u << 1 | 1, l, r, k);
+  }
+
+  pushup(u);
 }
 
 int main() {
-    int T = 1;
-    while (cin >> n, n) {
-        ys.clear();
-        for (int i = 0, j = 0; i < n; i++) {
-            double x1, y1, x2, y2;
-            scanf("%lf%lf%lf%lf", &x1, &y1, &x2, &y2);
-            seg[j++] = {x1, y1, y2, 1};
-            seg[j++] = {x2, y1, y2, -1};
-            ys.push_back(y1), ys.push_back(y2);
-        }
-
-        sort(ys.begin(), ys.end());
-        ys.erase(unique(ys.begin(), ys.end()), ys.end());
-        build(1, 0, ys.size() - 2);
-
-        sort(seg, seg + n * 2);
-
-        double res = 0;
-        for (int i = 0; i < n * 2; i++) {
-            if (i) res += tr[1].len * (seg[i].x - seg[i - 1].x);
-            modify(1, find(seg[i].y1), find(seg[i].y2) - 1, seg[i].k);
-        }
-
-        printf("Test case #%d\n", T++);
-        printf("Total explored area: %.2lf\n\n", res);
+  int T = 1;
+  while (cin >> n, n) {
+    ys.clear();
+    for (int i = 0, j = 0; i < n; i++) {
+      double x1, y1, x2, y2;
+      scanf("%lf%lf%lf%lf", &x1, &y1, &x2, &y2);
+      seg[j++] = {x1, y1, y2, 1};
+      seg[j++] = {x2, y1, y2, -1};
+      ys.push_back(y1), ys.push_back(y2);
     }
 
-    return 0;
+    sort(ys.begin(), ys.end());
+    ys.erase(unique(ys.begin(), ys.end()), ys.end());
+    build(1, 0, ys.size() - 2);
+
+    sort(seg, seg + n * 2);
+
+    double res = 0;
+    for (int i = 0; i < n * 2; i++) {
+      if (i) res += tr[1].len * (seg[i].x - seg[i - 1].x);
+      modify(1, find(seg[i].y1), find(seg[i].y2) - 1, seg[i].k);
+    }
+
+    printf("Test case #%d\n", T++);
+    printf("Total explored area: %.2lf\n\n", res);
+  }
 }
