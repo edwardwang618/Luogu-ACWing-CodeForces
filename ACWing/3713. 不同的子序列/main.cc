@@ -10,9 +10,9 @@ int f[2][N];
 int main() {
   scanf("%d\n", &Q);
   while (Q--) {
-    scanf("%s", s);
-    scanf("%s", t);
-    int n = strlen(s), m = strlen(t);
+    scanf("%s", s + 1);
+    scanf("%s", t + 1);
+    int n = strlen(s + 1), m = strlen(t + 1);
     if (n < m) {
       puts("0");
       continue;
@@ -24,14 +24,16 @@ int main() {
     for (i = 1; i <= m; i++) {
       for (int j = 0; j <= n; j++) {
         f[i & 1][j] = f[i & 1][j - 1];
-        if (s[j - 1] == t[i - 1])
+        if (s[j] == t[i])
           f[i & 1][j] = (f[i & 1][j] + f[i - 1 & 1][j - 1]) % mod;
       }
-      
+
       if (!f[i & 1][n]) break;
     }
 
-    if (i <= m) puts("0");
-    else printf("%d\n", f[m & 1][n]);
+    if (i <= m)
+      puts("0");
+    else
+      printf("%d\n", f[m & 1][n]);
   }
 }
