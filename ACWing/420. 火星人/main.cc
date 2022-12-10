@@ -3,35 +3,31 @@
 using namespace std;
 
 const int N = 10010;
-
 int n, m;
 int a[N];
 
 int main() {
-    cin >> n >> m;
+  cin >> n >> m;
 
-    for (int i = 1; i <= n; i++) cin >> a[i];
+  for (int i = 1; i <= n; i++) cin >> a[i];
 
-    while (m--) {
-        int k = n;
-        while (a[k - 1] > a[k]) k--;
-        
-        int l = k, r = n;
-        while (l < r) {
-            int m = l + (r - l + 1 >> 1);
-            if (a[m] > a[k - 1]) {
-                l = m;
-            } else {
-                r = m - 1;
-            }
-        }
+  while (m--) {
+    int k = n;
+    while (a[k - 1] > a[k]) k--;
 
-        swap(a[k - 1], a[l]);
-        reverse(a + k, a + n + 1);
+    int l = k, r = n;
+    while (l < r) {
+      int m = l + (r - l + 1 >> 1);
+      if (a[m] > a[k - 1])
+        l = m;
+      else
+        r = m - 1;
     }
 
-    for (int i = 1; i <= n; i++) cout << a[i] << ' ';
-    cout << endl;
+    swap(a[k - 1], a[l]);
+    reverse(a + k, a + n + 1);
+  }
 
-    return 0;
+  for (int i = 1; i <= n; i++) cout << a[i] << ' ';
+  cout << endl;
 }

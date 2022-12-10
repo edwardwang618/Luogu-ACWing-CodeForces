@@ -1910,7 +1910,7 @@ vector<int> morris_postorder(TreeNode *root) {
 
 ## 二叉搜索树
 
-#### 查找
+### 查找
 
 ```cpp
 TreeNode* search(TreeNode *root, int key) {
@@ -1932,7 +1932,7 @@ TreeNode* search(TreeNode *root, int key) {
 }
 ```
 
-#### 插入
+### 插入
 
 ```cpp
 TreeNode* insert(TreeNode *root, int key) {
@@ -1944,7 +1944,7 @@ TreeNode* insert(TreeNode *root, int key) {
 }
 ```
 
-#### 删除
+### 删除
 
 版本1（以前驱覆盖）
 
@@ -2042,7 +2042,7 @@ TreeNode* remove(TreeNode *root, int key) {
 }
 ```
 
-#### 分裂
+### 分裂
 
 将二叉搜索树分裂为小于等于$key$和大于$key$的两棵树。
 
@@ -2061,7 +2061,7 @@ vector<TreeNode *> split(TreeNode *root, int key) {
 }
 ```
 
-#### 合并
+### 合并
 
 假设两棵二叉搜索树$x$和$y$满足$x$的最大值小于等于$y$的最小值，求它们的合并之后的二叉搜索树。
 
