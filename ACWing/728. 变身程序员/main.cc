@@ -1,7 +1,5 @@
 #include <iostream>
 #include <sstream>
-#define x first
-#define y second
 using namespace std;
 using PII = pair<int, int>;
 
@@ -28,8 +26,7 @@ int main() {
   while (hh < tt) {
     res++;
     for (int i = tt - hh; i; i--) {
-      auto t = q[hh++];
-      int x = t.x, y = t.y;
+      auto [x, y] = q[hh++];
       for (int k = 0; k < 4; k++) {
         int nx = x + d[k], ny = y + d[k + 1];
         if (0 <= nx && nx < m && 0 <= ny && ny < n && a[nx][ny] == 1) {
