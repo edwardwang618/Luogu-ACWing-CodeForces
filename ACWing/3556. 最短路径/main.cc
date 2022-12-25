@@ -1,6 +1,5 @@
-#include <cstring>
 #include <iostream>
-#include <queue>
+#include <cstring>
 using namespace std;
 
 const int N = 60, INF = 0x3f3f3f3f;
