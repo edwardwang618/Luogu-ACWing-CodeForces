@@ -3,36 +3,29 @@ using namespace std;
 
 const int N = 1010, M = 20010;
 int n, m;
-int v[N], w[N], s[N];
 int f[2][M];
 int q[M];
 
 int main() {
-    cin >> n >> m;
+  scanf("%d%d", &n, &m);
 
-    for (int i = 1; i <= n; i++) 
-        // v体积，w价值，s个数
-        cin >> v[i] >> w[i] >> s[i];
+  for (int i = 1; i <= n; i++) {
+    // v体积，w价值，s个数
+    int v, w, s;
+    scanf("%d%d%d", &v, &w, &s);
 
-    for (int i = 1; i <= n; i++) {
-        for (int j = 0; j < v[i]; j++) {
-            int hh = 0, tt = 0;
-            for (int k = j; k <= m; k += v[i]) {  
-                f[i & 1][k] = f[i - 1 & 1][k];  
-                if (hh < tt && q[hh] < k - s[i] * v[i]) hh++;
-                
-                if (hh < tt) 
-                    f[i & 1][k] = max(f[i & 1][k], f[i - 1 & 1][q[hh]] + (k - q[hh]) / v[i] * w[i]);
+    for (int j = 0; j < v; j++) {
+      int hh = 0, tt = 0;
+      for (int k = j; k <= m; k += v) {
+        if (hh < tt && q[hh] < k - s * v) hh++;
+        while (hh < tt && f[i - 1 & 1][q[tt - 1]] - q[tt - 1] / v * w <=
+                              f[i - 1 & 1][k] - k / v * w)
+          tt--;
 
-                while (hh < tt && f[i - 1 & 1][q[tt - 1]] - (q[tt - 1] - j) / v[i] * w[i] <= f[i - 1 & 1][k] - (k - j) / v[i] * w[i])
-                    tt--; 
-
-                q[tt++] = k;
-            }
-        }
+        q[tt++] = k;
+        f[i & 1][k] = f[i - 1 & 1][q[hh]] + (k - q[hh]) / v * w;
+      }
     }
-
-    cout << f[n & 1][m] << endl;
-
-    return 0;
+  }
+  printf("%d\n", f[n & 1][m]);
 }
