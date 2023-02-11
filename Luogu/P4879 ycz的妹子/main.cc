@@ -58,16 +58,16 @@ int main() {
   build(1, 1, 5e5);
 
   while (m--) {
-	char op;
-	cin >> op;
-	int k;
-	long x;
-	if (op == 'C' || op == 'I') {
-	  scanf("%d%ld", &k, &x);
-	  modify(1, k, x, op);
-	} else if (op == 'D') {
-	  scanf("%d", &k);
-	  remove(1, k);
-	} else printf("%ld\n", tr[1].sum);
+	  char op;
+	  cin >> op;
+	  int k;
+	  long x;
+	  if (op == 'C' || op == 'I') {
+	    scanf("%d%ld", &k, &x);
+	    modify(1, k, x, op);
+	  } else if (op == 'D') {
+	    scanf("%d", &k);
+	    remove(1, k);
+	  } else printf("%ld\n", tr[1].sum);
   }
 }
