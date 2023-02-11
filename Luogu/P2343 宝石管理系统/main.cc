@@ -10,7 +10,9 @@ struct Node {
 } tr[N];
 int root, idx;
 
-void pushup(int p) { tr[p].sz = tr[tr[p].l].sz + tr[tr[p].r].sz + tr[p].cnt; }
+void pushup(int p) { 
+  tr[p].sz = tr[tr[p].l].sz + tr[tr[p].r].sz + tr[p].cnt; 
+}
 
 void zig(int &p) {
   int q = tr[p].l;
