@@ -5,7 +5,7 @@ const int N = 1e7 + 10;
 int n, m;
 int tr[N];
 
-#define lowbit(x) x & -x
+#define lowbit(x) (x & -x)
 
 void add(int k, int x) {
   for (int i = k; i <= n; i += lowbit(i)) tr[i] += x;
