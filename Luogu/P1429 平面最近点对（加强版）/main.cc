@@ -38,7 +38,7 @@ ll dfs(int l, int r) {
   for (int i = l; i <= r; i++)
     if (sqr(p[i].x - t) < d) b[++cnt] = i;
   for (int i = 1; i <= cnt; i++)
-    for (int j = i + 1; j <= cnt && (p[b[j]].y - p[b[i]].y) < d; j++)
+    for (int j = i + 1; j <= cnt && sqr(p[b[j]].y - p[b[i]].y) < d; j++)
       d = min(d, dis(b[i], b[j]));
   return d;
 }

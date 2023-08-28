@@ -21,7 +21,7 @@ int main() {
   int T;
   scanf("%d", &T);
   while (T--) {
-    scanf("%d%s", &n, s);
+    scanf("%d%s", &n, s + 1);
     printf("%d\n", dfs(1, n, 'a'));
   }
 }
