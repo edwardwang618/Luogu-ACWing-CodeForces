@@ -6,36 +6,36 @@ const int N = 100003;
 int h[N], e[N], ne[N], idx;
 
 void insert(int x) {
-    int k = (x % N + N) % N;
-    e[idx] = x, ne[idx] = h[k], h[k] = idx++;
+  int k = (x % N + N) % N;
+  e[idx] = x, ne[idx] = h[k], h[k] = idx++;
 }
 
 bool find(int x) {
-    int k = (x % N + N) % N;
-    for (int i = h[k]; i != -1; i = ne[i]) 
-        if (e[i] == x) return true;
+  int k = (x % N + N) % N;
+  for (int i = h[k]; ~i; i = ne[i])
+    if (e[i] == x) return true;
 
-    return false;
+  return false;
 }
 
 int main() {
-    int n;
-    cin >> n;
+  int n;
+  cin >> n;
 
-    memset(h, -1, sizeof h);
+  memset(h, -1, sizeof h);
 
-    while (n--) {
-        char op[2];
-        int x;
-        cin >> op;
-        cin >> x;
-        if (op[0] == 'I') {
-            insert(x);
-        } else if (op[0] == 'Q') {
-            if (find(x)) cout << "Yes" << endl;
-            else cout << "No" << endl;
-        }
+  while (n--) {
+    char op[2];
+    int x;
+    cin >> op;
+    cin >> x;
+    if (op[0] == 'I')
+      insert(x);
+    else if (op[0] == 'Q') {
+      if (find(x))
+        cout << "Yes" << endl;
+      else
+        cout << "No" << endl;
     }
-
-    return 0;
+  }
 }
