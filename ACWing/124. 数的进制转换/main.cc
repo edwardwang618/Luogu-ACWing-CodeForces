@@ -1,7 +1,7 @@
+#include <algorithm>
 #include <iostream>
 #include <string>
 #include <vector>
-#include <algorithm>
 using namespace std;
 
 int ain, aout;
@@ -17,6 +17,7 @@ char get(int x) {
 
 void div(vector<int>& a, int b, int& r) {
   vector<int> c;
+  r = 0;
   for (int i = 0; i < a.size(); i++) {
     r = r * ain + a[i];
     c.push_back(r / b);
@@ -51,8 +52,8 @@ int main() {
     cout << aout << " ";
 
     string res;
+    int r;
     while (a.size()) {
-      int r = 0;
       div(a, aout, r);
       res += get(r);
     }
