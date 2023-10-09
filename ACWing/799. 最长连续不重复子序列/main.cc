@@ -1,5 +1,5 @@
 #include <iostream>
-#include <unordered_map>
+#include <unordered_set>
 using namespace std;
 
 const int N = 100010;
@@ -10,10 +10,10 @@ int main() {
   for (int i = 0; i < n; i++) scanf("%d", &a[i]);
 
   int res = 0;
-  unordered_map<int, int> map;
+  unordered_set<int> st;
   for (int i = 0, j = 0; i < n; i++) {
-    map[a[i]]++;
-    while (j < i && map[a[i]] > 1) map[a[j++]]--;
+    while (st.count(a[i])) st.erase(a[j++]);
+    st.insert(a[i]);
     res = max(res, i - j + 1);
   }
 
