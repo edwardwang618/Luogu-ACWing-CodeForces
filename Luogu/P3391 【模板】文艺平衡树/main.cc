@@ -2,9 +2,11 @@
 using namespace std;
 
 const int N = 1e5 + 10;
+struct Node {
 #define lc(p) tr[p].l
 #define rc(p) tr[p].r
-struct Node {
+#define key(p) tr[p].key
+#define sz(p) tr[p].sz
   int l, r;
   int key, val;
   int sz;
@@ -20,7 +22,7 @@ int get_node(int key) {
   return idx;
 }
 
-#define pushup(p) tr[p].sz = tr[lc(p)].sz + tr[rc(p)].sz + 1
+#define pushup(p) sz(p) = sz(lc(p)) + sz(rc(p)) + 1
 
 void pushdown(int p) {
   swap(lc(p), rc(p));
@@ -36,9 +38,9 @@ void split(int p, int sz, int &x, int &y) {
   else {
     // 要分裂p了，先下传懒标记
     if (tr[p].rev) pushdown(p);
-    if (tr[lc(p)].sz < sz) {
+    if (sz(lc(p)) < sz) {
       x = p;
-      split(rc(p), sz - tr[lc(p)].sz - 1, rc(p), y);
+      split(rc(p), sz - sz(lc(p)) - 1, rc(p), y);
     } else {
       y = p;
       split(lc(p), sz, x, lc(p));
@@ -56,13 +58,13 @@ int merge(int x, int y) {
   if (tr[x].val > tr[y].val) {
     // 要将x右子树与y合并，合并之前下传x的懒标记
     if (tr[x].rev) pushdown(x);
-    tr[x].r = merge(tr[x].r, y);
+    rc(x) = merge(rc(x), y);
     pushup(x);
     // x是新树根
     return x;
   } else {
     if (tr[y].rev) pushdown(y);
-    tr[y].l = merge(x, tr[y].l);
+    lc(y) = merge(x, lc(y));
     pushup(y);
     return y;
   }
