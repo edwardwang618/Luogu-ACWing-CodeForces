@@ -38,18 +38,13 @@ void pushup(int p) {
 void pushdown(int p) {
   if (add(p)) {
     int a = add(p);
-    add(lc(p)) += a;
-    m(lc(p)) += a;
-    key(lc(p)) += a;
-    add(rc(p)) += a;
-    m(rc(p)) += a;
-    key(rc(p)) += a;
+    add(lc(p)) += a, m(lc(p)) += a, key(lc(p)) += a;
+    add(rc(p)) += a, m(rc(p)) += a, key(rc(p)) += a;
     add(p) = 0;
   }
   if (tr[p].rev) {
     swap(lc(p), rc(p));
-    tr[lc(p)].rev ^= 1;
-    tr[rc(p)].rev ^= 1;
+    tr[lc(p)].rev ^= 1, tr[rc(p)].rev ^= 1;
     tr[p].rev = false;
   }
 }
@@ -95,9 +90,7 @@ void insert(int pos, int v) {
 void add_to(int l, int r, int d) {
   split(root, l - 1, x, z);
   split(z, r - l + 1, y, z);
-  add(y) += d;
-  m(y) += d;
-  key(y) += d;
+  add(y) += d, m(y) += d, key(y) += d;
   root = merge(merge(x, y), z);
 }
 
