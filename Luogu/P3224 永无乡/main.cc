@@ -88,7 +88,8 @@ int main() {
   scanf("%d%d", &n, &m);
   for (int i = 1, x; i <= n; i++) {
     scanf("%d", &x);
-    p[i] = root[i] = get_node(i, x);
+    p[i] = i;
+    root[i] = get_node(i, x);
   }
 
   while (m--) {
