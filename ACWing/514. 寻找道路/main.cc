@@ -55,7 +55,8 @@ int main() {
   }
   scanf("%d%d", &st, &en);
   dfs(en);
-  for (int i = 1; i <= n; i++)
+  for (int i = 1; i <= n; i++) {
+    if (!vis[i]) cannot_use[i] = true;
     for (int j = h1[i]; ~j; j = ne1[j]) {
       int v = e1[j];
       if (!vis[v]) {
@@ -63,5 +64,6 @@ int main() {
         break;
       }
     }
+  }
   printf("%d\n", bfs());
 }
