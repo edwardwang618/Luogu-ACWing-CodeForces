@@ -28,7 +28,7 @@ int main() {
   for (int i = 1; i <= n; i++) {
     int x, m;
     scanf("%d%d", &x, &m);
-    g[x].reserve(0);
+    g.insert({x, {}});
     for (int j = 1; j <= m; j++) {
       int y;
       scanf("%d", &y);
