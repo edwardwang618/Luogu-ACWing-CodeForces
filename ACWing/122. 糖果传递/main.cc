@@ -16,8 +16,7 @@ int main() {
     sum += a[i];
   }
   sum /= n;
-  for (int i = 1; i <= n; i++) a[i] -= sum;
-  for (int i = 1; i <= n; i++) s[i] = s[i - 1] + a[i];
+  for (int i = 1; i <= n; i++) a[i] -= sum, s[i] = s[i - 1] + a[i];
   sort(s + 1, s + 1 + n);
   ll res = 0;
   for (int i = 1; i <= n; i++) res += abs(s[i] - s[(n + 1) / 2]);
