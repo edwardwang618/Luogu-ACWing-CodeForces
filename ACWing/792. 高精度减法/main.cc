@@ -1,49 +1,41 @@
+#include <algorithm>
 #include <iostream>
 #include <string>
-#include <vector>
 using namespace std;
 
-bool cmp(vector<int>& A, vector<int>& B) {
-  if (A.size() != B.size()) return A.size() >= B.size();
-  for (int i = A.size(); i >= 0; i--)
-    if (A[i] != B[i]) return A[i] >= B[i];
-
-  return true;
+bool cmp(auto& a, auto& b) {
+  if (a.size() != b.size()) return a.size() >= b.size();
+  return a >= b;
 }
 
-vector<int> subtract(vector<int>& A, vector<int>& B) {
-  vector<int> C;
-  for (int i = 0; i < A.size(); i++) {
-    if (A[i] >= B[i])
-      C.push_back(A[i] - B[i]);
-    else {
-      C.push_back(A[i] + 10 - B[i]);
-      A[i + 1]--;
-    }
+string sub(auto& a, auto& b) {
+  string c;
+  c.reserve(a.size());
+
+  for (int i = 0, t = 0; i < a.size(); ++i) {
+    int x = a[a.size() - 1 - i] - '0';
+    int y = (i < b.size() ? b[b.size() - 1 - i] - '0' : 0);
+    int diff = x - y - t;
+
+    if (diff < 0) {
+      diff += 10;
+      t = 1;
+    } else
+      t = 0;
+
+    c += diff + '0';
   }
 
-  while (C.size() > 1 && C.back() == 0) C.pop_back();
+  while (c.size() > 1 && c.back() == '0') c.pop_back();
 
-  return C;
+  reverse(c.begin(), c.end());
+  return c;
 }
 
 int main() {
   string a, b;
-  vector<int> A, B;
+  getline(cin, a);
+  getline(cin, b);
 
-  cin >> a >> b;
-  for (int i = a.size() - 1; i >= 0; i--) A.push_back(a[i] - '0');
-  for (int i = b.size() - 1; i >= 0; i--) B.push_back(b[i] - '0');
-
-  vector<int> C;
-  if (cmp(A, B))
-    C = subtract(A, B);
-  else {
-    C = subtract(B, A);
-    printf("-");
-  }
-
-  for (int i = C.size() - 1; i >= 0; i--) printf("%d", C[i]);
-
-  return 0;
+  cout << (cmp(a, b) ? sub(a, b) : "-" + sub(b, a)) << endl;
 }

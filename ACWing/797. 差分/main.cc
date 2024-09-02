@@ -6,26 +6,20 @@ int a[N], d[N];
 int n, m, l, r, c;
 
 int main() {
-    cin >> n >> m;
-    for (int i = 0; i < n; i++) cin >> a[i];
+  scanf("%d%d", &n, &m);
+  for (int i = 1; i <= n; i++) {
+    scanf("%d", &a[i]);
+    d[i] = a[i] - a[i - 1];
+  }
 
-    for (int i = 0; i < n; i++) {
-        d[i] += a[i]; 
-        if (i + 1 < n)
-            d[i + 1] -= a[i];
-    }
+  while (m--) {
+    scanf("%d%d%d", &l, &r, &c);
+    d[l] += c;
+    d[r + 1] -= c;
+  }
 
-    while (m--) {
-        cin >> l >> r >> c;
-        d[l - 1] += c;
-        d[r] -= c;
-    }
-    
-    int s = 0;
-    for (int i = 0; i < n; i++) {
-        s += d[i];
-        printf("%d ", s);
-    }
-
-    return 0;
+  for (int i = 1, s = 0; i <= n; i++) {
+    s += d[i];
+    printf("%d ", s);
+  }
 }
