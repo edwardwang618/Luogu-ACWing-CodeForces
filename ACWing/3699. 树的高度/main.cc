@@ -28,9 +28,9 @@ int bfs() {
         }
       }
     }
-    res++;
+    if (hh < tt) res++;
   }
-  return res - 1;
+  return res;
 }
 
 int main() {
