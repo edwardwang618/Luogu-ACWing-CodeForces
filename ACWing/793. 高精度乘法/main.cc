@@ -1,34 +1,33 @@
+#include <algorithm>
 #include <iostream>
 #include <string>
-#include <vector>
 using namespace std;
 
-vector<int> mult(vector<int>& A, int b) {
-    vector<int> C;
+string mult(string& a, int b) {
+  if (b == 0) return "0";
 
-    int t = 0;
-    for (int i = 0; i < A.size() || t > 0; i++) {
-        if (i < A.size()) t += A[i] * b;
-        C.push_back(t % 10);
-        t /= 10;
-    }
+  string res;
 
-    while (C.size() > 1 && C.back() == 0) C.pop_back();
+  int t = 0;
+  for (int i = a.size() - 1; i >= 0; i--) {
+    int prod = (a[i] - '0') * b + t;
+    res.push_back(prod % 10 + '0');
+    t = prod / 10;
+  }
 
-    return C;
+  while (t) {
+    res.push_back(t % 10 + '0');
+    t /= 10;
+  }
+
+  reverse(res.begin(), res.end());
+  return res;
 }
 
 int main() {
-    string a;
-    int b;
+  string a;
+  int b;
 
-    cin >> a >> b;
-    
-    vector<int> A;
-    for (int i = a.size() - 1; i >= 0; i--)  A.push_back(a[i] - '0');
-
-    auto C = mult(A, b);
-    for (int i = C.size() - 1; i >= 0; i--) printf("%d", C[i]);
-
-    return 0;
+  cin >> a >> b;
+  cout << mult(a, b) << endl;
 }
