@@ -5,7 +5,7 @@ const int N = 100010;
 int n, k;
 int a[N];
 
-int quick_select(int l, int r, int idx) {
+int quick_select(int l, int r, int k) {
   while (l < r) {
     int i = l, j = r;
     int piv = a[l + (r - l >> 1)];
@@ -15,11 +15,11 @@ int quick_select(int l, int r, int idx) {
       if (i <= j) swap(a[i++], a[j--]);
     }
 
-    if (idx <= j) r = j;
-    else if (idx >= i) l = i;
+    if (k <= j) r = j;
+    else if (k >= i) l = i;
     else break;
   }
-  return a[idx];
+  return a[k];
 }
 
 int main() {
