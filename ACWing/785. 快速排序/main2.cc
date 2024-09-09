@@ -1,16 +1,11 @@
-#include <iostream>
+#include <algorithm>
 #include <cstring>
+#include <iostream>
 using namespace std;
 
 const int N = 1e5 + 10;
 int n, a[N];
 int tmp[N], cnt[15];
-
-int max_num() {
-  int M = 0;
-  for (int i = 1; i <= n; i++) M = max(M, a[i]);
-  return M;
-}
 
 void radix_sort(int M) {
   for (int rad = 1; rad <= M; rad *= 10) {
@@ -26,6 +21,6 @@ int main() {
   scanf("%d", &n);
   for (int i = 1; i <= n; i++) scanf("%d", &a[i]);
 
-  radix_sort(max_num());
+  radix_sort(*max_element(a + 1, a + 1 + n));
   for (int i = 1; i <= n; i++) printf("%d ", a[i]);
 }
