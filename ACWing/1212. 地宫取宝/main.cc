@@ -20,7 +20,7 @@ int main() {
   for (int i = 1; i <= n; i++)
     for (int j = 1; j <= m; j++)
       for (int c = 0; c <= k; c++)
-        for (int v = 0; v <= M; v++) {
+        for (int v = 0; v < M; v++) {
           int& x = f[i][j][c][v];
           x = add(x, f[i - 1][j][c][v]);
           x = add(x, f[i][j - 1][c][v]);
@@ -31,6 +31,6 @@ int main() {
             }
         }
   int res = 0;
-  for (int i = 1; i <= M; i++) res = add(res, f[n][m][k][i]);
+  for (int i = 1; i < M; i++) res = add(res, f[n][m][k][i]);
   printf("%d\n", res);
 }
