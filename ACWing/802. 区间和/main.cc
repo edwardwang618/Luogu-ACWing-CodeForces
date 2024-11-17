@@ -1,57 +1,41 @@
-#include <iostream>
 #include <algorithm>
+#include <iostream>
+#include <unordered_map>
 #include <vector>
-#define x first
-#define y second
 using namespace std;
 using PII = pair<int, int>;
 
-const int N = 300010;
+const int N = 3e5 + 10;
 int n, m;
 int a[N], s[N];
-vector<int> alls;
-vector<PII> add, query;
-
-int find(int x) {
-  int l = 0, r = alls.size() - 1;
-  while (l < r) {
-    int m = l + (r - l >> 1);
-    if (alls[m] >= x) r = m;
-    else l = m + 1;
-  }
-
-  return l + 1;
-}
+vector<int> xs;
+vector<PII> adds, qs;
+unordered_map<int, int> mp;
 
 int main() {
-  cin >> n >> m;
-  for (int i = 0; i < n; i++) {
+  scanf("%d%d", &n, &m);
+  xs.reserve(n + 2 * m);
+  for (int i = 1; i <= n; i++) {
     int x, c;
-    cin >> x >> c;
-    add.push_back({x, c});
-    alls.push_back(x);
+    scanf("%d%d", &x, &c);
+    adds.emplace_back(x, c);
+    xs.push_back(x);
   }
 
-  for (int i = 0; i < m; i++) {
+  for (int i = 1; i <= m; i++) {
     int l, r;
-    cin >> l >> r;
-    query.push_back({l, r});
-    alls.push_back(l);
-    alls.push_back(r);
+    scanf("%d%d", &l, &r);
+    qs.emplace_back(l, r);
+    xs.push_back(l), xs.push_back(r);
   }
 
-  sort(alls.begin(), alls.end());
-  alls.erase(unique(alls.begin(), alls.end()), alls.end());
+  sort(xs.begin(), xs.end());
+  xs.erase(unique(xs.begin(), xs.end()), xs.end());
+  mp.reserve(xs.size());
+  for (int i = 0; i < xs.size(); i++) mp.emplace(xs[i], i + 1);
 
-  for (auto item : add) {
-    int x = find(item.x);
-    a[x] += item.y;
-  }
+  for (auto [x, c] : adds) a[mp[x]] += c;
+  for (int i = 1; i <= xs.size(); i++) s[i] = s[i - 1] + a[i];
 
-  for (int i = 1; i <= alls.size(); i++) s[i] = s[i - 1] + a[i];
-
-  for (auto item : query) {
-    int l = find(item.x), r = find(item.y);
-    cout << s[r] - s[l - 1] << endl;
-  }
+  for (auto [l, r] : qs) printf("%d\n", s[mp[r]] - s[mp[l] - 1]);
 }
