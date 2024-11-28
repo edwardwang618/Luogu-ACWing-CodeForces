@@ -5,14 +5,11 @@ using namespace std;
 const int N = 100010;
 int head, e[N], ne[N], idx;
 
-void init() {
-  head = -1;
-  idx = 0;
-}
+void init() { head = -1, idx = 0; }
 
-void add_to_head(int x) { e[idx] = x, ne[idx] = head, head = idx, idx++; }
+void add_to_head(int x) { e[idx] = x, ne[idx] = head, head = idx++; }
 
-void add(int k, int x) { e[idx] = x, ne[idx] = ne[k], ne[k] = idx, idx++; }
+void add(int k, int x) { e[idx] = x, ne[idx] = ne[k], ne[k] = idx++; }
 
 void remove(int k) { ~k ? ne[k] = ne[ne[k]] : head = ne[head]; }
 

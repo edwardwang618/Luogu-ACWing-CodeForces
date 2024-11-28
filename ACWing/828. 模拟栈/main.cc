@@ -32,6 +32,4 @@ int main() {
     else if (op == "query")
       cout << query() << endl;
   }
-
-  return 0;
 }
