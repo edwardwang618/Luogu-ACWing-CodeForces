@@ -1,13 +1,14 @@
 #include <iostream>
 using namespace std;
+using ll = long long;
 
 const int N = 100010;
-const long P = 131;
+const ll P = 131;
 int n, m;
 char s[N];
-long h[N], p[N];
+ll h[N], p[N];
 
-long ha(int l, int r) { return h[r] - h[l - 1] * p[r - l + 1]; }
+ll ha(int l, int r) { return h[r] - h[l - 1] * p[r - l + 1]; }
 
 int main() {
   scanf("%d%d", &n, &m);

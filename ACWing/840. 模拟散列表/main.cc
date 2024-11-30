@@ -1,5 +1,5 @@
-#include <iostream>
 #include <cstring>
+#include <iostream>
 using namespace std;
 
 const int N = 100003;
@@ -31,11 +31,7 @@ int main() {
     cin >> x;
     if (op[0] == 'I')
       insert(x);
-    else if (op[0] == 'Q') {
-      if (find(x))
-        cout << "Yes" << endl;
-      else
-        cout << "No" << endl;
-    }
+    else if (op[0] == 'Q')
+      find(x) ? puts("Yes") : puts("No");
   }
 }
