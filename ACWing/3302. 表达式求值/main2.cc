@@ -14,12 +14,8 @@ void update(int &a, int &b, int x, char op) {
 
 int dfs(int &idx, int a, int b) {
   char op = '+';
-  while (idx < s.size()) {
+  while (idx < s.size() && s[idx] != ')') {
     char ch = s[idx];
-    if (ch == ')') {
-      idx++;
-      return a + b;
-    }
     if (!isdigit(ch) && ch != '(') {
       op = ch;
       idx++;
@@ -27,6 +23,7 @@ int dfs(int &idx, int a, int b) {
     if (ch == '(') {
       idx++;
       int x = dfs(idx, 0, 0);
+      idx++;
       update(a, b, x, op);
     }
     if (isdigit(ch)) {
