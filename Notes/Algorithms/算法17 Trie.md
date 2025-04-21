@@ -82,3 +82,56 @@ int main() {
 
 这是个经典的用Trie解决的问题。例题：[https://blog.csdn.net/qq_46105170/article/details/113807387](https://blog.csdn.net/qq_46105170/article/details/113807387)给定一个数组，求异或值最大的数对。思路是，枚举第二个数$x$，然后在其前寻找与之异或最大的数。可以将前面的数视为二进制，然后存入Trie，从高位到低位存，接着拿$x$在Trie中进行询问，如果在某一位$u$在Trie中能找到$!u$的路径，那就说明$!u$这条路径存在数，而这些数与$x$进行异或的时候，可以保证这一位是$1$；由于数字是从高位到低位存的，所以走$!u$更优。如此这般，就能找到和$x$异或的最大数。
 
+```cpp
+#include <iostream>
+using namespace std;
+
+// Trie的节点数目可以开大一点
+const int N = 100010, M = 31 * N;
+int a[N], son[M][2], idx;
+
+void insert(int x) {
+    int p = 0;
+    for (int i = 30; i >= 0; i--) {
+        int u = x >> i & 1;
+        if (!son[p][u]) son[p][u] = ++idx;
+        p = son[p][u];
+    }
+}
+
+// 询问与x异或最大的那个数是几
+int query(int x) {
+    int res = 0;
+    int p = 0;
+    for (int i = 30; i >= 0; i--) {
+        int u = x >> i & 1;
+        // 能走不同的边，就走之，反之只能走相同边
+        if (son[p][!u]) {
+            p = son[p][!u];
+            res |= (!u) << i;
+        } else {
+            p = son[p][u];
+            res |= u << i;
+        }
+    }
+
+    return res;
+}
+
+int main() {
+    int n;
+    cin >> n;
+    for (int i = 0; i < n; i++) cin >> a[i];
+
+    int res = 0;
+    for (int i = 0; i < n; i++) {
+        insert(a[i]);
+        res = max(res, query(a[i]) ^ a[i]);
+    }
+
+    cout << res << endl;
+
+    return 0;
+}
+```
+
