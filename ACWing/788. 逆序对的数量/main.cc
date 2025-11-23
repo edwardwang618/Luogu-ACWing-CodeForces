@@ -1,36 +1,28 @@
 #include <iostream>
 using namespace std;
+
 using ll = long long;
 
-const int N = 100010;
-int n;
-int a[N], tmp[N];
+const int N = 1e5 + 10;
+int n, a[N], tmp[N];
 
 ll merge_sort(int l, int r) {
   if (l >= r) return 0;
-
-  int m = l + (r - l >> 1);
-  ll res = merge_sort(l, m) + merge_sort(m + 1, r);
-
-  int i = l, j = m + 1, idx = l;
-  while (i <= m && j <= r) {
-    if (a[i] > a[j]) {
-      res += m - i + 1;
-      tmp[idx++] = a[j++];
-    } else
-      tmp[idx++] = a[i++];
-  }
-
-  while (i <= m) tmp[idx++] = a[i++];
+  int mid = l + r >> 1;
+  ll res = merge_sort(l, mid) + merge_sort(mid + 1, r);
+  int i = l, j = mid + 1, idx = l;
+  while (i <= mid && j <= r)
+    if (a[i] <= a[j]) tmp[idx++] = a[i++], res += j - mid - 1;
+    else tmp[idx++] = a[j++]; 
+  while (i <= mid) tmp[idx++] = a[i++], res += r - mid;
   while (j <= r) tmp[idx++] = a[j++];
-
   for (i = l; i <= r; i++) a[i] = tmp[i];
   return res;
 }
 
 int main() {
-  cin >> n;
-  for (int i = 0; i < n; i++) scanf("%d", &a[i]);
+  scanf("%d", &n);
+  for (int i = 1; i <= n; i++) scanf("%d", &a[i]);
 
-  cout << merge_sort(0, n - 1) << endl;
+  printf("%lld\n", merge_sort(1, n));
 }

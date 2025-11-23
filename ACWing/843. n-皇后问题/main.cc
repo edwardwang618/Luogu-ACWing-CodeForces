@@ -1,41 +1,36 @@
 #include <iostream>
-#include <cstring>
 using namespace std;
 
-void dfs(int i, int res[], int n, bool used[], bool diag[], bool udiag[]) {
-    if (i == n) {
-        for (int j = 0; j < n; j++) {
-            for (int k = 0; k < n; k++) {
-                if (res[j] == k) cout << 'Q';
-                else cout << '.';
-            }
-            cout << endl;
-        }
+const int N = 10;
+int n;
+int res[N];
+bool col[N], diag[2 * N], udiag[2 * N];
 
-        cout << endl;
-        return;
+void dfs(int u) {
+  if (u == n) {
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < n; j++)
+        if (res[i] == j) putchar('Q');
+        else putchar('.');
+      puts("");
     }
 
-    for (int j = 0; j < n; j++) {
-        if (used[j] || diag[i - j + n - 1] || udiag[i + j]) continue;
-        used[j] = diag[i - j + n - 1] = udiag[i + j] = true;
-        res[i] = j;
-        dfs(i + 1, res, n, used, diag, udiag);
-        used[j] = diag[i - j + n - 1] = udiag[i + j] = false;
-    }
+    puts("");
+    return;
+  }
+
+  for (int i = 0; i < n; i++) {
+    // (u, i)
+    // x - y = n - 1 - k
+    if (col[i] || diag[u + i] || udiag[n - 1 - (u - i)]) continue;
+    col[i] = diag[u + i] = udiag[n - 1 - (u - i)] = true;
+    res[u] = i;
+    dfs(u + 1);
+    col[i] = diag[u + i] = udiag[n - 1 - (u - i)] = false;
+  }
 }
 
 int main() {
-    int n;
-    cin >> n;
-
-    int res[n];
-    bool used[n], diag[2 * n - 1], udiag[2 * n - 1];
-    memset(used, false, sizeof used);
-    memset(diag, false, sizeof diag);
-    memset(udiag, false, sizeof udiag);
-
-    dfs(0, res, n, used, diag, udiag);
-
-    return 0;
+  scanf("%d", &n);
+  dfs(0);
 }

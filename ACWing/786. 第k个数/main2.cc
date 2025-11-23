@@ -1,14 +1,12 @@
 #include <iostream>
 using namespace std;
 
-const int N = 100010;
-int n, k;
-int a[N];
+const int N = 1e5 + 10;
+int n, k, a[N];
 
 int quick_select(int l, int r, int k) {
   while (l < r) {
-    int i = l, j = r;
-    int piv = a[l + (r - l >> 1)];
+    int i = l, j = r, piv = a[l + r >> 1];
     while (i <= j) {
       while (a[i] < piv) i++;
       while (a[j] > piv) j--;
@@ -23,7 +21,8 @@ int quick_select(int l, int r, int k) {
 }
 
 int main() {
-  cin >> n >> k;
-  for (int i = 0; i < n; i++) scanf("%d", &a[i]);
-  cout << quick_select(0, n - 1, k - 1) << endl;
+  scanf("%d%d", &n, &k);
+  for (int i = 1; i <= n; i++) scanf("%d", &a[i]);
+
+  printf("%d\n", quick_select(1, n, k));
 }

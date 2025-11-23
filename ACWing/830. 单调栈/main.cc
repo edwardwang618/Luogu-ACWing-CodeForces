@@ -1,20 +1,19 @@
 #include <iostream>
-#include <stack>
 using namespace std;
 
-const int N = 100010;
-int a[N];
+const int N = 1e5 + 10;
+int n, stk[N], top;
 
 int main() {
-  int n;
-  cin >> n;
-  for (int i = 0; i < n; i++) cin >> a[i];
-
-  stack<int> stk;
-
-  for (int i = 0; i < n; i++) {
-    while (!stk.empty() && stk.top() >= a[i]) stk.pop();
-    cout << (stk.empty() ? -1 : stk.top()) << ' ';
-    stk.push(a[i]);
+  scanf("%d", &n);
+  int x;
+  for (int i = 1; i <= n; i++) {
+    scanf("%d", &x);
+    if (!top) printf("-1 ");
+    else {
+      while (top && stk[top - 1] >= x) top--;
+      printf("%d ",  top ? stk[top - 1] : -1);
+    }
+    stk[top++] = x;
   }
 }

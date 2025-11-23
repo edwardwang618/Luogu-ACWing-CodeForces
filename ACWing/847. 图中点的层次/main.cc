@@ -3,55 +3,48 @@
 #include <queue>
 using namespace std;
 
-const int N = 100010;
+const int N = 1e5 + 10;
 int n, m;
 int h[N], e[N], ne[N], idx;
 bool vis[N];
 
 void add(int a, int b) {
-    e[idx] = b, ne[idx] = h[a], h[a] = idx++;
+  e[idx] = b, ne[idx] = h[a], h[a] = idx++;
 }
 
 int bfs() {
-    if (n == 1) return 0;
-
-    int res = 0;
-
-    queue<int> q;
-    q.push(1);
-    vis[1] = true;
-    while (!q.empty()) {
-        res++;
-
-        int s = q.size();
-        for (int i = 0; i < s; i++) {
-            int cur = q.front();
-            q.pop();
-            for (int i = h[cur]; i != -1; i = ne[i]) {
-                int j = e[i];
-                if (j == n) return res;
-                if (!vis[j]) {
-                    vis[j] = true;
-                    q.push(j);
-                }
-            }
+  if (n == 1) return 0;
+  queue<int> q;
+  q.push(1);
+  vis[1] = true;
+  int res = 0;
+  while (q.size()) {
+    res++;
+    for (int i = q.size(); i; i--) {
+      int u = q.front(); q.pop();
+      for (int j = h[u]; ~j; j = ne[j]) {
+        int v = e[j];
+        if (!vis[v]) {
+          if (v == n) return res;
+          vis[v] = true;
+          q.push(v);
         }
+      }
     }
+  }
 
-    return -1;
+  return -1;
 }
 
 int main() {
-    cin >> n >> m;
+  scanf("%d%d", &n, &m);
+  memset(h, -1, sizeof h);
+  for (int i = 1; i <= m; i++) {
+    int a, b;
+    scanf("%d%d", &a, &b);
+    if (a == b) continue;
+    add(a, b);
+  }
 
-    memset(h, -1, sizeof h);
-    for (int i = 0; i < m; i++) {
-        int a, b;
-        cin >> a >> b;
-        add(a, b);
-    }
-
-    cout << bfs() << endl;
-
-    return 0;
+  printf("%d\n", bfs());
 }
