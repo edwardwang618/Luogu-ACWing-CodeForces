@@ -1,39 +1,43 @@
 #include <iostream>
 #include <cstring>
 #include <queue>
-using namespace std;
 
+using namespace std;
 using PII = pair<int, int>;
 
-const int N = 1.5e5 + 10, INF = 0x3f3f3f3f;
+const int N = 1e5 + 10, M = 4e5 + 10, INF = 0x3f3f3f3f;
 int n, m;
-int h[N], e[N], ne[N], w[N], idx;
-int dist[N];
+int h[N], e[M], ne[M], w[M], idx;
 bool vis[N];
+int dist[N];
 
-#define add(a, b, c) e[idx] = b, ne[idx] = h[a], w[idx] = c, h[a] = idx++
+#define add(a, b, c) \
+  e[idx] = b, ne[idx] = h[a], w[idx] = c, h[a] = idx++
 
-int dijkstra() {
+int prim() {
   memset(dist, 0x3f, sizeof dist);
-  dist[1] = 0;
+  int res = 0, cnt = 0;
   priority_queue<PII, vector<PII>, greater<>> heap;
   heap.push({0, 1});
   while (heap.size()) {
     auto [dis, u] = heap.top(); heap.pop();
     if (vis[u]) continue;
-    if (u == n) return dis;
-    
+
     vis[u] = true;
+    cnt++;
+  
+    res += dis;
+
     for (int i = h[u]; ~i; i = ne[i]) {
       int v = e[i], c = w[i];
-      if (!vis[v] && dist[v] > dis + c) {
-        dist[v] = dis + c;
-        heap.push({dist[v], v});
+      if (!vis[v] && dist[v] > c) {
+        dist[v] = c;
+        heap.push({c, v});
       }
     }
   }
 
-  return -1;
+  return cnt == n ? res : INF;
 }
 
 int main() {
@@ -43,8 +47,9 @@ int main() {
     int a, b, c;
     scanf("%d%d%d", &a, &b, &c);
     if (a == b) continue;
-    add(a, b, c);
+    add(a, b, c), add(b, a, c);
   }
 
-  printf("%d\n", dijkstra());
+  int res = prim();
+  res == INF ? puts("impossible") : printf("%d\n", res);
 }

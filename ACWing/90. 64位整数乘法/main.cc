@@ -1,22 +1,21 @@
 #include <iostream>
-#include <cstring>
 using namespace std;
 
-long qadd(long a, long b, long p) {
-    long res = 0;
-    while (b) {
-        if (b & 1) res = (res + a) % p;
-        b >>= 1;
-        a = (a + a) % p;
-    }
+using ll = long long;
 
-    return res;
+ll qadd(ll a, ll b, ll p) {
+  ll res = 0;
+  while (b) {
+    if (b & 1) res = (res + a) % p;
+    b >>= 1;
+    a = (a + a) % p;
+  }
+
+  return res;
 }
 
 int main() {
-    long a, b, p;
-    scanf("%ld%ld%ld", &a, &b, &p);
-    printf("%ld\n", qadd(a, b, p));
-
-    return 0;
+  ll a, b, p;
+  scanf("%lld%lld%lld", &a, &b, &p);
+  printf("%lld\n", qadd(a, b, p));
 }

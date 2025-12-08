@@ -5,38 +5,36 @@ using namespace std;
 const int N = 510, INF = 0x3f3f3f3f;
 int n, m;
 int g[N][N], dist[N];
-bool st[N];
+bool vis[N];
 
 int dijkstra() {
   memset(dist, 0x3f, sizeof dist);
   dist[1] = 0;
+  for (int i = 1; i <= n; i++) {
+    int u = -1;
+    for (int i = 1; i <= n; i++) 
+      if (!vis[i] && (!~u || dist[i] < dist[u])) u = i;
+    
+    if (u == n || dist[u] == INF) break;
 
-  for (int i = 0; i < n; i++) {
-    int t = -1;
-    for (int j = 1; j <= n; j++)
-      if (!st[j] && (t == -1 || dist[t] > dist[j])) t = j;
-
-    if (t == n) break;
-
-    st[t] = true;
-    for (int j = 1; j <= n; j++)
-      if (!st[j]) dist[j] = min(dist[j], dist[t] + g[t][j]);
+    vis[u] = true;
+    for (int v = 1; v <= n; v++)
+      if (!vis[v]) dist[v] = min(dist[v], dist[u] + g[u][v]);
   }
 
   return dist[n] == INF ? -1 : dist[n];
 }
 
 int main() {
-  cin >> n >> m;
-
+  scanf("%d%d", &n, &m);
   memset(g, 0x3f, sizeof g);
-
+  for (int i = 1; i <= n; i++) g[i][i] = 0;
   while (m--) {
     int a, b, c;
-    cin >> a >> b >> c;
-    if (a == b) g[a][b] = 0;
-    else g[a][b] = min(g[a][b], c);
+    scanf("%d%d%d", &a, &b, &c);
+    if (a == b) continue;
+    g[a][b] = min(g[a][b], c);
   }
 
-  cout << dijkstra() << endl;
+  printf("%d\n", dijkstra());
 }

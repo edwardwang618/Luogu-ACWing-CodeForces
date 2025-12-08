@@ -3,7 +3,7 @@
 #include <queue>
 using namespace std;
 
-const int N = 1e5 + 10;
+const int N = 1e5 + 10, INF = 0x3f3f3f3f;
 int n, m;
 int h[N], e[N], ne[N], w[N], idx;
 queue<int> q;
@@ -47,5 +47,5 @@ int main() {
   }
   
   int res = spfa();
-  res == 0x3f3f3f3f ? puts("impossible") : printf("%d\n", res);
+  res == INF ? puts("impossible") : printf("%d\n", res);
 }

@@ -1,14 +1,14 @@
 #include <iostream>
 using namespace std;
-using ll = long long;
+using ull = unsigned long long;
 
 const int N = 100010;
-const ll P = 131;
+const ull P = 131;
 int n, m;
 char s[N];
-ll h[N], p[N];
+ull h[N], p[N];
 
-ll ha(int l, int r) { return h[r] - h[l - 1] * p[r - l + 1]; }
+ull ha(int l, int r) { return h[r] - h[l - 1] * p[r - l + 1]; }
 
 int main() {
   scanf("%d%d", &n, &m);
@@ -23,6 +23,7 @@ int main() {
   while (m--) {
     int l1, r1, l2, r2;
     scanf("%d%d%d%d", &l1, &r1, &l2, &r2);
-    ha(l1, r1) == ha(l2, r2) ? puts("Yes") : puts("No");
+    if (r1 - l1 != r2 - l2) puts("No");
+    else ha(l1, r1) == ha(l2, r2) ? puts("Yes") : puts("No");
   }
 }

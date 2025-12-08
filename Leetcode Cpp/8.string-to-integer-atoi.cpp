@@ -8,24 +8,23 @@
 class Solution {
  public:
   int myAtoi(string s) {
-    int i = 0;
-    int n = s.length();
-    while (i < n && s[i] == ' ') i++;
-    if (i == n) return 0;
+    int k = 0;
+    while (k < s.size() && s[k] == ' ') k++;
+    if (k == s.size()) return 0;
 
     int sign = 1;
-    if (s[i] == '+' || s[i] == '-') {
-      sign = (s[i] == '+') ? 1 : -1;
-      i++;
-    }
+    if (s[k] == '-') sign = -1, k++;
+    else if (s[k] == '+') k++;
 
-    long res = 0;
-    for (; i < n && isdigit(s[i]); i++) {
-      res = res * 10 + (s[i] - '0');
-      if (res > INT_MAX) return sign == 1 ? INT_MAX : INT_MIN;
+    int res = 0;
+    for ( ; k < s.size() && '0' <= s[k] && s[k] <= '9'; k++) {
+      int x = s[k] - '0';
+      if (sign == 1 && res > (INT_MAX - x) / 10) return INT_MAX;
+      if (sign == -1 && -res < (INT_MIN + x) / 10) return INT_MIN;
+      if (-res * 10 - x == INT_MIN) return INT_MIN;
+      res = res * 10 + x;
     }
-
-    return (int)(sign * res);
+    return sign * res;
   }
 };
 // @lc code=end

@@ -19,8 +19,7 @@ int bellman_ford() {
       dist[i & 1][v] = min(dist[i & 1][v], dist[i - 1 & 1][u] + w);
     }
 
-  if (dist[k & 1][n] > INF / 2) return INF;
-  else return dist[k & 1][n];
+  return dist[k & 1][n] > INF / 2 ? INF : dist[k & 1][n];
 }
 
 int main() {

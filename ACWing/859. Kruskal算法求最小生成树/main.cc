@@ -2,57 +2,48 @@
 #include <algorithm>
 using namespace std;
 
-const int N = 100010, M = 2 * N;
-
-int n, m;
+const int N = 1e5 + 10, M = 2e5 + 10, INF = 0x3f3f3f3f;
+int n, m, idx;
+struct Edge {
+  int u, v, w;
+} e[M];
 int p[N];
 
-struct Edge {
-    int a, b, w;
-    bool operator<(const Edge &W) const {
-        return w < W.w;
-    }
-} edges[M];
-
-void init(int n) {
-    for (int i = 0; i < n; i++) p[i] = i;
+int find(int x) {
+  return x == p[x] ? x : p[x] = find(p[x]);
 }
 
-int find(int x) {
-    if (x != p[x]) p[x] = find(p[x]);
-    return p[x];
-} 
+bool merge(int a, int b) {
+  int pa = find(a), pb = find(b);
+  if (pa == pb) return false;
+  p[pa] = pb;
+  return true;
+}
 
-bool merge(int x, int y) {
-    int px = find(x), py = find(y);
-    if (px == py) return false;
-    p[px] = py;
-    return true;
+int kruskal() {
+  int res = 0, cnt = 0;
+  sort(e + 1, e + idx + 1, [&](auto& w1, auto& w2) { return w1.w < w2.w; });
+  for (int i = 1; i <= n; i++) p[i] = i;
+  for (int i = 1; i <= idx; i++) {
+    auto [u, v, w] = e[i];
+    if (merge(u, v)) {
+      res += w;
+      cnt++;
+    }
+  }
+
+  return cnt == n - 1 ? res : INF;
 }
 
 int main() {
-    int n, m;
-    cin >> n >> m;
-    for (int i = 0; i < m; i++) {
-        int a, b, w;
-        cin >> a >> b >> w;
-        edges[i] = {a, b, w};
-    }
-    
-    init(n);
-    sort(edges, edges + m);
+  scanf("%d%d", &n, &m);
+  while (m--) {
+    int a, b, c;
+    scanf("%d%d%d", &a, &b, &c);
+    if (a == b) continue;
+    e[++idx] = {a, b, c};
+  }
 
-    int res = 0, cnt = 0;
-    for (int i = 0; i < m; i++) {
-        int a = edges[i].a, b = edges[i].b, w = edges[i].w;
-        if (merge(a, b)) {
-            res += w;
-            cnt++;
-        }
-    }
-
-    if (cnt < n - 1) cout << "impossible" << endl;
-    else cout << res << endl;
-
-    return 0;
+  int res = kruskal();
+  res == INF ? puts("impossible") : printf("%d\n", res);
 }

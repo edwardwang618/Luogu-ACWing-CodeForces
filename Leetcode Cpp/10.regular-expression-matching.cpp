@@ -6,7 +6,7 @@
 
 // @lc code=start
 class Solution {
- public:
+public:
   bool isMatch(string s, string p) {
     int n = s.size(), m = p.size();
     s = " " + s;
@@ -14,13 +14,13 @@ class Solution {
     bool f[n + 1][m + 1];
     memset(f, 0, sizeof f);
     f[0][0] = true;
-    for (int j = 1; j <= m; j++)
-      for (int i = 0; i <= n; i++)
+    auto g = [&](int i, int j) { return s[i] == p[j] || p[j] == '.'; };
+    for (int i = 0; i <= n; i++)
+      for (int j = 1; j <= m; j++)
         if (p[j] != '*')
-          f[i][j] = i && (p[j] == '.' || s[i] == p[j]) && f[i - 1][j - 1];
+          f[i][j] = i && g(i, j) && f[i - 1][j - 1];
         else
-          f[i][j] = j >= 2 && f[i][j - 2] ||
-                    i && f[i - 1][j] && (p[j - 1] == '.' || s[i] == p[j - 1]);
+          f[i][j] = j >= 2 && f[i][j - 2] || i && f[i - 1][j] && g(i, j - 1);
     return f[n][m];
   }
 };

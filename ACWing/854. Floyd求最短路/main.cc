@@ -13,16 +13,15 @@ void floyd() {
 }
 
 int main() {
-  cin >> n >> m >> Q;
+  scanf("%d%d%d", &n, &m, &Q);
 
   for (int i = 1; i <= n; i++)
     for (int j = 1; j <= n; j++)
-      if (i == j) d[i][j] = 0;
-      else d[i][j] = INF;
+      d[i][j] = i == j ? 0 : INF;
 
   while (m--) {
     int a, b, w;
-    cin >> a >> b >> w;
+    scanf("%d%d%d", &a, &b, &w);
     d[a][b] = min(d[a][b], w);
   }
 
@@ -30,7 +29,7 @@ int main() {
 
   while (Q--) {
     int a, b;
-    cin >> a >> b;
-    d[a][b] > INF / 2 ? puts("impossible") : printf("%d", d[a][b]);
+    scanf("%d%d", &a, &b);
+    d[a][b] > INF / 2 ? puts("impossible") : printf("%d\n", d[a][b]);
   }
 }

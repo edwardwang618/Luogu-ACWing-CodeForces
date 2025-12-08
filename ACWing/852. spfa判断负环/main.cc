@@ -1,40 +1,37 @@
-#include <cstring>
 #include <iostream>
+#include <cstring>
 #include <stack>
 using namespace std;
 
-const int N = 100010;
+const int N = 2010, M = 10010;
 int n, m;
-int h[N], w[N], e[N], ne[N], idx;
+int h[N], e[M], ne[M], w[M], idx;
+bool vis[N];
 int dist[N], cnt[N];
-bool st[N];
 
-void add(int a, int b, int c) {
-  e[idx] = b, w[idx] = c, ne[idx] = h[a], h[a] = idx++;
-}
+#define add(a, b, c) \
+  e[idx] = b, ne[idx] = h[a], w[idx] = c, h[a] = idx++
 
 bool spfa() {
   stack<int> stk;
   for (int i = 1; i <= n; i++) {
     stk.push(i);
-    st[i] = true;
+    vis[i] = true;
   }
 
   while (stk.size()) {
-    int t = stk.top();
-    stk.pop();
+    int u = stk.top(); stk.pop();
+    vis[u] = false;
+    for (int i = h[u]; ~i; i = ne[i]) {
+      int v = e[i], c = w[i];
+      if (dist[v] > dist[u] + c) {
+        dist[v] = dist[u] + c;
+        cnt[v] = cnt[u] + 1;
+        if (cnt[v] >= n) return true;
 
-    st[t] = false;
-    for (int i = h[t]; ~i; i = ne[i]) {
-      int j = e[i];
-      if (dist[j] > dist[t] + w[i]) {
-        dist[j] = dist[t] + w[i];
-        cnt[j] = cnt[t] + 1;
-        if (cnt[j] >= n) return true;
-
-        if (!st[j]) {
-          stk.push(j);
-          st[j] = true;
+        if (!vis[v]) {
+          stk.push(v);
+          vis[v] = true;
         }
       }
     }
@@ -44,14 +41,13 @@ bool spfa() {
 }
 
 int main() {
+  scanf("%d%d", &n, &m);
   memset(h, -1, sizeof h);
-  cin >> n >> m;
-
   while (m--) {
     int a, b, c;
-    cin >> a >> b >> c;
+    scanf("%d%d%d", &a, &b, &c);
     add(a, b, c);
   }
 
-  spfa() ? puts("Yes") : puts("No");
+  puts(spfa() ? "Yes" : "No");
 }

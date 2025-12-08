@@ -7,50 +7,29 @@
 // @lc code=start
 class Solution {
  public:
-  // vector<vector<int>> combinationSum(vector<int>& a, int t) {
-  //   vector<vector<int>> res;
-  //   sort(a.begin(), a.end());
-  //   vector<int> v;
-  //   dfs(v, 0, 0, t, a, res);
-  //   return res;
-  // }
-
-  // void dfs(vector<int>& v, int s, int pos, int t, vector<int>& a,
-  // vector<vector<int>>& res) {
-  //   if (s == t) {
-  //     res.push_back(v);
-  //     return;
-  //   }
-
-  //   for (int i = pos; i < a.size(); i++) {
-  //     if (s + a[i] > t) break;
-  //     v.push_back(a[i]);
-  //     dfs(v, s + a[i], i, t, a, res);
-  //     v.pop_back();
-  //   }
-  // }
-
   vector<vector<int>> combinationSum(vector<int>& a, int t) {
+    sort(a.begin(), a.end(), greater<>());
     vector<vector<int>> res;
     vector<int> v;
-    dfs(v, 0, 0, t, a, res);
+    dfs(v, 0, t, a, res);
     return res;
   }
 
-  void dfs(vector<int>& v, int s, int pos, int t, vector<int>& a,
+  static void dfs(vector<int>& v, int pos, int t, vector<int>& a,
            vector<vector<int>>& res) {
-    if (s == t) {
+    if (!t) {
       res.push_back(v);
       return;
     }
 
     if (pos == a.size()) return;
 
-    for (int i = 0; s + i * a[pos] <= t; i++) {
-      dfs(v, s + i * a[pos], pos + 1, t, a, res);
+    int sz = v.size();
+    for (; t >= 0; t -= a[pos]) {
+      dfs(v, pos + 1, t, a, res);
       v.push_back(a[pos]);
     }
-    for (int i = 0; s + i * a[pos] <= t; i++) v.pop_back();
+    v.resize(sz);
   }
 };
 // @lc code=end

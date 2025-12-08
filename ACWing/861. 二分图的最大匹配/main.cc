@@ -2,50 +2,45 @@
 #include <cstring>
 using namespace std;
 
-const int N = 510, M = 100010;
+const int N = 510, M = 1e5 + 10;
 
 int n1, n2, m;
 int h[N], e[M], ne[M], idx;
 int match[N];
-bool st[N];
+bool vis[N];
 
-void add(int a, int b) {
-    e[idx] = b, ne[idx] = h[a], h[a] = idx++;
-}
+#define add(a, b) e[idx] = b, ne[idx] = h[a], h[a] = idx++
 
 bool dfs(int v) {
-    for (int i = h[v]; ~i; i = ne[i]) {
-        int j = e[i];
-        if (!st[j]) {
-            st[j] = true;
-            if (!match[j] || dfs(match[j])) {
-                match[j] = v;
-                return true;
-            }
-        }
+  for (int i = h[v]; ~i; i = ne[i]) {
+    int j = e[i];
+    if (!vis[j]) {
+      vis[j] = true;
+      if (!match[j] || dfs(match[j])) {
+        match[j] = v;
+        return true;
+      }
     }
+  }
 
-    return false;
+  return false;
 }
 
 int main() {
-    cin >> n1 >> n2 >> m;
+  scanf("%d%d%d", &n1, &n2, &m);
 
-    memset(h, -1, sizeof h);
+  memset(h, -1, sizeof h);
 
-    while (m--) {
-        int a, b;
-        cin >> a >> b;
-        add(a, b);
-    }
+  while (m--) {
+    int a, b;
+    scanf("%d%d", &a, &b);
+    add(a, b);
+  }
 
-    int res = 0;
-    for (int i = 1; i <= n1; i++) {
-        memset(st, false, sizeof st);
-        if (dfs(i)) res++;
-    }
-
-    cout << res << endl;
-
-    return 0;
+  int res = 0;
+  for (int i = 1; i <= n1; i++) {
+    memset(vis, false, sizeof vis);
+    if (dfs(i)) res++;
+  }
+  printf("%d\n", res);
 }

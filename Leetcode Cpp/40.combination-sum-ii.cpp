@@ -7,25 +7,29 @@
 // @lc code=start
 class Solution {
  public:
-  vector<vector<int>> combinationSum2(vector<int> &A, int target) {
+  vector<vector<int>> combinationSum2(vector<int> &a, int t) {
     vector<vector<int>> res;
-    sort(A.begin(), A.end(), greater<int>());
+    sort(a.rbegin(), a.rend());
 
     vector<int> v;
-    dfs(0, target, A, v, res);
+    v.reserve(a.size());
+    dfs(0, t, a, v, res);
     return res;
   }
 
-  void dfs(int u, int target, vector<int> &A, vector<int> &v,
+  static void dfs(int u, int t, vector<int> &a, vector<int> &v,
            vector<vector<int>> &res) {
-    if (!target) res.push_back(v);
+    if (!t) {
+      res.push_back(v);
+      return;
+    }
 
-    for (int i = u; i < A.size(); i++) {
-      if (i > u && A[i] == A[i - 1]) continue;
+    for (int i = u; i < a.size(); i++) {
+      if (i > u && a[i] == a[i - 1]) continue;
 
-      if (target >= A[i]) {
-        v.push_back(A[i]);
-        dfs(i + 1, target - A[i], A, v, res);
+      if (t >= a[i]) {
+        v.push_back(a[i]);
+        dfs(i + 1, t - a[i], a, v, res);
         v.pop_back();
       }
     }
