@@ -13,8 +13,9 @@ class Solution {
     mp[0] = 1;
     for (int i = 0, s = 0; i < a.size(); i++) {
       s = (s + a[i] % k + k) % k;
-      res += mp[s];
-      mp[s]++;
+      auto [it, ins] = mp.try_emplace(s, 0);
+      res += it->second;
+      ++it->second;
     }
     return res;
   }

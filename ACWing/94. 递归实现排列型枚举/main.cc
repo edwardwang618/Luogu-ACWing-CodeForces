@@ -1,32 +1,29 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
-const int N = 10;
-int n;
-int a[N];
-bool st[N];
+int n, vis;
 
-void dfs(int idx) {
-    if (idx == n) {
-        for (int i = 0; i < n; i++)
-            cout << a[i] << ' ';
-        cout << endl;
-        return;
-    }
+void dfs(int u, auto& v) {
+  if (u == n + 1) {
+    for (int x : v) printf("%d ", x);
+    puts("");
+    return;
+  }
 
-    for (int i = 1; i <= n; i++) {
-        if (st[i]) continue;
-
-        a[idx] = i;
-        st[i] = true;
-        dfs(idx + 1);
-        st[i] = false;
-    }
+  for (int i = 1; i <= n; i++) {
+    if (vis >> i - 1 & 1) continue;
+    v.push_back(i);
+    vis ^= 1 << i - 1;
+    dfs(u + 1, v);
+    vis ^= 1 << i - 1;
+    v.pop_back();
+  }
 }
 
 int main() {
-    cin >> n;
-    dfs(0);
-
-    return 0;
+  scanf("%d", &n);
+  vector<int> a;
+  a.reserve(n);
+  dfs(1, a);
 }

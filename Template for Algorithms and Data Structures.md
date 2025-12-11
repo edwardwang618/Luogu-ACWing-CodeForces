@@ -5219,7 +5219,7 @@ int dijkstra() {
     for (int j = 1; j <= n; j++)
       if (!st[j] && (t == -1 || dist[t] > dist[j])) t = j;
 
-    if (t == n) break;
+    if (t == n || dist[t] == INF) break;
 
     st[t] = true;
     for (int j = 1; j <= n; j++)

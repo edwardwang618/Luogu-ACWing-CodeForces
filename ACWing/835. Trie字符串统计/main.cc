@@ -2,10 +2,10 @@
 #include <string>
 using namespace std;
 
-const int N = 100010;
+const int N = 1e5 + 10;
 int son[N][26], cnt[N], idx;
 
-void insert(string s) {
+void insert(string& s) {
   int p = 0;
   for (int i = 0; i < s.size(); i++) {
     int u = s[i] - 'a';
@@ -16,7 +16,7 @@ void insert(string s) {
   cnt[p]++;
 }
 
-int query(string s) {
+int query(string& s) {
   int p = 0;
   for (int i = 0; i < s.size(); i++) {
     int u = s[i] - 'a';
@@ -28,6 +28,8 @@ int query(string s) {
 }
 
 int main() {
+  ios::sync_with_stdio(false);
+  cin.tie(nullptr);
   int n;
   cin >> n;
   while (n--) {
@@ -37,6 +39,6 @@ int main() {
     cin >> s;
 
     if (op == 'I') insert(s);
-    else if (op == 'Q') cout << query(s) << endl;
+    else if (op == 'Q') cout << query(s) << '\n';
   }
 }

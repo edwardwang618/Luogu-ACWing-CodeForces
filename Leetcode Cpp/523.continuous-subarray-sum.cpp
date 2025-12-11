@@ -12,9 +12,8 @@ class Solution {
     mp[0] = -1;
     for (int i = 0, s = 0; i < nums.size(); i++) {
       s = (s + nums[i]) % k;
-      if (mp.count(s)) {
-        if (i - mp[s] >= 2) return true;
-      } else mp[s] = i;
+      auto [it, ins] = mp.try_emplace(s, i);
+      if (!ins && i - it->second >= 2) return true;
     }
 
     return false;

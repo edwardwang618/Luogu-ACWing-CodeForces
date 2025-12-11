@@ -4,21 +4,19 @@ using namespace std;
 int state, n;
 
 void dfs(int u) {
-    for (int i = 0; i < n; i++) 
-        if (state >> i & 1)
-            printf("%d ", i + 1);
-    puts("");
+  for (int i = 0; i < n; i++)
+    if (state >> i & 1)
+      printf("%d ", i + 1);
+  puts("");
 
-    for (int i = u; i < n; i++) {
-        state += 1 << i;
-        dfs(i + 1);
-        state -= 1 << i;
-    }
+  for (int i = u; i < n; i++) {
+    state ^= 1 << i;
+    dfs(i + 1);
+    state ^= 1 << i;
+  }
 }
 
 int main() {
-    cin >> n;
-    dfs(0);
-
-    return 0;
+  scanf("%d", &n);
+  dfs(0);
 }

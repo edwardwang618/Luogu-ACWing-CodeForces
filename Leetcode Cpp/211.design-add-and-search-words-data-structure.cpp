@@ -6,39 +6,44 @@
 
 // @lc code=start
 class WordDictionary {
- public:
+public:
   struct Node {
-    Node *son[26];
+    int son[26];
     bool is_word;
-  } *root;
+    Node() : son{0}, is_word(false) {}
+  };
 
-  WordDictionary() {
-    root = new Node();
-  }
+  vector<Node> pl;
 
-  void addWord(string word) {
-    auto cur = root;
+  WordDictionary() { pl.emplace_back(); }
+
+  void addWord(const string &word) {
+    int p = 0;
     for (auto &c : word) {
-      int idx = c - 'a';
-      if (!cur->son[idx]) cur->son[idx] = new Node();
-      cur = cur->son[idx];
+      int idx = c - 'a', ne = pl[p].son[idx];
+      if (!ne) {
+        pl[p].son[idx] = ne = pl.size();
+        pl.emplace_back();
+      }
+      p = pl[p].son[idx];
     }
-    cur->is_word = true;
+    pl[p].is_word = true;
   }
 
-  bool search(string word) {
-    return dfs(0, root, word);
-  }
+  bool search(const string &word) { return dfs(0, 0, word); }
 
-  bool dfs(int u, Node *cur, string &s) {
-    if (u == s.size()) return cur->is_word;
-    if (s[u] != '.')
-      if (cur->son[s[u] - 'a']) 
-        return dfs(u + 1, cur->son[s[u] - 'a'], s);
-      else return false;
-    
+  bool dfs(int u, int p, const string &s) {
+    if (u == s.size())
+      return pl[p].is_word;
+    if (s[u] != '.') {
+      if (pl[p].son[s[u] - 'a'])
+        return dfs(u + 1, pl[p].son[s[u] - 'a'], s);
+      else
+        return false;
+    }
+
     for (int i = 0; i < 26; i++)
-      if (cur->son[i] && dfs(u + 1, cur->son[i], s))
+      if (pl[p].son[i] && dfs(u + 1, pl[p].son[i], s))
         return true;
     return false;
   }

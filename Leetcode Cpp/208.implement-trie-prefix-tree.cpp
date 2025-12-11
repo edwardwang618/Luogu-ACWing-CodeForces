@@ -6,42 +6,48 @@
 
 // @lc code=start
 class Trie {
- public:
+public:
   struct Node {
-    Node *son[26];
+    int son[26];
     bool is_word;
-  } *root;
+    Node() : son{0}, is_word(false) {}
+  };
 
-  Trie() {
-    root = new Node();
+  vector<Node> pool;
+
+  Trie() { pool.emplace_back(); }
+
+  void insert(const string &word) {
+    int p = 0;
+    for (auto &c : word) {
+      int idx = c - 'a', ne = pool[p].son[idx];
+      if (!ne) {
+        pool[p].son[idx] = ne = pool.size();
+        pool.emplace_back();
+      }
+      p = ne;
+    }
+    pool[p].is_word = true;
   }
 
-  void insert(string word) {
-    auto cur = root;
+  bool search(const string &word) {
+    int p = 0;
     for (auto &c : word) {
       int idx = c - 'a';
-      if (!cur->son[idx]) cur->son[idx] = new Node();
-      cur = cur->son[idx]; 
+      if (!pool[p].son[idx])
+        return false;
+      p = pool[p].son[idx];
     }
-    cur->is_word = true;
+    return pool[p].is_word;
   }
 
-  bool search(string word) {
-    auto cur = root;
-    for (auto &c : word) {
-      int idx = c - 'a';
-      if (!cur->son[idx]) return false;
-      cur = cur->son[idx]; 
-    }
-    return cur->is_word;
-  }
-
-  bool startsWith(string prefix) {
-    auto cur = root;
+  bool startsWith(const string &prefix) {
+    int p = 0;
     for (auto &c : prefix) {
       int idx = c - 'a';
-      if (!cur->son[idx]) return false;
-      cur = cur->son[idx]; 
+      if (!pool[p].son[idx])
+        return false;
+      p = pool[p].son[idx];
     }
     return true;
   }

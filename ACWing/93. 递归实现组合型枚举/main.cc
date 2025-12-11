@@ -2,24 +2,23 @@
 using namespace std;
 
 int n, m;
-int a[30];
 
-void dfs(int u, int cnt) {
-    if (cnt == m) {
-        for (int i = 0; i < m; i++) cout << a[i] << ' ';
-        cout << endl;
-        return;
-    }
+void dfs(int u, int cnt, int st) {
+  if (cnt == m) {
+    for (int i = 0; i < n; i++)
+      if (st >> i & 1) printf("%d ", i + 1);
+    puts("");
+    return;
+  }
 
-    for (int i = u; i <= n + 1 + cnt - m; i++) {
-        a[cnt] = i;
-        dfs(i + 1, cnt + 1);
-    }
+  for (int i = u; i <= n + 1 + cnt - m; i++) {
+    st ^= 1 << i - 1;
+    dfs(i + 1, cnt + 1, st);
+    st ^= 1 << i - 1;
+  }
 }
 
 int main() {
-    cin >> n >> m;
-
-    dfs(1, 0);
-    return 0;
+  scanf("%d%d", &n, &m);
+  dfs(1, 0, 0);
 }

@@ -2,6 +2,7 @@
 using namespace std;
 
 const int N = 100010;
+int n;
 int a[N];
 
 int quick_select(int l, int r, int idx) {
@@ -20,14 +21,12 @@ int quick_select(int l, int r, int idx) {
 }
 
 int main() {
-    int n;
-    cin >> n;
+    scanf("%d", &n);
     for (int i = 0; i < n; i++) cin >> a[i];
 
     int res = 0;
     int x = quick_select(0, n - 1, n / 2);
     for (int i = 0; i < n; i++) res += abs(a[i] - x);
 
-    cout << res << endl;
-    return 0;
+    printf("%d\n", res);
 }
