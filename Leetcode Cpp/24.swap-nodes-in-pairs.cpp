@@ -20,9 +20,8 @@ class Solution {
   ListNode* swapPairs(ListNode* head) {
     if (!head || !head->next) return head;
 
-    auto dummy = new ListNode(0);
-    dummy->next = head;
-    for (auto cur = dummy; cur && cur->next; cur = cur->next->next) {
+    ListNode dummy(0, head);
+    for (auto cur = &dummy; cur && cur->next; cur = cur->next->next) {
       if (auto tmp = cur->next->next; tmp) {
         cur->next->next = tmp->next;
         tmp->next = cur->next;
@@ -30,7 +29,7 @@ class Solution {
       }
     }
 
-    return dummy->next;
+    return dummy.next;
   }
 };
 // @lc code=end

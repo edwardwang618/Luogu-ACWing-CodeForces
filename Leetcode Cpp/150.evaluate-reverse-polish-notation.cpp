@@ -6,11 +6,10 @@
 
 // @lc code=start
 class Solution {
- public:
-  int evalRPN(vector<string>& v) {
+public:
+  int evalRPN(vector<string> &v) {
     stack<int> stk;
-    constexpr array<char, 4> ops{'+', '-', '*', '/'};
-    auto f = [&](stack<int>& stk, char op) -> int {
+    auto f = [&](stack<int> &stk, char op) {
       int b = stk.top(); stk.pop();
       int a = stk.top(); stk.pop();
       switch (op) {
@@ -21,8 +20,9 @@ class Solution {
       }
       return -1;
     };
-    for (auto& s : v)
-      if (s.size() == 1 && find(ops.begin(), ops.end(), s[0]) != ops.end())
+    for (auto &s : v)
+      if (char ch = s[0];
+          s.size() == 1 && (ch == '+' || ch == '-' || ch == '*' || ch == '/'))
         stk.push(f(stk, s[0]));
       else stk.push(stoi(s));
     return stk.top();

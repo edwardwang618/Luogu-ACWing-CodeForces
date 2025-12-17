@@ -16,9 +16,9 @@
  * };
  */
 class Solution {
- public:
-  ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
-    ListNode* dummy = new ListNode(0), *prev = dummy;
+public:
+  ListNode *mergeTwoLists(ListNode *l1, ListNode *l2) {
+    ListNode dummy, *prev = &dummy;
     while (l1 || l2) {
       if (!l1) {
         prev->next = l2;
@@ -38,7 +38,7 @@ class Solution {
       prev = prev->next;
     }
 
-    return dummy->next;
+    return dummy.next;
   }
 };
 // @lc code=end

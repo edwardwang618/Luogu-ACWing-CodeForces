@@ -6,23 +6,32 @@
 
 // @lc code=start
 class Solution {
- public:
+public:
   int minDistance(string s1, string s2) {
     int m = s1.size(), n = s2.size();
-    int f[m + 1][n + 1];
-    for (int i = 0; i <= m; i++)
+    if (m < n) {
+      swap(s1, s2);
+      swap(m, n);
+    }
+    int f[2][n + 1];
+    iota(&f[0][0], &f[0][0] + n + 1, 0);
+    for (int i = 1; i <= m; i++)
       for (int j = 0; j <= n; j++) {
-        if (!i || !j) f[i][j] = i ^ j;
+        if (!j)
+          f[i & 1][j] = i;
         else {
-          if (s1[i - 1] == s2[j - 1]) f[i][j] = f[i - 1][j - 1];
+          if (s1[i - 1] == s2[j - 1])
+            f[i & 1][j] = f[i - 1 & 1][j - 1];
           else {
-            f[i][j] = min(f[i][j - 1] + 1, f[i - 1][j - 1] + 1);
-            f[i][j] = min(f[i][j], 1 + f[i - 1][j]);
+            int ins = f[i & 1][j - 1] + 1;
+            int rep = f[i - 1 & 1][j - 1] + 1;
+            int del = f[i - 1 & 1][j] + 1;
+            f[i & 1][j] = min({ins, rep, del});
           }
         }
       }
 
-    return f[m][n];
+    return f[m & 1][n];
   }
 };
 // @lc code=end

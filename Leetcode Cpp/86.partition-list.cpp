@@ -1,7 +1,7 @@
 /*
- * @lc app=leetcode id=203 lang=cpp
+ * @lc app=leetcode id=86 lang=cpp
  *
- * [203] Remove Linked List Elements
+ * [86] Partition List
  */
 
 // @lc code=start
@@ -17,18 +17,19 @@
  */
 class Solution {
 public:
-  ListNode *removeElements(ListNode *head, int val) {
-    ListNode dummy;
-    auto *prev = &dummy;
+  ListNode *partition(ListNode *head, int x) {
+    ListNode d1, d2;
+    auto *p1 = &d1, *p2 = &d2;
     while (head) {
-      if (head->val != val) {
-        prev->next = head;
-        prev = prev->next;
-      }
+      if (head->val < x)
+        p1->next = head, p1 = p1->next;
+      else
+        p2->next = head, p2 = p2->next;
       head = head->next;
     }
-    prev->next = nullptr;
-    return dummy.next;
+    p1->next = d2.next;
+    p2->next = nullptr;
+    return d1.next;
   }
 };
 // @lc code=end

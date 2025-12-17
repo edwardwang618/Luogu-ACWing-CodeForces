@@ -19,11 +19,12 @@ class Solution {
  public:
   ListNode *reverseKGroup(ListNode *head, int k) {
     if (!k || k == 1) return head;
-    ListNode *dummy = new ListNode(0), *prev = dummy;
-    dummy->next = head;
+    ListNode dummy;
+    auto *prev = &dummy;
+    dummy.next = head;
 
     while (prev) prev = swap(prev, k);
-    return dummy->next;
+    return dummy.next;
   }
 
   // prev->a1->...->ak

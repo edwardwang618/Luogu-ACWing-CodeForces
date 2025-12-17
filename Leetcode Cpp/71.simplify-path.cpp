@@ -21,8 +21,7 @@ class Solution {
       }
     }
 
-    if (res.empty()) return "/";
-    return res;
+    return res.empty() ? "/" : res;
   }
 };
 // @lc code=end

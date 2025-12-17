@@ -21,7 +21,7 @@ class Solution {
   //   auto cmp = [&](auto& p1, auto& p2) { return p1->val > p2->val; };
   //   priority_queue<ListNode*, vector<ListNode*>, decltype(cmp)> heap(cmp);
   //   for (auto* p : lists) if (p) heap.push(p);
-  //   auto dummy = new ListNode(0), cur = dummy;
+  //   ListNode dummy, *cur = &dummy;
   //   while (heap.size()) {
   //     auto p = heap.top();
   //     heap.pop();
@@ -29,7 +29,7 @@ class Solution {
   //     cur = cur->next;
   //     if (p->next) heap.push(p->next);
   //   }
-  //   return dummy->next;
+  //   return dummy.next;
   // }
 
   ListNode* merge(vector<ListNode*>& v, int l, int r) {

@@ -16,17 +16,20 @@
  * };
  */
 class Solution {
- public:
-  ListNode* deleteDuplicates(ListNode* head) {
-    ListNode *dummy = new ListNode(0), *prev = dummy;
+public:
+  ListNode *deleteDuplicates(ListNode *head) {
+    ListNode dummy;
+    auto *prev = &dummy;
     while (head) {
       int x = head->val;
-      if (!head->next || head->next->val != x) prev->next = head, prev = head;
-      while (head && head->val == x) head = head->next;
+      if (!head->next || head->next->val != x)
+        prev->next = head, prev = head;
+      while (head && head->val == x)
+        head = head->next;
     }
 
     prev->next = nullptr;
-    return dummy->next;
+    return dummy.next;
   }
 };
 // @lc code=end

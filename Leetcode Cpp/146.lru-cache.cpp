@@ -6,61 +6,81 @@
 
 // @lc code=start
 class LRUCache {
- public:
-  struct ListNode {
-    ListNode *prev, *next;
+public:
+  struct Node {
+    int prev, next;
     int key, val;
-    ListNode(int key, int val) {
-      this->key = key;
-      this->val = val;
-      prev = next = nullptr;
-    }
+    Node(int prev, int next, int key, int val)
+        : prev(prev), next(next), key(key), val(val) {}
   };
-  using node_p = ListNode *;
-  node_p head, tail;
-  node_p nn(int key, int val) { return new ListNode(key, val); }
-  unordered_map<int, node_p> mp;
+
+#define head 0
+#define tail 1
+#define null -1
+#define key(node_idx) pl[node_idx].key
+#define val(node_idx) pl[node_idx].val
+#define prev(node_idx) pl[node_idx].prev
+#define next(node_idx) pl[node_idx].next
+
+  vector<Node> pl;
+  unordered_map<int, int> mp;
   int sz, cap;
 
-  LRUCache(int capacity) {
-    cap = capacity;
-    sz = 0;
-    head = nn(0, 0), tail = nn(0, 0);
-    head->next = tail, tail->prev = head;
+  LRUCache(int capacity) : sz(0), cap(capacity) {
+    pl.reserve(2 + cap);
+    pl.emplace_back(null, tail, 0, 0);
+    pl.emplace_back(head, null, 0, 0);
+    mp.reserve(cap);
   }
 
-  node_p delink(node_p node) {
-    if (node->next) node->next->prev = node->prev;
-    if (node->prev) node->prev->next = node->next;
-    return node;
+  int new_node(int key, int val) {
+    pl.emplace_back(null, null, key, val);
+    return pl.size() - 1;
   }
 
-  void move_to_head(node_p node) {
-    delink(node);
-    node->next = head->next, node->prev = head;
-    head->next = node, node->next->prev = node;
+  void move_to_head(int idx) {
+    if (~prev(idx))
+      next(prev(idx)) = next(idx);
+    if (~next(idx))
+      prev(next(idx)) = prev(idx);
+    prev(idx) = head;
+    next(idx) = next(head);
+    next(head) = prev(next(idx)) = idx;
   }
 
   int get(int key) {
-    if (!mp.count(key)) return -1;
-    auto node = mp[key];
-    move_to_head(node);
-    return node->val;
+    auto it = mp.find(key);
+    if (it == mp.end())
+      return -1;
+    int idx = it->second;
+    move_to_head(idx);
+    return val(idx);
   }
 
-  void put(int key, int value) {
-    if (mp.count(key)) {
-      auto node = mp[key];
-      node->val = value;
-      move_to_head(node);
+  void put(int key, int val) {
+    auto it = mp.find(key);
+    if (it != mp.end()) {
+      // found
+      int idx = it->second;
+      val(idx) = val;
+      move_to_head(idx);
     } else {
-      sz++;
-      move_to_head(nn(key, value));
-      mp[key] = head->next;
-      if (sz > cap) {
-        mp.erase(delink(tail->prev)->key);
-        sz--;
+      // not found
+      if (sz == cap) [[unlikely]] {
+        if (!sz)
+          return;
+        int idx = pl[tail].prev;
+        move_to_head(idx);
+        mp.erase(key(idx));
+        mp[key] = idx;
+        key(idx) = key;
+        val(idx) = val;
+        return;
       }
+      int idx = new_node(key, val);
+      mp[key] = idx;
+      move_to_head(idx);
+      sz++;
     }
   }
 };

@@ -14,7 +14,7 @@ class Solution {
   //   return res;
   // }
 
-  // void dfs(int u, vector<int>& a, vector<int>& v, vector<vector<int>>& res) {
+  // static void dfs(int u, auto& a, auto& v, auto& res) {
   //   res.push_back(v);
   //   for (int i = u; i < a.size(); i++) {
   //     v.push_back(a[i]);

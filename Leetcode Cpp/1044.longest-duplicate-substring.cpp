@@ -7,39 +7,35 @@
 // @lc code=start
 class Solution {
  public:
-  using UL = unsigned long;
-  string longestDupSubstring(string s) {
-    int n = s.size();
-    int ss = 0, sl = 0;
-    auto check = [&](int len) {
-      UL ha = 0, P = 131, pow = 1;
-      for (int i = 0; i < len; i++) {
-        ha = ha * P + s[i];
-        pow = pow * P;
-      }
-
-      unordered_set<UL> st{ha};
+  using ull = unsigned long long;
+  string longestDupSubstring(string& s) {
+    static auto f = [&](int len, int& res_l) {
+      int n = s.size();
+      ull ha = 0, pow = 1;
+      static constexpr ull P = 131;
+      unordered_set<ull> st;
+      st.reserve(n - len + 1);
+      for (int i = 0; i < len; i++) ha = ha * P + s[i], pow *= P;
+      st.insert(ha);
       for (int i = len; i < n; i++) {
         ha = ha * P + s[i];
-        ha -= pow * s[i - len];
-        if (st.count(ha)) {
-          ss = i - len + 1, sl = len;
+        ha -= s[i - len] * pow;
+        auto [_, ins] = st.insert(ha);
+        if (!ins) {
+          res_l = i - len + 1;
           return true;
         }
-        st.insert(ha);
       }
-
       return false;
     };
-
-    int l = 0, r = n - 1;
+    int l = 0, r = s.size() - 1;
+    int res_l = 0;
     while (l < r) {
-      int mid = l + (r - l + 1 >> 1);
-      if (check(mid)) l = mid;
+      int mid = l + r + 1 >> 1;
+      if (f(mid, res_l)) l = mid;
       else r = mid - 1;
     }
-
-    return s.substr(ss, sl);
+    return s.substr(res_l, l);
   }
 };
 // @lc code=end

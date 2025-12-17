@@ -16,13 +16,14 @@
  * };
  */
 class Solution {
- public:
-  bool isPalindrome(ListNode* head) {
-    auto dummy = new ListNode(0, head);
-    auto fast = dummy, slow = dummy;
-    while (fast && fast->next) slow = slow->next, fast = fast->next->next;
+public:
+  bool isPalindrome(ListNode *head) {
+    ListNode dummy(0, head);
+    auto fast = &dummy, slow = &dummy;
+    while (fast && fast->next)
+      slow = slow->next, fast = fast->next->next;
     auto rev = [&](auto head) {
-      ListNode* prev = nullptr;
+      ListNode *prev = nullptr;
       while (head) {
         auto tmp = head->next;
         head->next = prev;
@@ -31,15 +32,15 @@ class Solution {
       }
       return prev;
     };
-    auto cmp = [&](auto l1, auto l2) {
+    return [](auto l1, auto l2) {
       while (l1 && l2) {
-        if (l1->val != l2->val) return false;
+        if (l1->val != l2->val)
+          return false;
         l1 = l1->next;
         l2 = l2->next;
       }
       return true;
-    };
-    return cmp(dummy->next, rev(slow->next));
+    }(dummy.next, rev(slow->next));
   }
 };
 // @lc code=end

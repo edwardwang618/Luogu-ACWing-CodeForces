@@ -1,7 +1,7 @@
 /*
- * @lc app=leetcode id=203 lang=cpp
+ * @lc app=leetcode id=92 lang=cpp
  *
- * [203] Remove Linked List Elements
+ * [92] Reverse Linked List II
  */
 
 // @lc code=start
@@ -17,17 +17,17 @@
  */
 class Solution {
 public:
-  ListNode *removeElements(ListNode *head, int val) {
-    ListNode dummy;
+  ListNode *reverseBetween(ListNode *head, int left, int right) {
+    ListNode dummy(0, head);
     auto *prev = &dummy;
-    while (head) {
-      if (head->val != val) {
-        prev->next = head;
-        prev = prev->next;
-      }
-      head = head->next;
+    for (int i = 1; i < left; i++) prev = prev->next;
+    auto* cur = prev->next;
+    for (int i = 1; i <= right - left; i++) {
+      auto* tmp = cur->next;
+      cur->next = tmp->next;
+      tmp->next = prev->next;
+      prev->next = tmp;
     }
-    prev->next = nullptr;
     return dummy.next;
   }
 };

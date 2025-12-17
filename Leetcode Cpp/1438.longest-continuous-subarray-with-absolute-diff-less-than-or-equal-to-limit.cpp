@@ -31,10 +31,10 @@ class Solution {
     map<int, int> mp;
     int res = 0;
     for (int i = 0, j = 0; i < a.size(); i++) {
-      mp[a[i]]++;
+      ++mp[a[i]];
       while (mp.rbegin()->first - mp.begin()->first > l) {
-        mp[a[j]]--;
-        if (!mp[a[j]]) mp.erase(a[j]);
+        auto it = mp.find(a[j]);
+        if (!--it->second) mp.erase(it);
         j++;
       }
 

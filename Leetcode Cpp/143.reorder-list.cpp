@@ -16,17 +16,18 @@
  * };
  */
 class Solution {
- public:
-  void reorderList(ListNode* head) {
-    auto dummy = new ListNode(0, head), cur = dummy;
-    auto slow = dummy, fast = dummy;
+public:
+  void reorderList(ListNode *head) {
+    ListNode dummy(0, head);
+    auto prev = &dummy;
+    auto slow = &dummy, fast = &dummy;
     while (fast && fast->next) {
       slow = slow->next;
       fast = fast->next->next;
     }
 
     auto rev = [](auto head) {
-      ListNode* prev = nullptr;
+      ListNode *prev = nullptr;
       while (head) {
         auto tmp = head->next;
         head->next = prev;
@@ -36,19 +37,19 @@ class Solution {
       return prev;
     };
 
-    auto l1 = dummy->next;
+    auto l1 = dummy.next;
     auto l2 = rev(slow->next);
     slow->next = nullptr;
 
     while (l1 || l2) {
       if (l1) {
-        cur->next = l1;
-        cur = cur->next;
+        prev->next = l1;
+        prev = prev->next;
         l1 = l1->next;
       }
       if (l2) {
-        cur->next = l2;
-        cur = cur->next;
+        prev->next = l2;
+        prev = prev->next;
         l2 = l2->next;
       }
     }

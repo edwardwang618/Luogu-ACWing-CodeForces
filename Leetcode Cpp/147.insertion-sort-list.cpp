@@ -1,7 +1,7 @@
 /*
- * @lc app=leetcode id=203 lang=cpp
+ * @lc app=leetcode id=147 lang=cpp
  *
- * [203] Remove Linked List Elements
+ * [147] Insertion Sort List
  */
 
 // @lc code=start
@@ -17,17 +17,17 @@
  */
 class Solution {
 public:
-  ListNode *removeElements(ListNode *head, int val) {
-    ListNode dummy;
-    auto *prev = &dummy;
+  ListNode *insertionSortList(ListNode *head) {
+    ListNode dummy, *prev;
     while (head) {
-      if (head->val != val) {
-        prev->next = head;
+      prev = &dummy;
+      while (prev->next && prev->next->val <= head->val)
         prev = prev->next;
-      }
+      auto tmp = prev->next;
+      prev->next = head;
       head = head->next;
+      prev->next->next = tmp;
     }
-    prev->next = nullptr;
     return dummy.next;
   }
 };

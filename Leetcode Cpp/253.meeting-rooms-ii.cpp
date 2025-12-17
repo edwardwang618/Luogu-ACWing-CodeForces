@@ -21,7 +21,7 @@ class Solution {
 
   int minMeetingRooms(vector<vector<int>>& is) {
     map<int, int> mp;
-    for (auto& p : is) mp[p[0]]++, mp[p[1]]--;
+    for (auto& p : is) ++mp[p[0]], --mp[p[1]];
     int res = 0, cnt = 0;
     for (auto &[k, v] : mp) cnt += v, res = max(res, cnt);
     return res;
