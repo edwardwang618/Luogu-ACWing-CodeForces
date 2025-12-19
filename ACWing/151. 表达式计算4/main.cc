@@ -1,4 +1,3 @@
-#include <cctype>
 #include <iostream>
 #include <stack>
 using namespace std;
@@ -10,7 +9,6 @@ int main() {
   ios::sync_with_stdio(false);
   cin.tie(nullptr);
   cin >> s;
-  if (s[0] == '-') s = '0' + s;
   s = '(' + s + ')';
   int l = 0, r = 0;
   for (char ch : s) {
@@ -67,8 +65,8 @@ int main() {
       stk.push(x);
     } else if (ch == '(') ops.push('(');
     else if (ch == ')') {
-      while (ops.size() && ops.top() != '(') calc(stk, ops);
-      if (ops.size()) ops.pop();
+      while (ops.top() != '(') calc(stk, ops);
+      ops.pop();
     } else if (ch == '-' && i && !isdigit(s[i - 1]) && s[i - 1] != ')') {
       if (s[i + 1] == '(') {
         stk.push(-1);
@@ -81,7 +79,7 @@ int main() {
         i = j - 1;
       }
     } else {
-      while (ops.size() && f(ops.top()) >= f(ch)) calc(stk, ops);
+      while (f(ops.top()) >= f(ch)) calc(stk, ops);
       ops.push(ch);
     }
   }

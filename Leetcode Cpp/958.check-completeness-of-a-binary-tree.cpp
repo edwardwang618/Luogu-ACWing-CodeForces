@@ -1,7 +1,7 @@
 /*
- * @lc app=leetcode id=102 lang=cpp
+ * @lc app=leetcode id=958 lang=cpp
  *
- * [102] Binary Tree Level Order Traversal
+ * [958] Check Completeness of a Binary Tree
  */
 
 // @lc code=start
@@ -18,25 +18,21 @@
  * };
  */
 class Solution {
- public:
-  vector<vector<int>> levelOrder(TreeNode* root) {
-    vector<vector<int>> res;
-    if (!root) return res;
+public:
+  bool isCompleteTree(TreeNode *root) {
+    if (!root) return true;
     queue<TreeNode*> q;
     q.push(root);
+    bool found = false;
     while (q.size()) {
-      res.emplace_back();
-      auto &v = res.back();
-      for (int i = q.size(); i; i--) {
-        auto t = q.front();
-        q.pop();
-        v.push_back(t->val);
-        if (t->left) q.push(t->left);
-        if (t->right) q.push(t->right);
-      }
+      auto t = q.front(); q.pop();
+      if (found && (t->left || t->right)) return false;
+      if (!t->left && t->right) return false;
+      if (!t->left || !t->right) found = true;
+      if (t->left) q.push(t->left);
+      if (t->right) q.push(t->right);
     }
-
-    return res;
+    return true;
   }
 };
 // @lc code=end

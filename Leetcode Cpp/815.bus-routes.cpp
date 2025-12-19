@@ -9,18 +9,24 @@ class Solution {
  public:
   int numBusesToDestination(vector<vector<int>>& v, int s, int t) {
     if (s == t) return 0;
+    int m = v.size();
     // mp[x]：x属于哪些线路
-    unordered_map<int, unordered_set<int>> mp;
+    unordered_map<int, vector<int>> mp;
     queue<int> q;
-    unordered_set<int> vis;
-    for (int i = 0; i < v.size(); i++)
+    vector<int> vis(m);
+    for (int i = 0; i < v.size(); i++) {
+      bool hasS = false, hasT = false;
       for (int x : v[i]) {
         if (x == s) {
+          hasS = true;
           q.push(i);
-          vis.insert(i);
+          vis[i] = true;
         }
-        mp[x].insert(i);
+        if (x == t) hasT = true;
+        mp[x].push_back(i);
       }
+      if (hasS && hasT) return 1;
+    }
 
     int res = 0;
     while (q.size()) {
@@ -29,13 +35,14 @@ class Solution {
         int id = q.front(); q.pop();
         for (int x : v[id]) {
           if (x == t) return res;
-          if (mp.count(x)) {
-            for (int y : mp[x]) {
-              if (vis.count(y)) continue;
-              vis.insert(y);
-              q.push(y);
-            }
-            mp.erase(x);
+          auto it = mp.find(x);
+          if (it != mp.end()) {
+            for (int y : it->second)
+              if (!vis[y]) {
+                vis[y] = true;
+                q.push(y);
+              }
+            mp.erase(it);
           }
         }
       }

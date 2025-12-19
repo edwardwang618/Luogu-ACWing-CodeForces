@@ -24,13 +24,13 @@ class Solution {
     heap.push({1.0, st});
     vector<bool> vis(n);
     vector<double> dist(n, 0.0);
+    dist[st] = 1.0;
     while (heap.size()) {
       auto [pr, u] = heap.top();
       heap.pop();
       if (u == ed) return pr;
       if (vis[u]) continue;
       vis[u] = true;
-      dist[u] = pr;
       for (int i = h[u]; ~i; i = ne[i]) {
         int v = e[i];
         double p = w[i];

@@ -7,35 +7,35 @@
 // @lc code=start
 class Solution {
  public:
-  int len;
-  bool makesquare(vector<int> &A) {
-    len = 0;
-    for (auto &x : A) len += x;
+  bool makesquare(vector<int> &a) {
+    int len = 0;
+    for (auto &x : a) len += x;
     if (len % 4) return false;
     len /= 4;
 
-    sort(A.begin(), A.end(), greater<int>());
-    vector<bool> vis(A.size(), 0);
-    return dfs(0, 0, 0, A, vis);
-  }
+    sort(a.begin(), a.end(), greater<>{});
+    int n = a.size();
+    vector<bool> vis(n);
 
-  bool dfs(int u, int cur_len, int cnt, vector<int> &A, vector<bool> &vis) {
-    if (cnt == 3) return true;
-    if (cur_len == len) return dfs(0, 0, cnt + 1, A, vis);
+    auto dfs = [&](auto&& self, int u, int cur_len, int cnt) ->bool {
+      if (cnt == 3) return true;
+      if (cur_len == len) return self(self, 0, 0, cnt + 1);
 
-    for (int i = u; i < A.size(); i++) {
-      if (vis[i]) continue;
-      if (cur_len + A[i] > len) continue;
-      cur_len += A[i];
-      vis[i] = true;
-      if (dfs(u + 1, cur_len, cnt, A, vis)) return true;
-      cur_len -= A[i];
-      vis[i] = false;
-      if (!cur_len || cur_len + A[i] == len) return false;
-      while (i + 1 < A.size() && A[i + 1] == A[i]) i++;
-    }
+      for (int i = u; i < n; i++) {
+        if (vis[i]) continue;
+        if (cur_len + a[i] > len) continue;
+        cur_len += a[i];
+        vis[i] = true;
+        if (self(self, u + 1, cur_len, cnt)) return true;
+        cur_len -= a[i];
+        vis[i] = false;
+        if (!cur_len || cur_len + a[i] == len) return false;
+        while (i + 1 < n && a[i + 1] == a[i]) i++;
+      }
 
-    return false;
+      return false;
+    };
+    return dfs(dfs, 0, 0, 0);
   }
 };
 // @lc code=end

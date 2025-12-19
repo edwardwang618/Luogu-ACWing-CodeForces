@@ -6,53 +6,58 @@
 
 // @lc code=start
 class Solution {
- public:
+public:
   struct Node {
-    Node *son[26];
+    int son[26];
     bool is_word;
-  } * root;
-  int d[5] = {-1, 0, 1, 0, -1};
+    Node() : son{0}, is_word(false) {}
+  };
+  vector<Node> tr;
 
   void insert(string &s) {
-    auto p = root;
+    int p = 0;
     for (auto &c : s) {
-      int idx = c - 'a';
-      if (!p->son[idx]) p->son[idx] = new Node();
-      p = p->son[idx];
+      int idx = c - 'a', ne = tr[p].son[idx];
+      if (!ne) {
+        tr[p].son[idx] = ne = tr.size();
+        tr.emplace_back();
+      }
+      p = ne;
     }
-    p->is_word = true;
+    tr[p].is_word = true;
   }
 
   vector<string> findWords(vector<vector<char>> &g, vector<string> &ws) {
-    root = new Node();
-    for (auto &s : ws) insert(s);
+    tr.emplace_back();
+    for (auto &s : ws)
+      insert(s);
     unordered_set<string> res;
 
     for (int i = 0; i < g.size(); i++)
       for (int j = 0; j < g[0].size(); j++) {
         string s;
-        auto p = root;
-        dfs(i, j, p, s, res, g);
+        dfs(i, j, 0, s, res, g);
       }
 
     return vector<string>(res.begin(), res.end());
   }
 
-  void dfs(int x, int y, Node *p, string &s, unordered_set<string> &res,
-           vector<vector<char>> &g) {
+  void dfs(int x, int y, int p, string &s, auto &res, auto &g) {
+    static int d[] = {1, 0, -1, 0, 1};
     char ch = g[x][y];
-    if (!p->son[ch - 'a']) return;
-    p = p->son[ch - 'a'];
+    int ne = tr[p].son[ch - 'a'];
+    if (!ne)
+      return;
+    p = ne;
     s += ch;
-    if (p->is_word) res.insert(s);
+    if (tr[p].is_word)
+      res.insert(s);
 
     g[x][y] = 0;
     for (int i = 0; i < 4; i++) {
       int nx = x + d[i], ny = y + d[i + 1];
-      if (0 <= nx && nx < g.size() && 0 <= ny && ny < g[0].size() &&
-          g[nx][ny]) {
+      if (0 <= nx && nx < g.size() && 0 <= ny && ny < g[0].size() && g[nx][ny])
         dfs(nx, ny, p, s, res, g);
-      }
     }
     g[x][y] = ch;
     s.pop_back();

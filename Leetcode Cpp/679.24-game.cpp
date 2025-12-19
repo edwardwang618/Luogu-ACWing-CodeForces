@@ -6,45 +6,42 @@
 
 // @lc code=start
 class Solution {
- public:
-  const double eps = 1e-9;
-  bool judgePoint24(vector<int>& v) {
-    vector<double> a(v.begin(), v.end());
-    return dfs(a);
+public:
+  bool judgePoint24(vector<int> &v) {
+    static constexpr double eps = 1e-6;
+    return dfs(v, eps);
   }
 
-  bool dfs(vector<double>& a) {
-    if (a.size() == 1) return abs(a[0] - 24) < eps;
-    for (int i = 0; i + 1 < a.size(); i++)
-      for (int j = i + 1; j < a.size(); j++) {
+  static bool dfs(auto &a, double eps) {
+    int n = a.size();
+    if (n == 1)
+      return abs(a[0] - 24.0) <= eps;
+
+    for (int i = 0; i + 1 < n; i++) {
+      for (int j = i + 1; j < n; j++) {
         double x = a[i], y = a[j];
-        a.erase(a.begin() + j);
-        a.erase(a.begin() + i);
+        vector<double> b;
+        b.reserve(n - 1);
+        for (int k = 0; k < n; k++)
+          if (k != i && k != j)
+            b.push_back(a[k]);
 
-        a.push_back(x + y);
-        if (dfs(a)) return true;
-        a.back() = x - y;
-        if (dfs(a)) return true;
-        a.back() = y - x;
-        if (dfs(a)) return true;
-        a.back() = x * y;
-        if (dfs(a)) return true;
-        a.pop_back();
-        if (abs(y) > eps) {
-          a.push_back(x / y);
-          if (dfs(a)) return true;
-          a.pop_back();
-        }
-        if (abs(x) > eps) {
-          a.push_back(y / x);
-          if (dfs(a)) return true;
-          a.pop_back();
-        }
+        auto try_push = [&](double val) {
+          b.push_back(val);
+          if (dfs(b, eps))
+            return true;
+          b.pop_back();
+          return false;
+        };
 
-        a.insert(a.begin() + i, x);
-        a.insert(a.begin() + j, y);
+        if (try_push(x + y) || try_push(x * y) || try_push(x - y) ||
+            try_push(y - x))
+          return true;
+
+        if (abs(y) > eps && try_push(x / y) || abs(x) > eps && try_push(y / x))
+          return true;
       }
-
+    }
     return false;
   }
 };

@@ -7,7 +7,7 @@
 // @lc code=start
 class Solution {
  public:
-  int openLock(vector<string>& deadends, string end) {
+  int openLock(vector<string>& deadends, string& end) {
     string begin = "0000";
     if (begin == end) return 0;
     unordered_set<string> dead(deadends.begin(), deadends.end()), vis1, vis2;
@@ -17,11 +17,11 @@ class Solution {
     vis1.insert(begin), vis2.insert(end);
 
     int res = 0;
-    while (q1.size() || q2.size()) {
+    while (q1.size() && q2.size()) {
       res++;
-      if (one_step(q1, vis1, vis2, dead)) return res;
-      res++;
-      if (one_step(q2, vis2, vis1, dead)) return res;
+      if (q1.size() <= q2.size()) {
+        if (one_step(q1, vis1, vis2, dead)) return res;
+      } else if (one_step(q2, vis2, vis1, dead)) return res;
     }
 
     return -1;
@@ -30,8 +30,7 @@ class Solution {
   bool one_step(queue<string>& q, unordered_set<string>& vis1,
                 unordered_set<string>& vis2, unordered_set<string>& dead) {
     for (int i = q.size(); i; i--) {
-      auto s = q.front();
-      q.pop();
+      auto s = q.front(); q.pop();
       for (int j = 0; j < 4; j++) {
         char ch = s[j];
         for (int dx : {-1, 1}) {

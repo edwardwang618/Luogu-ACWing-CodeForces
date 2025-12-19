@@ -10,6 +10,7 @@ class Solution {
   vector<string> generateParenthesis(int n) {
     vector<string> res;
     string s;
+    s.reserve(2 * n);
     dfs(s, 0, 0, res, n);
     return res;
   }

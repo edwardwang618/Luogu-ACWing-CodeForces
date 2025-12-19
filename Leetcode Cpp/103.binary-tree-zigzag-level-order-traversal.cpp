@@ -1,7 +1,7 @@
 /*
- * @lc app=leetcode id=102 lang=cpp
+ * @lc app=leetcode id=103 lang=cpp
  *
- * [102] Binary Tree Level Order Traversal
+ * [103] Binary Tree Zigzag Level Order Traversal
  */
 
 // @lc code=start
@@ -18,24 +18,25 @@
  * };
  */
 class Solution {
- public:
-  vector<vector<int>> levelOrder(TreeNode* root) {
+public:
+  vector<vector<int>> zigzagLevelOrder(TreeNode *root) {
     vector<vector<int>> res;
     if (!root) return res;
     queue<TreeNode*> q;
     q.push(root);
+    bool flip = false;
     while (q.size()) {
       res.emplace_back();
       auto &v = res.back();
       for (int i = q.size(); i; i--) {
-        auto t = q.front();
-        q.pop();
+        auto t = q.front(); q.pop();
         v.push_back(t->val);
         if (t->left) q.push(t->left);
         if (t->right) q.push(t->right);
       }
+      if (flip) reverse(v.begin(), v.end());
+      flip ^= 1;
     }
-
     return res;
   }
 };

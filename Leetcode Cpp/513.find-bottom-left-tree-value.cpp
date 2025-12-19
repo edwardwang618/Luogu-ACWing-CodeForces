@@ -1,7 +1,7 @@
 /*
- * @lc app=leetcode id=102 lang=cpp
+ * @lc app=leetcode id=513 lang=cpp
  *
- * [102] Binary Tree Level Order Traversal
+ * [513] Find Bottom Left Tree Value
  */
 
 // @lc code=start
@@ -18,25 +18,22 @@
  * };
  */
 class Solution {
- public:
-  vector<vector<int>> levelOrder(TreeNode* root) {
-    vector<vector<int>> res;
-    if (!root) return res;
+public:
+  int findBottomLeftValue(TreeNode *root) {
     queue<TreeNode*> q;
     q.push(root);
+    optional<int> res;
     while (q.size()) {
-      res.emplace_back();
-      auto &v = res.back();
       for (int i = q.size(); i; i--) {
-        auto t = q.front();
-        q.pop();
-        v.push_back(t->val);
+        auto t = q.front(); q.pop();
+        if (!res) res = t->val;
         if (t->left) q.push(t->left);
         if (t->right) q.push(t->right);
       }
+      if (q.empty()) break;
+      else res.reset();
     }
-
-    return res;
+    return *res;
   }
 };
 // @lc code=end
