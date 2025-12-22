@@ -15,7 +15,7 @@ class Solution {
     constexpr int INF = 2e9;
     vector<vector<int>> dist(m, vector<int>(n, INF));
     dist[0][0] = 0;
-    vector<vector<bool>> vis(m, vector<bool>(n, false));
+    vector<vector<bool>> vis(m, vector<bool>(n));
     static int dx[] = {0, 0, 1, -1};
     static int dy[] = {1, -1, 0, 0};
     while (dq.size()) {

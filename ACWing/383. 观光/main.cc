@@ -16,14 +16,14 @@ struct Ver {
 int n, m, S, T;
 int h[N], e[M], ne[M], w[M], idx;
 int dist[N][2], cnt[N][2];
-bool st[N][2];
+bool vis[N][2];
 
 void add(int a, int b, int c) {
     e[idx] = b, w[idx] = c, ne[idx] = h[a], h[a] = idx++;
 }
 
 void dijkstra() {
-    memset(st, 0, sizeof st);
+    memset(vis, 0, sizeof vis);
     memset(cnt, 0, sizeof cnt);
     memset(dist, 0x3f, sizeof dist);
     dist[S][0] = 0;
@@ -37,8 +37,8 @@ void dijkstra() {
         heap.pop();
 
         int v = t.ver, type = t.type, d = t.dist, count = cnt[v][type];
-        if (st[v][type]) continue;
-        st[v][type] = true;
+        if (vis[v][type]) continue;
+        vis[v][type] = true;
 
         for (int i = h[v]; ~i; i = ne[i]) {
             int j = e[i];

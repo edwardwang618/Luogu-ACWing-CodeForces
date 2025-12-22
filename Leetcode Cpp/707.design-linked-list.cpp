@@ -6,64 +6,110 @@
 
 // @lc code=start
 class MyLinkedList {
- public:
+  static constexpr int null = -1;
+  static constexpr int head = 0;
+  static constexpr int tail = 1;
   struct Node {
+    int prev, next;
     int val;
-    Node* next;
-    Node(int val) : val(val), next(nullptr) {}
-  }* head;
+    Node(int x) : prev(null), next(null), val(x) {}
+    Node(int x, int prev, int next) : prev(prev), next(next), val(x) {}
+  };
 
-  MyLinkedList() { head = nullptr; }
+  vector<Node> pl;
+  vector<int> used;
+  int sz;
+
+#define prev(idx) pl[idx].prev
+#define next(idx) pl[idx].next
+#define val(idx) pl[idx].val
+
+  int new_node(int val) {
+    int idx;
+    if (used.size()) {
+      idx = used.back();
+      used.pop_back();
+      pl[idx].val = val;
+    } else {
+      idx = pl.size();
+      pl.emplace_back(val);
+    }
+    return idx;
+  }
+
+  int operator[](int idx) {
+    if (idx < 0 || idx >= sz)
+      return null;
+    int res;
+    if (idx < sz >> 1) {
+      res = head;
+      for (int i = 0; i <= idx; i++)
+        res = next(res);
+    } else {
+      res = tail;
+      for (int i = sz; i > idx; i--)
+        res = prev(res);
+    }
+    return res;
+  }
+
+public:
+  MyLinkedList() {
+    pl.reserve(2);
+    pl.emplace_back(0);
+    pl.emplace_back(0);
+    next(head) = tail;
+    prev(tail) = head;
+    sz = 0;
+  }
 
   int get(int idx) {
-    if (idx < 0) return -1;
-    auto p = head;
-    for (int i = 0; i < idx && p; i++) p = p->next;
-    if (!p) return -1;
-    return p->val;
+    if (idx = (*this)[idx]; ~idx)
+      return val(idx);
+    return -1;
   }
 
   void addAtHead(int val) {
-    auto p = new Node(val);
-    p->next = head;
-    head = p;
+    int idx = new_node(val);
+    prev(idx) = head;
+    next(idx) = next(head);
+    next(head) = idx;
+    prev(next(idx)) = idx;
+    sz++;
   }
 
   void addAtTail(int val) {
-    if (!head) {
-      head = new Node(val);
-      return;
-    }
-
-    auto p = head;
-    while (p->next) p = p->next;
-    p->next = new Node(val);
+    int idx = new_node(val);
+    prev(idx) = prev(tail);
+    next(idx) = tail;
+    prev(tail) = idx;
+    next(prev(idx)) = idx;
+    sz++;
   }
 
   void addAtIndex(int idx, int val) {
-    if (idx <= 0) {
-      addAtHead(val);
+    if (idx == sz) {
+      addAtTail(val);
       return;
     }
-
-    auto p = head;
-    for (int i = 0; i < idx - 1 && p; i++) p = p->next;
-    if (!p) return;
-    auto node = new Node(val);
-    node->next = p->next;
-    p->next = node;
+    if (idx < 0 || idx > sz)
+      return;
+    int new_idx = new_node(val);
+    idx = (*this)[idx];
+    prev(new_idx) = prev(idx);
+    next(new_idx) = idx;
+    prev(idx) = new_idx;
+    next(prev(new_idx)) = new_idx;
+    sz++;
   }
 
   void deleteAtIndex(int idx) {
-    if (!idx) {
-      head = head->next;
-      return;
+    if (idx = (*this)[idx]; ~idx) {
+      prev(next(idx)) = prev(idx);
+      next(prev(idx)) = next(idx);
+      used.push_back(idx);
+      sz--;
     }
-
-    auto p = head;
-    for (int i = 0; i < idx - 1 && p; i++) p = p->next;
-    if (!p || !p->next) return;
-    p->next = p->next->next;
   }
 };
 

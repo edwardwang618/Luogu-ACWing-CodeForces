@@ -13,41 +13,44 @@ public:
     Node() : son{0}, is_word(false) {}
   };
 
-  vector<Node> pool;
+#define son(p, idx) tr[p].son[idx]
+#define is_word(p) tr[p].is_word
 
-  Trie() { pool.emplace_back(); }
+  vector<Node> tr;
+
+  Trie() { tr.emplace_back(); }
 
   void insert(const string &word) {
     int p = 0;
     for (auto &c : word) {
-      int idx = c - 'a', ne = pool[p].son[idx];
+      int idx = c - 'a', ne = son(p, idx);
       if (!ne) {
-        pool[p].son[idx] = ne = pool.size();
-        pool.emplace_back();
+        son(p, idx) = ne = tr.size();
+        tr.emplace_back();
       }
       p = ne;
     }
-    pool[p].is_word = true;
+    is_word(p) = true;
   }
 
   bool search(const string &word) {
     int p = 0;
     for (auto &c : word) {
       int idx = c - 'a';
-      if (!pool[p].son[idx])
+      if (!son(p, idx))
         return false;
-      p = pool[p].son[idx];
+      p = son(p, idx);
     }
-    return pool[p].is_word;
+    return is_word(p);
   }
 
   bool startsWith(const string &prefix) {
     int p = 0;
     for (auto &c : prefix) {
       int idx = c - 'a';
-      if (!pool[p].son[idx])
+      if (!son(p, idx))
         return false;
-      p = pool[p].son[idx];
+      p = son(p, idx);
     }
     return true;
   }

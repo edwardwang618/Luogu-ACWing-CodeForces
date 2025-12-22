@@ -21,6 +21,7 @@ class Solution {
 
     int min_len = 2e9, max_len = 0;
     unordered_set<ull> st;
+    st.reserve(ws.size());
     for (auto& s : ws) {
       int n = s.size();
       min_len = min(min_len, n);

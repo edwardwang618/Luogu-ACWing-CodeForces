@@ -6,97 +6,86 @@
 
 // @lc code=start
 class AllOne {
- public:
-  struct Node {
-    Node *prev, *next;
+  struct Block {
+    int freq;
     unordered_set<string> keys;
-    int cnt;
-
-    Node(const string& key, int cnt) {
-      keys.insert(key);
-      this->cnt = cnt;
-    }
   };
+  // From front to back, freq increasing;
+  // No block is empty;
+  // mp maps the key to It which refers to the Block it belongs to
+  list<Block> blocks;
+  using It = list<Block>::iterator;
+  unordered_map<string, It> mp;
 
-  struct LinkedList {
-    Node *head, *tail;
-    int sz;
-
-    LinkedList() {
-      head = new Node("", 0);
-      tail = new Node("", 0);
-      head->next = tail;
-      tail->prev = head;
-    }
-
-    void add_first(Node* node) { add_after(head, node); }
-
-    void add_after(Node* cur, Node* node) {
-      node->prev = cur;
-      node->next = cur->next;
-      cur->next = node;
-      node->next->prev = node;
-      sz++;
-    }
-
-    void remove(Node* node) {
-      node->prev->next = node->next;
-      node->next->prev = node->prev;
-      sz--;
-    }
-
-    bool empty() { return sz == 0; }
-  };
-
-  LinkedList list;
-  unordered_map<string, Node*> mp;
-
-  AllOne() {}
-
-  void inc(string key) {
-    if (!mp.count(key)) {
-      if (list.empty() || list.head->next->cnt != 1) {
-        auto node = new Node(key, 1);
-        list.add_first(node);
-        mp[key] = node;
-      } else {
-        list.head->next->keys.insert(key);
-        mp[key] = list.head->next;
-      }
-    } else {
-      auto node = mp[key];
-      node->keys.erase(key);
-      if (node->next == list.tail || node->next->cnt != node->cnt + 1)
-        list.add_after(node, new Node(key, node->cnt + 1));
-      mp[key] = node->next;
-      node->next->keys.insert(key);
-      if (node->keys.empty()) list.remove(node);
-    }
+  auto ensure_after(It it, int freq) {
+    auto ne = next(it);
+    if (ne == blocks.end() || ne->freq != freq)
+      ne = blocks.insert(ne, {freq, {}});
+    return ne;
   }
 
-  void dec(string key) {
-    if (!mp.count(key)) return;
-    auto node = mp[key];
-    node->keys.erase(key);
-    if (node->cnt == 1)
-      mp.erase(key);
-    else {
-      if (node->prev == list.head || node->prev->cnt != node->cnt - 1)
-        list.add_after(node->prev, new Node(key, node->cnt - 1));
-      node->prev->keys.insert(key);
-      mp[key] = node->prev;
+  auto ensure_before(It it, int freq) {
+    if (it == blocks.begin())
+      return blocks.insert(it, {freq, {}});
+    auto pr = prev(it);
+    if (pr->freq != freq)
+      pr = blocks.insert(it, {freq, {}});
+    return pr;
+  }
+
+  // Ensure key is in it->keys
+  void remove_key_and_cleanup(It it, const string &key) {
+    if (it->keys.size() == 1)
+      blocks.erase(it);
+    else
+      it->keys.erase(key);
+  }
+
+public:
+  AllOne() {}
+
+  void inc(const string &key) {
+    auto it = mp.find(key);
+    if (it == mp.end()) {
+      // new key, guarantee blocks begin with freq 1
+      if (blocks.empty() || blocks.begin()->freq != 1)
+        blocks.insert(blocks.begin(), {1, {}});
+      blocks.begin()->keys.insert(key);
+      mp.emplace(key, blocks.begin());
+      return;
     }
-    if (node->keys.empty()) list.remove(node);
+    // existing key
+    auto block_it = it->second;
+    auto ne_block_it = ensure_after(block_it, block_it->freq + 1);
+    ne_block_it->keys.insert(key);
+    remove_key_and_cleanup(block_it, key);
+    it->second = ne_block_it;
+  }
+
+  void dec(const string &key) {
+    auto it = mp.find(key);
+    auto block_it = it->second;
+    if (block_it->freq == 1) {
+      mp.erase(it);
+      remove_key_and_cleanup(block_it, key);
+      return;
+    }
+    auto pr_block_it = ensure_before(block_it, block_it->freq - 1);
+    pr_block_it->keys.insert(key);
+    remove_key_and_cleanup(block_it, key);
+    it->second = pr_block_it;
   }
 
   string getMaxKey() {
-    if (list.empty()) return "";
-    return *list.tail->prev->keys.begin();
+    if (blocks.empty())
+      return "";
+    return *blocks.back().keys.begin();
   }
 
   string getMinKey() {
-    if (list.empty()) return "";
-    return *list.head->next->keys.begin();
+    if (blocks.empty())
+      return "";
+    return *blocks.front().keys.begin();
   }
 };
 

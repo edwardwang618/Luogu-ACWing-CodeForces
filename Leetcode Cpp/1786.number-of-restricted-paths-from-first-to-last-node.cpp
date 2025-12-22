@@ -35,7 +35,7 @@ public:
         int v = e[i];
         if (dist[v] > d + w[i]) {
           dist[v] = d + w[i];
-          heap.push({dist[v], v});
+          heap.emplace(dist[v], v);
         }
       }
     }
