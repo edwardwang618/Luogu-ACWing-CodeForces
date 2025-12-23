@@ -6,19 +6,20 @@
 
 // @lc code=start
 class Solution {
- public:
-  int longestConsecutive(vector<int>& a) {
+public:
+  int longestConsecutive(vector<int> &a) {
     unordered_set<int> st(a.begin(), a.end());
     int res = 0;
     while (st.size()) {
       int x = *st.begin(), y = x + 1, len = 0;
-      while (st.count(x)) {
-        st.erase(x);
+      unordered_set<int>::iterator it;
+      while (it = st.find(x), it != st.end()) {
+        st.erase(it);
         x--;
         len++;
       }
-      while (st.count(y)) {
-        st.erase(y);
+      while (it = st.find(y), it != st.end()) {
+        st.erase(it);
         y++;
         len++;
       }

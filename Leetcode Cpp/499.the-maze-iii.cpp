@@ -6,53 +6,54 @@
 
 // @lc code=start
 class Solution {
- public:
+public:
   struct Node {
-    int x, y;
-    int dist;
+    int u, dist;
     string path;
   };
-
   string findShortestWay(vector<vector<int>> &g, vector<int> &beg,
                          vector<int> &end) {
     int m = g.size(), n = g[0].size();
-    int ex = end[0], ey = end[1];
-    static auto cmp = [](const Node &n1, const Node &n2) {
-      return n1.dist != n2.dist ? n1.dist > n2.dist : n1.path > n2.path;
+    auto in_bound = [&](int x, int y) {
+      return 0 <= x && x < m && 0 <= y && y < n;
     };
-    static vector<int> d[4] = {{1, 0}, {0, -1}, {0, 1}, {-1, 0}};
+    auto id = [&](int x, int y) { return x * n + y; };
+    int st = id(beg[0], beg[1]), ed = id(end[0], end[1]);
+    auto cmp = [](auto &a, auto &b) {
+      if (a.dist != b.dist)
+        return a.dist > b.dist;
+      return a.path > b.path;
+    };
+    static int dx[4] = {1, 0, 0, -1};
+    static int dy[4] = {0, -1, 1, 0};
     static char dch[] = "dlru";
-    vector<vector<bool>> vis(m, vector<bool>(n));
+    vector<int> dist(m * n, 2e9);
+    vector<string> best_path(m * n);
     priority_queue<Node, vector<Node>, decltype(cmp)> heap(cmp);
-    heap.push({beg[0], beg[1], 0, ""});
-    int dist[m][n];
-    memset(dist, 0x3f, sizeof dist);
+    dist[st] = 0;
+    heap.emplace(st, 0, "");
     while (heap.size()) {
-      auto t = heap.top();
-      heap.pop();
-      int x = t.x, y = t.y, dis = t.dist;
-      if (vis[x][y]) continue;
-      if (x == ex && y == ey) return t.path;
-
-      vis[x][y] = true;
-      dist[x][y] = dis;
+      auto [u, dis, path] = heap.top(); heap.pop();
+      if (dis > dist[u] || path != best_path[u]) continue;
+      if (u == ed) return path;
+      int x = u / n, y = u % n;
       for (int k = 0; k < 4; k++) {
-        int dx = d[k][0], dy = d[k][1];
-        x = t.x, y = t.y;
-        int step = 0;
-        while (0 <= x + dx && x + dx < m && 0 <= y + dy && y + dy < n &&
-               g[x + dx][y + dy] != 1) {
-          x += dx, y += dy;
+        int nx = x, ny = y, step = 0;
+        while (in_bound(nx + dx[k], ny + dy[k]) &&
+               g[nx + dx[k]][ny + dy[k]] == 0) {
+          nx += dx[k], ny += dy[k];
           step++;
-          if (x == ex && y == ey) break;
+          if (id(nx, ny) == ed) break;
         }
-        if (!vis[x][y] && dist[x][y] >= dis + step) {
-          dist[x][y] = dis + step;
-          heap.push({x, y, dist[x][y], t.path + dch[k]});
+        int nid = id(nx, ny), nd = dis + step;
+        string np = path + dch[k];
+        if (dist[nid] > nd || (dist[nid] == nd && np < best_path[nid])) {
+          dist[nid] = nd;
+          best_path[nid] = np;
+          heap.emplace(nid, nd, np);
         }
       }
     }
-
     return "impossible";
   }
 };

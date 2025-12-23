@@ -9,7 +9,6 @@ const int N = 1.5e5 + 10, INF = 0x3f3f3f3f;
 int n, m;
 int h[N], e[N], ne[N], w[N], idx;
 int dist[N];
-bool vis[N];
 
 #define add(a, b, c) e[idx] = b, ne[idx] = h[a], w[idx] = c, h[a] = idx++
 
@@ -17,18 +16,17 @@ int dijkstra() {
   memset(dist, 0x3f, sizeof dist);
   dist[1] = 0;
   priority_queue<PII, vector<PII>, greater<>> heap;
-  heap.push({0, 1});
+  heap.emplace(0, 1);
   while (heap.size()) {
     auto [dis, u] = heap.top(); heap.pop();
-    if (vis[u]) continue;
+    if (dis > dist[u]) continue;
     if (u == n) return dis;
     
-    vis[u] = true;
     for (int i = h[u]; ~i; i = ne[i]) {
       int v = e[i], c = w[i];
-      if (!vis[v] && dist[v] > dis + c) {
+      if (dist[v] > dis + c) {
         dist[v] = dis + c;
-        heap.push({dist[v], v});
+        heap.emplace(dist[v], v);
       }
     }
   }

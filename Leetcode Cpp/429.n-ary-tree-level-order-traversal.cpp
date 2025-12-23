@@ -35,10 +35,9 @@ class Solution {
     while (q.size()) {
       vector<int> v;
       for (int i = q.size(); i; i--) {
-        auto t = q.front();
-        q.pop();
+        auto t = q.front(); q.pop();
         v.push_back(t->val);
-        for (auto* node : t->children) q.push(node);
+        for (auto *node : t->children) q.push(node);
       }
       res.push_back(v);
     }

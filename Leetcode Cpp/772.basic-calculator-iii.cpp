@@ -7,14 +7,15 @@
 // @lc code=start
 class Solution {
  public:
+  using ll = long long;
   int calculate(string s) {
     unordered_map<char, int> mp{
         {'(', 1}, {'+', 2}, {'-', 2}, {'*', 3}, {'/', 3}};
     stack<char> ops;
-    stack<long> stk;
-    auto calc = [&](stack<long>& stk, stack<char>& ops) {
-      long b = stk.top(); stk.pop();
-      long a = stk.top(); stk.pop();
+    stack<ll> stk;
+    auto calc = [&](auto &stk, auto &ops) {
+      ll b = stk.top(); stk.pop();
+      ll a = stk.top(); stk.pop();
       switch (ops.top()) {
         case '+': stk.push(a + b); break;
         case '-': stk.push(a - b); break;
@@ -41,7 +42,7 @@ class Solution {
       }
     }
 
-    while (stk.size() > 1) calc(stk, ops);
+    while (ops.size()) calc(stk, ops);
     return (int)stk.top();
   }
 };

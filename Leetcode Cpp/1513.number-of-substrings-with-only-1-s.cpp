@@ -8,7 +8,7 @@
 class Solution {
  public:
   using ll = long long;
-  int numSub(string s) {
+  int numSub(string &s) {
     constexpr int MOD = 1e9 + 7;
     ll res = 0;
     for (int i = 0; i < s.size(); i++) {
