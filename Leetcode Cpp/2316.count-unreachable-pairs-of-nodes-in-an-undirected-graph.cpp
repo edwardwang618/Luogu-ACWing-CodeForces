@@ -10,10 +10,9 @@ class Solution {
   using ll = long long;
   ll countPairs(int n, vector<vector<int>>& es) {
     vector<int> p(n), sz(n, 1);
-    for (int i = 0; i < n; i++) p[i] = i;
-    function<int(int)> find = [&](int x) {
-      if (x != p[x]) p[x] = find(p[x]);
-      return p[x];
+    iota(p.begin(), p.end(), 0);
+    auto find = [&](this auto &&find, int x) -> int {
+      return x == p[x] ? x : p[x] = find(p[x]);
     };
 
     for (auto& e : es) {

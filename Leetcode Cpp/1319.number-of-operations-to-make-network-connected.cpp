@@ -7,17 +7,13 @@
 // @lc code=start
 class Solution {
  public:
-  vector<int> p;
-  int find(int x) {
-    if (p[x] != x) p[x] = find(p[x]);
-    return p[x];
-  }
-
   int makeConnected(int n, vector<vector<int>>& es) {
     if (es.size() < n - 1) return -1;
-    p.resize(n);
-    for (int i = 0; i < n; i++) p[i] = i;
-
+    vector<int> p(n);
+    iota(p.begin(), p.end(), 0);
+    auto find = [&](this auto &&find, int x) -> int {
+      return x == p[x] ? x : p[x] = find(p[x]);
+    };
     for (auto& e : es) {
       int x = e[0], y = e[1];
       int px = find(x), py = find(y);

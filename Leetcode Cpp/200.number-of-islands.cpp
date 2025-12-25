@@ -6,29 +6,26 @@
 
 // @lc code=start
 class Solution {
- public:
-  int d[5] = {-1, 0, 1, 0, -1};
-  int numIslands(vector<vector<char>>& g) {
+public:
+  int numIslands(vector<vector<char>> &g) {
+    int m = g.size(), n = g[0].size();
     int res = 0;
-    for (int i = 0; i < g.size(); i++)
-      for (int j = 0; j < g[0].size(); j++) {
+    auto dfs = [&](this auto &&dfs, int x, int y) -> void {
+      g[x][y] = '0';
+      static int d[] = {1, 0, -1, 0, 1};
+      for (int k = 0; k < 4; k++) {
+        int nx = x + d[k], ny = y + d[k + 1];
+        if (0 <= nx && nx < m && 0 <= ny && ny < n && g[nx][ny] == '1')
+          dfs(nx, ny);
+      }
+    };
+    for (int i = 0; i < m; i++)
+      for (int j = 0; j < n; j++)
         if (g[i][j] == '1') {
-          dfs(i, j, g);
+          dfs(i, j);
           res++;
         }
-      }
-
     return res;
-  }
-
-  void dfs(int x, int y, auto& g) {
-    g[x][y] = '0';
-    for (int k = 0; k < 4; k++) {
-      int nx = x + d[k], ny = y + d[k + 1];
-      if (0 <= nx && nx < g.size() && 0 <= ny && ny < g[0].size() &&
-          g[nx][ny] == '1')
-        dfs(nx, ny, g);
-    }
   }
 };
 // @lc code=end

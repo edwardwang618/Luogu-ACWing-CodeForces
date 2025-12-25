@@ -8,14 +8,14 @@
 class NumArray {
 public:
   vector<int> s;
-  NumArray(vector<int> &nums) {
-    int n = nums.size();
+  NumArray(vector<int> &a) {
+    int n = a.size();
     s.resize(n + 1);
     for (int i = 0; i < n; i++)
-      s[i + 1] = s[i] + nums[i];
+      s[i + 1] = s[i] + a[i];
   }
 
-  int sumRange(int left, int right) { return s[right + 1] - s[left]; }
+  int sumRange(int l, int r) { return s[r + 1] - s[l]; }
 };
 
 /**

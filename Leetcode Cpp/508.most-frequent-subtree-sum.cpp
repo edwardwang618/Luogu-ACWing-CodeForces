@@ -23,13 +23,13 @@ public:
     int max_freq = 0;
     unordered_map<int, int> mp;
 
-    auto dfs = [&](auto &&self, auto root) -> int {
+    auto dfs = [&](this auto &&dfs, auto root) -> int {
       if (!root) return 0;
-      int sum = root->val + self(self, root->left) + self(self, root->right);
+      int sum = root->val + dfs(root->left) + dfs(root->right);
       if (max_freq < ++mp[sum]) max_freq++;
       return sum;
     };
-    dfs(dfs, root);
+    dfs(root);
     vector<int> res;
     for (auto [k, v] : mp) if (v == max_freq) res.push_back(k);
     return res;

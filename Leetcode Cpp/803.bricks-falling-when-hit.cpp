@@ -14,17 +14,17 @@ public:
     int TOP = m * n;
     vector<int> p(m * n + 1, -1), sz(m * n + 1, 0);
 
-    auto find = [&](auto &&self, int x) -> int {
-      return x == p[x] ? x : p[x] = self(self, p[x]);
+    auto find = [&](this auto &&find, int x) -> int {
+      return x == p[x] ? x : p[x] = find(p[x]);
     };
     auto merge = [&](int x, int y) {
-      int px = find(find, x), py = find(find, y);
+      int px = find(x), py = find(y);
       if (px == py)
         return;
       p[px] = py;
       sz[py] += sz[px];
     };
-    auto topSize = [&]() { return sz[find(find, TOP)]; };
+    auto topSize = [&]() { return sz[find(TOP)]; };
 
     static int d[] = {1, 0, -1, 0, 1};
 

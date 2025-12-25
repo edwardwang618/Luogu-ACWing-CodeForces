@@ -6,44 +6,50 @@
 
 // @lc code=start
 class Solution {
- public:
-  // vector<vector<int>> kClosest(vector<vector<int>>& ps, int k) {
-  //   auto dis = [](auto& p) { return p[0] * p[0] + p[1] * p[1]; };
-  //   auto cmp = [&](auto& p1, auto& p2) { return dis(p1) < dis(p2); };
-  //   priority_queue<vector<int>, vector<vector<int>>, decltype(cmp)>
-  //   heap(cmp); for (int i = 0; i < k; i++) heap.push(ps[i]); for (int i = k;
-  //   i < ps.size(); i++)
-  //     if (dis(ps[i]) < dis(heap.top())) {
+public:
+  // vector<vector<int>> kClosest(vector<vector<int>> &ps, int k) {
+  //   int n = ps.size();
+  //   vector<int> dist(n, -1);
+  //   auto dis = [&](int i) { 
+  //     if (~dist[i]) return dist[i];
+  //     auto &p = ps[i];
+  //     return dist[i] = p[0] * p[0] + p[1] * p[1]; 
+  //   };
+  //   auto cmp = [&](int i, int j) { return dis(i) < dis(j); };
+  //   priority_queue<int, vector<int>, decltype(cmp)> heap(cmp);
+  //   for (int i = 0; i < ps.size(); i++) {
+  //     if (i < k) heap.push(i);
+  //     else if (dis(i) < dis(heap.top())) {
   //       heap.pop();
-  //       heap.push(ps[i]);
+  //       heap.push(i);
   //     }
-
-  //   vector<vector<int>> res;
-  //   for (int i = 0; i < k; i++) {
-  //     res.push_back(heap.top());
-  //     heap.pop();
   //   }
 
+  //   vector<vector<int>> res;
+  //   while (heap.size()) {
+  //     int i = heap.top(); heap.pop();
+  //     res.push_back(ps[i]);
+  //   }
   //   return res;
   // }
 
   vector<vector<int>> kClosest(vector<vector<int>>& ps, int k) {
     auto dis = [](auto& p) { return p[0] * p[0] + p[1] * p[1]; };
-    quick_select(ps, 0, ps.size() - 1, k - 1, dis);
-    return vector<vector<int>>(ps.begin(), ps.begin() + k);
-  }
-
-  void quick_select(vector<vector<int>>& ps, int l, int r, int rk, auto& dis) {
-    if (l >= r) return;
-    int i = l, j = r;
-    int piv_dis = dis(ps[l + (r - l >> 1)]);
-    while (i <= j) {
-      while (dis(ps[i]) < piv_dis) i++;
-      while (dis(ps[j]) > piv_dis) j--;
-      if (i <= j) swap(ps[i++], ps[j--]);
-    }
-    if (rk <= j) quick_select(ps, l, j, rk, dis);
-    if (rk >= i) quick_select(ps, i, r, rk, dis);
+    auto quick_select = [&](int l, int r, int k) {
+      while (l < r) {
+        int i = l, j = r, piv = dis(ps[l + r >> 1]);
+        while (i <= j) {
+          while (dis(ps[i]) < piv) i++;
+          while (dis(ps[j]) > piv) j--;
+          if (i <= j) swap(ps[i++], ps[j--]);
+        }
+        if (k <= j) r = j;
+        else if (k >= i) l = i;
+        else return;
+      }
+    };
+    quick_select(0, ps.size() - 1, k - 1);
+    return {ps.begin(), ps.begin() + k};
   }
 };
 // @lc code=end

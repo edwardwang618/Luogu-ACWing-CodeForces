@@ -21,14 +21,14 @@ class Solution {
 public:
   TreeNode *convertBST(TreeNode *root) {
     int sum = 0;
-    auto dfs = [&](auto &&self, auto root) -> void {
+    auto dfs = [&](this auto &&dfs, auto root) -> void {
       if (!root) return;
-      self(self, root->right);
+      dfs(root->right);
       root->val += sum;
       sum = root->val;
-      self(self, root->left);
+      dfs(root->left);
     };
-    dfs(dfs, root);
+    dfs(root);
     return root;
   }
 };

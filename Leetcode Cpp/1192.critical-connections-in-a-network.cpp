@@ -22,18 +22,18 @@ public:
     int timestamp = 0;
 
     vector<vector<int>> res;
-    auto dfs = [&](auto &&self, int u, int from, int timestamp) -> void {
+    auto dfs = [&](this auto &&dfs, int u, int from, int timestamp) -> void {
       dfn[u] = low[u] = ++timestamp;
       for (int i = h[u]; ~i; i = ne[i]) {
         int v = e[i];
         if (!dfn[v]) {
-          self(self, v, u, timestamp);
+          dfs(v, u, timestamp);
           low[u] = min(low[u], low[v]);
           if (dfn[u] < low[v]) res.push_back({u, v});
         } else if (v != from) low[u] = min(low[u], low[v]);
       }
     };
-    dfs(dfs, 0, -1, 0);
+    dfs(0, -1, 0);
     return res;
   }
 };
