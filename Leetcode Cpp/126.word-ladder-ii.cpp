@@ -6,62 +6,57 @@
 
 // @lc code=start
 class Solution {
- public:
-  vector<vector<string>> findLadders(string beg, string end,
-                                     vector<string> &ws) {
+public:
+  vector<vector<string>> findLadders(string &begin, string &end,
+                                     vector<string> &v) {
     vector<vector<string>> res;
-    unordered_set<string> set;
-    for (auto &s : ws) set.insert(s);
-    if (!set.count(end)) return res;
-    set.insert(beg);
-    unordered_map<string, vector<string>> g;
-    unordered_map<string, int> dist;
-    dist[end] = 0;
-
+    unordered_set<string> st(v.begin(), v.end());
+    if (!st.count(end))
+      return res;
+    st.insert(begin);
     queue<string> q;
-    q.push(end);
+    q.push(begin);
+    unordered_map<string, int> dist{{begin, 0}};
+    unordered_map<string, vector<string>> g;
+    int d = 0;
+    bool found = false;
     while (q.size()) {
-      auto s = q.front();
-      q.pop();
-      auto t = s;
-      for (int i = 0; i < s.size(); i++) {
-        char old = s[i];
-        for (char ch = 'a'; ch <= 'z'; ch++) {
-          if (ch == old) continue;
-
-          s[i] = ch;
-          if (set.count(s))
-            if (!dist.count(s) || dist[s] == dist[t] + 1) {
-              g[s].push_back(t);
-              if (!dist.count(s)) q.push(s);
-
-              dist[s] = dist[t] + 1;
-              if (s == beg) break;
+      d++;
+      for (int i = q.size(); i; i--) {
+        auto s = q.front(); q.pop();
+        auto t = s;
+        found = [&]() {
+          for (char &ch : s) {
+            char tmp = ch;
+            for (char ne = 'a'; ne <= 'z'; ne++) {
+              if (ne == tmp) continue;
+              ch = ne;
+              if (!st.count(s)) continue;
+              auto [it, ins] = dist.emplace(s, d);
+              if (ins || it->second == d) {
+                g[s].push_back(t);
+                if (ins) q.push(s);
+              };
+              if (s == end) return true;
             }
-        }
-
-        s[i] = old;
+            ch = tmp;
+          }
+          return false;
+        }();
       }
+      if (found) break;
     }
 
-    if (!dist.count(beg)) return res;
-    vector<string> v;
-    dfs(beg, dist, v, res, g);
+    vector<string> path;
+    path.reserve(d + 1);
+    auto dfs = [&](this auto &&dfs, string &cur) -> void {
+      path.push_back(cur);
+      if (cur == begin) res.emplace_back(path.rbegin(), path.rend());
+      else for (auto &ne : g[cur]) dfs(ne);
+      path.pop_back();
+    };
+    dfs(end);
     return res;
-  }
-
-  void dfs(string &s, unordered_map<string, int> &dist, vector<string> &v,
-           vector<vector<string>> &res,
-           unordered_map<string, vector<string>> &g) {
-    v.push_back(s);
-    if (!dist[s]) {
-      res.push_back(v);
-      v.pop_back();
-      return;
-    }
-
-    for (auto &ne : g[s]) dfs(ne, dist, v, res, g);
-    v.pop_back();
   }
 };
 // @lc code=end

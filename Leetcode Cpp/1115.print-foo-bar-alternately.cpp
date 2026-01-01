@@ -25,7 +25,7 @@ class FooBar {
       // printFoo() outputs "foo". Do not change or remove this line.
       printFoo();
       run_foo = false;
-      cv.notify_one();
+      cv.notify_all();
     }
   }
 
@@ -36,7 +36,7 @@ class FooBar {
       // printBar() outputs "bar". Do not change or remove this line.
       printBar();
       run_foo = true;
-      cv.notify_one();
+      cv.notify_all();
     }
   }
 };

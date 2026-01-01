@@ -16,7 +16,7 @@ class Solution {
     if (m == 1 && n == 1) return 1;
     int res = 1;
     queue<PII> q;
-    q.push({0, 0});
+    q.emplace(0, 0);
     g[0][0] = -1;
     while (q.size()) {
       res++;
@@ -28,7 +28,7 @@ class Solution {
           if (0 <= nx && nx < m && 0 <= ny && ny < n && !g[nx][ny]) {
             if (nx == m - 1 && ny == n - 1) return res;
             g[nx][ny] = -1;
-            q.push({nx, ny});
+            q.emplace(nx, ny);
           }
         }
       }

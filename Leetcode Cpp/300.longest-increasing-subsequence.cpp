@@ -6,28 +6,22 @@
 
 // @lc code=start
 class Solution {
- public:
-  int lengthOfLIS(vector<int>& a) {
-    int n = a.size(), f[n];
-    memset(f, 0, sizeof f);
-    int idx = 0;
-    for (int i = 0; i < a.size(); i++) {
-      int l = 0, r = idx - 1, pos;
-      if (l > r) pos = -1;
-      else {
-        while (l < r) {
-          int mid = l + (r - l >> 1);
-          if (f[mid] >= a[i]) r = mid;
-          else l = mid + 1;
-        }
-
-        pos = f[l] >= a[i] ? l : -1;
+public:
+  int lengthOfLIS(vector<int> &a) {
+    int n = a.size();
+    vector<int> f;
+    for (int i = 0; i < n; i++) {
+      int x = a[i], m = f.size();
+      int l = 0, r = m - 1;
+      while (l < r) {
+        int mid = l + r >> 1;
+        if (f[mid] >= x) r = mid;
+        else l = mid + 1;
       }
-
-      ~pos ? f[pos] = a[i] : f[idx++] = a[i];
+      if (l >= m || f[l] < x) f.push_back(x);
+      else f[l] = x;
     }
-
-    return idx;
+    return f.size();
   }
 };
 // @lc code=end
