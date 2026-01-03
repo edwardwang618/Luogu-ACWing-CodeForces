@@ -60,7 +60,7 @@ public:
           int idxy = id(nx, ny);
           if (vis[idxy]) continue;
           vis[idxy] = true;
-          heap.emplace(min(dis, g[nx][ny]), id(nx, ny));
+          heap.emplace(min(dis, g[nx][ny]), idxy);
         }
       }
     }
