@@ -5,40 +5,36 @@
  */
 
 // @lc code=start
-
 class CountIntervals {
- public:
-  struct Node {
-    int st, ed, x;
-    Node *l, *r;
-    Node(int st, int ed, int x)
-        : st(st), ed(ed), x(x), l(nullptr), r(nullptr) {}
-  };
+public:
+  using PII = pair<int, int>;
+  set<PII> st;
+  int covered = 0;
+  static int len(int l, int r) { return r - l + 1; }
 
-  Node* root;
+  CountIntervals() = default;
 
-  void update(Node* u, int st, int ed) {
-    if (u->x == u->ed - u->st + 1) return;
-
-    if (st <= u->st && u->ed <= ed) {
-      u->x = u->ed - u->st + 1;
-      return;
+  void add(int l, int r) {
+    auto it = st.lower_bound({l, 0});
+    if (it != st.begin()) {
+      auto pre = prev(it);
+      if (pre->second >= l - 1)
+        it = pre;
     }
 
-    int mid = u->st + u->ed >> 1;
-    if (!u->l) u->l = new Node(u->st, mid, 0);
-    if (!u->r) u->r = new Node(mid + 1, u->ed, 0);
-    if (st <= mid) update(u->l, st, ed);
-    if (ed > mid) update(u->r, st, ed);
-    u->x = u->l->x + u->r->x;
-    if (u->x == u->ed - u->st + 1 && (u->l || u->r)) u->l = u->r = nullptr;
+    int L = l, R = r;
+    while (it != st.end() && it->first <= r + 1) {
+      L = min(L, it->first);
+      R = max(R, it->second);
+      covered -= len(it->first, it->second);
+      it = st.erase(it);
+    }
+
+    st.emplace(L, R);
+    covered += len(L, R);
   }
 
-  CountIntervals() { root = new Node(1, 1e9, 0); }
-
-  void add(int left, int right) { update(root, left, right); }
-
-  int count() { return root->x; }
+  int count() { return covered; }
 };
 /**
  * Your CountIntervals object will be instantiated and called as such:
@@ -46,4 +42,4 @@ class CountIntervals {
  * obj->add(left,right);
  * int param_2 = obj->count();
  */
-// @lc code=ed
+// @lc code=end
