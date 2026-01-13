@@ -6,17 +6,21 @@
 
 // @lc code=start
 class RangeFreqQuery {
- public:
+public:
   unordered_map<int, vector<int>> mp;
 
-  RangeFreqQuery(vector<int>& arr) {
-    for (int i = 0; i < arr.size(); ++i) mp[arr[i]].push_back(i);
+  RangeFreqQuery(vector<int> &a) {
+    for (int i = 0; i < a.size(); ++i)
+      mp[a[i]].push_back(i);
   }
 
-  int query(int left, int right, int val) {
-    auto& v = mp[val];
-    return upper_bound(v.begin(), v.end(), right) -
-           lower_bound(v.begin(), v.end(), left);
+  int query(int l, int r, int x) {
+    if (auto it = mp.find(x); it != mp.end()) {
+      auto &v = it->second;
+      return upper_bound(v.begin(), v.end(), r) -
+             lower_bound(v.begin(), v.end(), l);
+    }
+    return 0;
   }
 };
 

@@ -23,12 +23,12 @@ class Solution {
     auto *prev = &dummy;
     dummy.next = head;
 
-    while (prev) prev = swap(prev, k);
+    while (prev) prev = reverse_k(prev, k);
     return dummy.next;
   }
 
   // prev->a1->...->ak
-  ListNode *swap(ListNode *prev, int k) {
+  ListNode *reverse_k(ListNode *prev, int k) {
     ListNode *ak = prev;
     for (int i = 0; i < k; i++) {
       ak = ak->next;

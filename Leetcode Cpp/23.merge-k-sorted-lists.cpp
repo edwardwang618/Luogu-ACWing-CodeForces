@@ -16,7 +16,7 @@
  * };
  */
 class Solution {
- public:
+public:
   // ListNode* mergeKLists(vector<ListNode*>& lists) {
   //   auto cmp = [&](auto& p1, auto& p2) { return p1->val > p2->val; };
   //   priority_queue<ListNode*, vector<ListNode*>, decltype(cmp)> heap(cmp);
@@ -32,33 +32,31 @@ class Solution {
   //   return dummy.next;
   // }
 
-  ListNode* merge(vector<ListNode*>& v, int l, int r) {
-    if (l > r) return nullptr;
-    if (l == r) return v[l];
-    int mid = l + (r - l >> 1);
-    auto left = merge(v, l, mid), right = merge(v, mid + 1, r);
-    ListNode dummy;
-    auto cur = &dummy;
-    while (left || right) {
-      if (!left) {
-        cur->next = right;
-        break;
-      } else if (!right) {
-        cur->next = left;
-        break;
-      } else {
-        if (left->val <= right->val)
-          cur->next = left, left = left->next;
-        else
-          cur->next = right, right = right->next;
-        cur = cur->next;
+  ListNode *mergeKLists(vector<ListNode *> &v) {
+    auto dfs = [&](this auto &&dfs, int l, int r) -> ListNode* {
+      if (l > r) return nullptr;
+      if (l == r) return v[l];
+      int mid = l + r >> 1;
+      auto left = dfs(l, mid), right = dfs(mid + 1, r);
+      ListNode dummy;
+      auto cur = &dummy;
+      while (left || right) {
+        if (!left) {
+          cur->next = right; break;
+        } else if (!right) {
+          cur->next = left; break;
+        } else {
+          if (left->val <= right->val)
+            cur->next = left, left = left->next;
+          else
+            cur->next = right, right = right->next;
+          cur = cur->next;
+        }
       }
-    }
-    return dummy.next;
-  }
+      return dummy.next;
+    };
 
-  ListNode* mergeKLists(vector<ListNode*>& v) {
-    return merge(v, 0, v.size() - 1);
+    return dfs(0, (int)v.size() - 1);
   }
 };
 // @lc code=end
