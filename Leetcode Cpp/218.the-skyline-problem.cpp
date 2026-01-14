@@ -5,6 +5,7 @@
  */
 
 // @lc code=start
+#if 0
 class Solution {
  public:
   struct Node {
@@ -62,20 +63,52 @@ class Solution {
 
     vector<vector<int>> res;
     int last = 0;
-    dfs(1, last, v, res);
+    auto dfs = [&](this auto &&dfs, int u) -> void {
+      if (tr[u].l == tr[u].r || tr[u].h) {
+        if (tr[u].h != last) {
+          res.push_back({v[tr[u].l], tr[u].h});
+          last = tr[u].h;
+        }
+        return;
+      }
+      dfs(u << 1);
+      dfs(u << 1 | 1);
+    };
+    dfs(1);
     return res;
   }
+};
+#endif
 
-  void dfs(int u, int &last, vector<int> &v, vector<vector<int>> &res) {
-    if (tr[u].l == tr[u].r || tr[u].h) {
-      if (tr[u].h != last) {
-        res.push_back({v[tr[u].l], tr[u].h});
-        last = tr[u].h;
-      }
-      return;
+class Solution {
+public:
+  vector<vector<int>> getSkyline(vector<vector<int>> &bs) {
+    using PBI = pair<bool, int>;
+    map<int, vector<PBI>> events;
+    for (auto &b : bs) {
+      events[b[0]].emplace_back(true, b[2]);
+      events[b[1]].emplace_back(false, b[2]);
     }
-    dfs(u << 1, last, v, res);
-    dfs(u << 1 | 1, last, v, res);
+
+    multiset<int> active;
+    active.insert(0);
+
+    vector<vector<int>> res;
+    int last = 0;
+    for (auto &[x, ev] : events) {
+      for (auto &[in, h] : ev) {
+        if (in) active.insert(h);
+        else active.erase(active.find(h));
+      }
+
+      int h = *active.rbegin();
+      if (h != last) {
+        res.push_back({x, h});
+        last = h;
+      }
+    }
+
+    return res;
   }
 };
 // @lc code=end

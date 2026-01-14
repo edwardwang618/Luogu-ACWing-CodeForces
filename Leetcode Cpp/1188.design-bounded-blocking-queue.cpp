@@ -21,7 +21,7 @@ public:
       cv_full.wait(lk, [this] { return q.size() < capacity; });
       q.push(element);
     }
-    cv_empty.notify_all();
+    cv_empty.notify_one();
   }
 
   int dequeue() {
@@ -31,7 +31,7 @@ public:
       int x = q.front();
       q.pop();
     }
-    cv_full.notify_all();
+    cv_full.notify_one();
     return x;
   }
 

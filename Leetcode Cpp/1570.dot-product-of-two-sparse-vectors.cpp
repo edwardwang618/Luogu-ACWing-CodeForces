@@ -7,20 +7,27 @@
 // @lc code=start
 class SparseVector {
  public:
-  unordered_map<int, int> v;
+ using PII = pair<int, int>;
+  vector<PII> v;
 
-  SparseVector(vector<int>& nums) {
-    for (int i = 0; i < nums.size(); i++)
-      if (nums[i]) v[i] = nums[i];
+  SparseVector(vector<int>& a) {
+    for (int i = 0; i < a.size(); i++)
+      if (a[i]) v.emplace_back(i, a[i]);
   }
 
   // Return the dotProduct of two sparse vectors
   int dotProduct(SparseVector& vec) {
-    auto v2 = vec.v;
+    auto &v2 = vec.v;
     int res = 0;
-    for (auto& [k, n] : v)
-      if (v2.count(k)) res += n * v2[k];
-
+    for (int i = 0, j = 0; i < v.size() && j < vec.v.size(); ) {
+      if (v[i].first < v2[j].first) i++;
+      else if (v[i].first > v2[j].first) j++;
+      else {
+        res += v[i].second * v2[j].second;
+        i++;
+        j++;
+      }
+    }
     return res;
   }
 };
