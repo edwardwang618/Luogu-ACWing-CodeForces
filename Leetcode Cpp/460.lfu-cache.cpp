@@ -6,21 +6,59 @@
 
 // @lc code=start
 class LFUCache {
- private:
   struct Node {
     int key, val, freq;
     Node *prev, *next;
     Node(int key, int val)
         : key(key), val(val), prev(nullptr), next(nullptr), freq(1) {}
   };
+
+  struct Allocator {
+    Node *freehead;
+    int chunksize = 16;
+    vector<void *> pools;
+    Allocator() {
+      pools.emplace_back(::operator new(chunksize * sizeof(Node)));
+      freehead = static_cast<Node *>(pools[0]);
+      for (int i = 0; i + 1 < chunksize; i++)
+        freehead[i].next = &freehead[i + 1];
+      freehead[chunksize - 1].next = nullptr;
+    }
+
+    ~Allocator() {
+      static_assert(is_trivially_destructible<Node>::value,
+                    "Node is not trivially destructible.");
+      for (void *pool : pools)
+        ::operator delete(pool);
+    }
+
+    Node *allocate(int key, int val) {
+      if (!freehead) {
+        pools.emplace_back(::operator new(chunksize * sizeof(Node)));
+        Node *node = static_cast<Node *>(pools.back());
+        for (int i = 0; i < chunksize; i++)
+          node[i].next = i + 1 < chunksize ? &node[i + 1] : freehead;
+        freehead = node;
+        chunksize *= 2;
+      }
+      Node *next = freehead->next;
+      Node *node = new (freehead) Node(key, val);
+      freehead = next;
+      return node;
+    }
+
+    void deallocate(Node *p) {
+      p->next = freehead;
+      freehead = p;
+    }
+  } allocator;
   struct LinkedList {
     Node *head, *tail;
-    int sz;
-    LinkedList() : sz(0) {
-      head = new Node(0, 0);
-      tail = new Node(0, 0);
-      head->next = tail;
-      tail->prev = head;
+    void init(Node *head, Node *tail) {
+      this->head = head;
+      this->tail = tail;
+      this->head->next = this->tail;
+      this->tail->prev = this->head;
     }
 
     void addFirst(Node *node) {
@@ -28,48 +66,47 @@ class LFUCache {
       node->next = head->next;
       head->next = node;
       node->next->prev = node;
-      sz++;
     }
 
     void remove(Node *node) {
-      if (!sz) return;
       node->prev->next = node->next;
       node->next->prev = node->prev;
-      sz--;
     }
 
     Node *removeLast() {
-      if (!sz) return nullptr;
       auto *res = tail->prev;
       remove(res);
       return res;
     }
+
+    bool empty() { return head->next == tail; }
   };
 
   unordered_map<int, Node *> nodemp;
-  unordered_map<int, LinkedList *> freq;
+  unordered_map<int, LinkedList> freq;
   int cap, minFreq;
 
   void update(Node *node) {
-    auto *list = freq[node->freq];
-    list->remove(node);
-    if (node->freq == minFreq && !list->sz) minFreq++;
+    auto &list = freq[node->freq];
+    list.remove(node);
+    if (node->freq == minFreq && list.empty()) minFreq++;
     node->freq++;
-    if (!freq.count(node->freq)) freq[node->freq] = new LinkedList();
-    freq[node->freq]->addFirst(node);
+    auto [it, ins] = freq.emplace(node->freq, LinkedList{});
+    if (ins)
+      it->second.init(allocator.allocate(0, 0), allocator.allocate(0, 0));
+    it->second.addFirst(node);
   }
 
   void removeOldest() {
-    auto *list = freq[minFreq];
-    auto *node = list->removeLast();
+    auto &list = freq[minFreq];
+    auto *node = list.removeLast();
     nodemp.erase(node->key);
+    allocator.deallocate(node);
   }
 
- public:
-  LFUCache(int capacity) {
-    freq[1] = new LinkedList();
-    cap = capacity;
-    minFreq = 0;
+public:
+  LFUCache(int capacity) : cap(capacity), minFreq(0) {
+    freq[1].init(allocator.allocate(0, 0), allocator.allocate(0, 0));
   }
 
   int get(int key) {
@@ -89,9 +126,9 @@ class LFUCache {
     }
 
     if (nodemp.size() == cap) removeOldest();
-    auto *node = new Node(key, value);
+    auto *node = allocator.allocate(key, value);
     nodemp[key] = node;
-    freq[1]->addFirst(node);
+    freq[1].addFirst(node);
     minFreq = 1;
   }
 };

@@ -52,8 +52,8 @@ class Solution {
   int rectangleArea(vector<vector<int>> &rectangles) {
     vector<Seg> v;
     for (auto &rect : rectangles) {
-      v.push_back({rect[1], rect[3], rect[0], 1});
-      v.push_back({rect[1], rect[3], rect[2], -1});
+      v.emplace_back(rect[1], rect[3], rect[0], 1);
+      v.emplace_back(rect[1], rect[3], rect[2], -1);
       ys.push_back(rect[1]);
       ys.push_back(rect[3]);
     }
@@ -67,10 +67,11 @@ class Solution {
     build(1, 0, n - 2);
 
     sort(v.begin(), v.end());
-    int MOD = 1e9 + 7;
+    static constexpr int MOD = 1e9 + 7;
+    using ll = long long;
     int res = 0;
     for (int i = 0, j; i < v.size(); i++) {
-      if (i) res = (res + (long)tr[1].len * (v[i].x - v[i - 1].x)) % MOD;
+      if (i) res = (res + (ll)tr[1].len * (v[i].x - v[i - 1].x)) % MOD;
       j = i;
       while (j < v.size() && v[i].x == v[j].x) {
         modify(1, mp[v[j].l], mp[v[j].r] - 1, v[j].w);

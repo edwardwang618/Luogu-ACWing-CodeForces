@@ -12,19 +12,20 @@ class RandomizedSet {
   RandomizedSet() {}
 
   bool insert(int x) {
-    if (mp.count(x)) return false;
+    auto [it, ins] = mp.emplace(x, v.size());
+    if (!ins) return false;
     v.push_back(x);
-    mp[x] = v.size() - 1;
     return true;
   }
 
   bool remove(int x) {
-    if (!mp.count(x)) return false;
-    int idx = mp[x];
+    auto it = mp.find(x);
+    if (it == mp.end()) return false;
+    int idx = it->second;
     swap(v[idx], v.back());
     mp[v[idx]] = idx;
     v.pop_back();
-    mp.erase(x);
+    mp.erase(it);
     return true;
   }
 

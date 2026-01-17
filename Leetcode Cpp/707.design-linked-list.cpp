@@ -6,108 +6,119 @@
 
 // @lc code=start
 class MyLinkedList {
-  static constexpr int null = -1;
-  static constexpr int head = 0;
-  static constexpr int tail = 1;
+public:
   struct Node {
-    int prev, next;
+    Node *prev, *next;
     int val;
-    Node(int x) : prev(null), next(null), val(x) {}
-    Node(int x, int prev, int next) : prev(prev), next(next), val(x) {}
+    Node(int x) : prev(nullptr), next(nullptr), val(x) {}
+    Node(int x, Node *prev, Node *next) : prev(prev), next(next), val(x) {}
   };
 
-  vector<Node> pl;
-  vector<int> used;
+  struct Allocator {
+    int chunksize = 16;
+    Node *freehead;
+    vector<void *> pools;
+    Allocator() {
+      pools.emplace_back(::operator new(chunksize * sizeof(Node)));
+      freehead = static_cast<Node *>(pools[0]);
+      for (int i = 0; i + 1 < chunksize; i++)
+        freehead[i].next = &freehead[i + 1];
+      freehead[chunksize - 1].next = nullptr;
+    }
+
+    ~Allocator() {
+      static_assert(is_trivially_destructible<Node>::value,
+                    "Node is not trivially destructible.");
+      for (void *pool : pools)
+        ::operator delete(pool);
+    }
+
+    void grow() {
+      void *pool = ::operator new(chunksize * sizeof(Node));
+      Node *node = static_cast<Node *>(pool);
+      for (int i = 0; i < chunksize; i++)
+        node[i].next = i + 1 < chunksize ? &node[i + 1] : freehead;
+      freehead = node;
+      chunksize *= 2;
+    }
+
+    Node *allocate(int x, Node *prev = nullptr, Node *next = nullptr) {
+      if (!freehead)
+        grow();
+      Node *cur = freehead;
+      freehead = freehead->next;
+      new (cur) Node(x, prev, next);
+      return cur;
+    }
+
+    void deallocate(Node *p) {
+      p->next = freehead;
+      freehead = p;
+    }
+
+  } allocator;
+
+  Node *head, *tail;
   int sz;
 
-#define prev(idx) pl[idx].prev
-#define next(idx) pl[idx].next
-#define val(idx) pl[idx].val
-
-  int new_node(int val) {
-    int idx;
-    if (used.size()) {
-      idx = used.back();
-      used.pop_back();
-      pl[idx].val = val;
-    } else {
-      idx = pl.size();
-      pl.emplace_back(val);
-    }
-    return idx;
+  MyLinkedList()
+      : allocator(), head(allocator.allocate(0)), tail(allocator.allocate(0)),
+        sz(0) {
+    head->next = tail;
+    tail->prev = head;
   }
 
-  int operator[](int idx) {
+  Node *operator[](int idx) {
     if (idx < 0 || idx >= sz)
-      return null;
-    int res;
-    if (idx < sz >> 1) {
+      return nullptr;
+    Node *res;
+    if (idx < sz / 2) {
       res = head;
       for (int i = 0; i <= idx; i++)
-        res = next(res);
+        res = res->next;
     } else {
       res = tail;
-      for (int i = sz; i > idx; i--)
-        res = prev(res);
+      for (int i = 0; i < sz - idx; i++)
+        res = res->prev;
     }
     return res;
   }
 
-public:
-  MyLinkedList() {
-    pl.reserve(2);
-    pl.emplace_back(0);
-    pl.emplace_back(0);
-    next(head) = tail;
-    prev(tail) = head;
-    sz = 0;
-  }
-
   int get(int idx) {
-    if (idx = (*this)[idx]; ~idx)
-      return val(idx);
+    if (auto node = (*this)[idx]; node)
+      return node->val;
     return -1;
   }
 
   void addAtHead(int val) {
-    int idx = new_node(val);
-    prev(idx) = head;
-    next(idx) = next(head);
-    next(head) = idx;
-    prev(next(idx)) = idx;
+    auto node = allocator.allocate(val, head, head->next);
+    head->next = node;
+    node->next->prev = node;
     sz++;
   }
 
   void addAtTail(int val) {
-    int idx = new_node(val);
-    prev(idx) = prev(tail);
-    next(idx) = tail;
-    prev(tail) = idx;
-    next(prev(idx)) = idx;
+    auto node = allocator.allocate(val, tail->prev, tail);
+    tail->prev = node;
+    node->prev->next = node;
     sz++;
   }
 
   void addAtIndex(int idx, int val) {
-    if (idx == sz) {
+    if (idx == sz)
       addAtTail(val);
-      return;
+    else if (auto node = (*this)[idx]; node) {
+      node->prev = allocator.allocate(val, node->prev, node);
+      node->prev->prev->next = node->prev;
+      sz++;
     }
-    if (idx < 0 || idx > sz)
-      return;
-    int new_idx = new_node(val);
-    idx = (*this)[idx];
-    prev(new_idx) = prev(idx);
-    next(new_idx) = idx;
-    prev(idx) = new_idx;
-    next(prev(new_idx)) = new_idx;
-    sz++;
   }
 
   void deleteAtIndex(int idx) {
-    if (idx = (*this)[idx]; ~idx) {
-      prev(next(idx)) = prev(idx);
-      next(prev(idx)) = next(idx);
-      used.push_back(idx);
+    if (auto node = (*this)[idx]; node) {
+      node->prev->next = node->next;
+      node->next->prev = node->prev;
+      allocator.deallocate(node);
       sz--;
     }
   }
