@@ -110,24 +110,24 @@ public:
   }
 
   int get(int key) {
-    if (!nodemp.count(key)) return -1;
-    auto *node = nodemp[key];
+    Node *node;
+    if (auto it = nodemp.find(key); it == nodemp.end()) return -1;
+    else node = it->second;
     update(node);
     return node->val;
   }
 
   void put(int key, int value) {
     if (!cap) return;
-    if (nodemp.count(key)) {
-      auto *node = nodemp[key];
+    auto &node = nodemp[key];
+    if (node) {
       node->val = value;
       update(node);
       return;
     }
 
-    if (nodemp.size() == cap) removeOldest();
-    auto *node = allocator.allocate(key, value);
-    nodemp[key] = node;
+    if (nodemp.size() > cap) removeOldest();
+    node = allocator.allocate(key, value);
     freq[1].addFirst(node);
     minFreq = 1;
   }

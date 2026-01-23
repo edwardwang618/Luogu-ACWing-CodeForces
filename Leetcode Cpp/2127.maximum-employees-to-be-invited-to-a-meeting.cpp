@@ -9,16 +9,13 @@ class Solution {
  public:
   int maximumInvitations(vector<int>& fs) {
     int n = fs.size();
-    int ind[n];
-    memset(ind, 0, sizeof ind);
+    vector<int> ind(n);
     for (int i = 0; i < n; i++) ind[fs[i]]++;
     queue<int> q;
     for (int i = 0; i < n; i++)
       if (!ind[i]) q.push(i);
-    int len[n];
-    memset(len, 0, sizeof len);
-    bool vis[n];
-    memset(vis, 0, sizeof vis);
+    vector<int> len(n);
+    vector<bool> vis(n);
     while (q.size()) {
       int t = q.front();
       q.pop();
