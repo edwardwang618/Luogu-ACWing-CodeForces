@@ -8,18 +8,16 @@
 class MyCircularDeque {
 public:
   int *buf;
+  int cap;
   int head, tail;
-  int sz, cap;
 
-  MyCircularDeque(int k) : head(0), tail(0), sz(0), cap(k) { buf = new int[k]; }
-  ~MyCircularDeque() { delete[] buf; }
+  MyCircularDeque(int k) : buf(new int[k + 1]), cap(k + 1), head(0), tail(0) {}
 
   bool insertFront(int x) {
     if (isFull())
       return false;
     head = (head - 1 + cap) % cap;
     buf[head] = x;
-    sz++;
     return true;
   }
 
@@ -28,7 +26,6 @@ public:
       return false;
     buf[tail] = x;
     tail = (tail + 1) % cap;
-    sz++;
     return true;
   }
 
@@ -36,7 +33,6 @@ public:
     if (isEmpty())
       return false;
     head = (head + 1) % cap;
-    sz--;
     return true;
   }
 
@@ -44,25 +40,16 @@ public:
     if (isEmpty())
       return false;
     tail = (tail - 1 + cap) % cap;
-    sz--;
     return true;
   }
 
-  int getFront() {
-    if (isEmpty())
-      return -1;
-    return buf[head];
-  }
+  int getFront() { return isEmpty() ? -1 : buf[head]; }
 
-  int getRear() {
-    if (isEmpty())
-      return -1;
-    return buf[(tail - 1 + cap) % cap];
-  }
+  int getRear() { return isEmpty() ? -1 : buf[(tail - 1 + cap) % cap]; }
 
-  bool isEmpty() { return !sz; }
+  bool isEmpty() { return head == tail; }
 
-  bool isFull() { return sz == cap; }
+  bool isFull() { return (tail + 1) % cap == head; }
 };
 
 /**

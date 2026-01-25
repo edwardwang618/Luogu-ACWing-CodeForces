@@ -22,8 +22,7 @@ public:
 
   int pop() {
     int x = stk.front(); stk.pop_front();
-    auto it = mp.find(x);
-    if (it->second.size() == 1) mp.erase(it);
+    if (auto it = mp.find(x); it->second.size() == 1) mp.erase(it);
     else it->second.pop_back();
     return x;
   }

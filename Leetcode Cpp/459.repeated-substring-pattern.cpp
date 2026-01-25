@@ -7,7 +7,7 @@
 // @lc code=start
 class Solution {
  public:
-  bool repeatedSubstringPattern(string s) {
+  bool repeatedSubstringPattern(string &s) {
     int n = s.size();
     s = ' ' + s;
     int ne[n + 1];

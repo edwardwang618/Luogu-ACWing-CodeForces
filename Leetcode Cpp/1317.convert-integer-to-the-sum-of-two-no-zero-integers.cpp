@@ -8,10 +8,16 @@
 class Solution {
  public:
   vector<int> getNoZeroIntegers(int n) {
+    auto f = [](int x) {
+      while (x) {
+        if (x % 10 == 0) return false;
+        x /= 10;
+      }
+      return true;
+    };
     for (int i = 1; i <= n / 2; i++) {
       int j = n - i;
-      if (i + j == n && !~to_string(i).find('0') && !~to_string(j).find('0'))
-        return {i, j};
+      if (f(i) && f(j)) return {i, j};
     }
 
     return {};

@@ -8,10 +8,10 @@
 class MyCircularQueue {
 public:
   int *buf;
+  int cap;
   int head, tail;
-  int sz, cap;
 
-  MyCircularQueue(int k) : head(0), tail(0), cap(k), sz(0) { buf = new int[k]; }
+  MyCircularQueue(int k) : buf(new int[k + 1]), cap(k + 1), head(0), tail(0) {}
   ~MyCircularQueue() { delete[] buf; }
 
   bool enQueue(int x) {
@@ -19,7 +19,6 @@ public:
       return false;
     buf[tail] = x;
     tail = (tail + 1) % cap;
-    sz++;
     return true;
   }
 
@@ -27,25 +26,16 @@ public:
     if (isEmpty())
       return false;
     head = (head + 1) % cap;
-    sz--;
     return true;
   }
 
-  int Front() {
-    if (isEmpty())
-      return -1;
-    return buf[head];
-  }
+  int Front() { return isEmpty() ? -1 : buf[head]; }
 
-  int Rear() {
-    if (isEmpty())
-      return -1;
-    return buf[(tail + cap - 1) % cap];
-  }
+  int Rear() { return isEmpty() ? -1 : buf[(tail - 1 + cap) % cap]; }
 
-  bool isEmpty() { return !sz; }
+  bool isEmpty() { return head == tail; }
 
-  bool isFull() { return sz == cap; }
+  bool isFull() { return (tail + 1) % cap == head; }
 };
 
 /**

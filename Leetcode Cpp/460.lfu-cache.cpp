@@ -20,9 +20,8 @@ class LFUCache {
     Allocator() {
       pools.emplace_back(::operator new(chunksize * sizeof(Node)));
       freehead = static_cast<Node *>(pools[0]);
-      for (int i = 0; i + 1 < chunksize; i++)
-        freehead[i].next = &freehead[i + 1];
-      freehead[chunksize - 1].next = nullptr;
+      for (int i = 0; i < chunksize; i++)
+        freehead[i].next = i + 1 < chunksize ? &freehead[i + 1] : nullptr;
     }
 
     ~Allocator() {
@@ -37,7 +36,7 @@ class LFUCache {
         pools.emplace_back(::operator new(chunksize * sizeof(Node)));
         Node *node = static_cast<Node *>(pools.back());
         for (int i = 0; i < chunksize; i++)
-          node[i].next = i + 1 < chunksize ? &node[i + 1] : freehead;
+          node[i].next = i + 1 < chunksize ? &node[i + 1] : nullptr;
         freehead = node;
         chunksize *= 2;
       }
@@ -91,7 +90,7 @@ class LFUCache {
     list.remove(node);
     if (node->freq == minFreq && list.empty()) minFreq++;
     node->freq++;
-    auto [it, ins] = freq.emplace(node->freq, LinkedList{});
+    auto [it, ins] = freq.try_emplace(node->freq);
     if (ins)
       it->second.init(allocator.allocate(0, 0), allocator.allocate(0, 0));
     it->second.addFirst(node);

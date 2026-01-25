@@ -7,12 +7,11 @@
 // @lc code=start
 class Solution {
  public:
-#define lowbit(x) (x & -x);
   int hammingWeight(uint32_t n) {
     int res = 0;
     while (n) {
       res++;
-      n -= lowbit(n);
+      n &= n - 1;
     }
     return res;
   }
