@@ -6,26 +6,29 @@
 
 // @lc code=start
 class TreeAncestor {
- public:
   vector<vector<int>> f;
 
+public:
   TreeAncestor(int n, vector<int> &p) {
-    int m = (int)log2(n) + 1;
+    int m = n == 1 ? 1 : (int)log2(n - 1) + 2;
     f = vector<vector<int>>(n, vector<int>(m, -1));
-    for (int i = 0; i < p.size(); i++) f[i][0] = p[i];
+    for (int i = 0; i < p.size(); i++)
+      f[i][0] = p[i];
 
     for (int j = 1; j < m; j++)
       for (int i = 0; i < n; i++)
-        if (~f[i][j - 1]) f[i][j] = f[f[i][j - 1]][j - 1];
+        if (~f[i][j - 1])
+          f[i][j] = f[f[i][j - 1]][j - 1];
   }
 
-  int getKthAncestor(int node, int k) {
+  int getKthAncestor(int x, int k) {
     for (int i = 0; 1 << i <= k; i++)
-      if (k & 1 << i) {
-        if (f[node][i] == -1) return -1;
-        node = f[node][i];
+      if (k >> i & 1) {
+        if (!~f[x][i])
+          return -1;
+        x = f[x][i];
       }
-    return node;
+    return x;
   }
 };
 /**

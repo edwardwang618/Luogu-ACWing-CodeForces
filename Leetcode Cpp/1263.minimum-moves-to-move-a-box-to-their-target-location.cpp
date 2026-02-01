@@ -14,7 +14,6 @@ class Solution {
     int x2, y2;
   };
 
-
   int minPushBox(vector<vector<char>>& g) {
     static constexpr int N = 20;
     int m = g.size(), n = g[0].size();
@@ -31,9 +30,8 @@ class Solution {
     memset(dist, 0x3f, sizeof dist);
     dist[begin.x1][begin.y1][begin.x2][begin.y2] = 0;
     memset(vis, 0, sizeof vis);
-    deque<State> dq;
-    dq.push_back(begin);
-    static int d[] = {-1, 0, 1, 0, -1};
+    deque<State> dq{{begin}};
+    static constexpr int d[]{-1, 0, 1, 0, -1};
     auto in_bound = [&](int x, int y) {
       return 0 <= x && x < m && 0 <= y && y < n;
     };
