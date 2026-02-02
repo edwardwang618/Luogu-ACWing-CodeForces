@@ -6,7 +6,7 @@
 
 // @lc code=start
 class Solution {
- public:
+public:
   // bool isBipartite(vector<vector<int>>& g) {
   //   int n = g.size();
   //   vector<int> col(n, -1);
@@ -27,20 +27,22 @@ class Solution {
   //   return true;
   // }
 
-  vector<int> p;
-
-  int find(int x) { return x == p[x] ? x : p[x] = find(p[x]); }
-
-  bool isBipartite(vector<vector<int>>& g) {
+  bool isBipartite(vector<vector<int>> &g) {
     int n = g.size();
-    p.resize(n);
-    for (int i = 0; i < n; i++) p[i] = i;
-    for (int i = 0; i < n; i++)
+    vector<int> p(n);
+    auto find = [&](this auto &&find, int x) -> int {
+      return x == p[x] ? x : p[x] = find(p[x]);
+    };
+    iota(p.begin(), p.end(), 0);
+    for (int i = 0; i < n; i++) {
+      int pi = find(i);
       for (int ne : g[i]) {
         int pne = find(ne);
-        if (find(i) == pne) return false;
+        if (pi == pne)
+          return false;
         p[find(g[i][0])] = pne;
       }
+    }
     return true;
   }
 };
