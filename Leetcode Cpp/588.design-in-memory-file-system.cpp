@@ -6,77 +6,102 @@
 
 // @lc code=start
 class FileSystem {
- public:
+public:
   struct Dir {
-    unordered_map<string, Dir *> dirs;
+    unordered_map<string, int> dirs;
     unordered_map<string, string> files;
   };
 
-  Dir *root;
+  vector<Dir> pool;
+  const int root;
+#define dirs(f) pool[f].dirs
+#define files(f) pool[f].files
 
-  FileSystem() { root = new Dir(); }
+  FileSystem() : root(0) { pool.emplace_back(); }
 
-  vector<string> ls(string path) {
-    auto *f = root;
+  int new_dir() {
+    int n = pool.size();
+    pool.emplace_back();
+    return n;
+  }
+
+  vector<string> ls(const string &path) {
+    int f = root;
     string fname;
-    for (int i = 1; i < path.size(); i++) {
+    int pn = path.size();
+    for (int i = 1; i < pn; i++) {
       int j = i;
-      while (j < path.size() && path[j] != '/') j++;
+      while (j < pn && path[j] != '/')
+        j++;
       fname = path.substr(i, j - i);
-      if (j == path.size()) break;
-      f = f->dirs[fname];
+      if (j == pn)
+        break;
+      f = dirs(f)[fname];
       i = j;
     }
 
     if (fname.size()) {
-      if (f->files.count(fname)) return {fname};
-      f = f->dirs[fname];
+      if (files(f).count(fname))
+        return {fname};
+      f = dirs(f)[fname];
     }
     vector<string> res;
-    for (auto &[k, v] : f->dirs) res.push_back(k);
-    for (auto &[k, v] : f->files) res.push_back(k);
+    for (auto &[k, v] : dirs(f))
+      res.push_back(k);
+    for (auto &[k, v] : files(f))
+      res.push_back(k);
     sort(res.begin(), res.end());
     return res;
   }
 
-  void mkdir(string path) {
-    auto *f = root;
-    for (int i = 1; i < path.size(); i++) {
+  void mkdir(const string &path) {
+    int f = root;
+    int pn = path.size();
+    for (int i = 1; i < pn; i++) {
       int j = i;
-      while (j < path.size() && path[j] != '/') j++;
+      while (j < pn && path[j] != '/')
+        j++;
       auto fname = path.substr(i, j - i);
-      if (!f->dirs.count(fname)) f->dirs[fname] = new Dir();
-      f = f->dirs[fname];
+      int &nf = dirs(f)[fname];
+      if (!nf)
+        nf = new_dir();
+      f = nf;
       i = j;
     }
   }
 
-  void addContentToFile(string path, string content) {
-    auto *f = root;
+  void addContentToFile(const string &path, const string &content) {
+    int f = root;
     string fname;
-    for (int i = 1; i < path.size(); i++) {
+    int pn = path.size();
+    for (int i = 1; i < pn; i++) {
       int j = i;
-      while (j < path.size() && path[j] != '/') j++;
+      while (j < pn && path[j] != '/')
+        j++;
       fname = path.substr(i, j - i);
-      if (j == path.size()) break;
-      f = f->dirs[fname];
+      if (j == pn)
+        break;
+      f = dirs(f)[fname];
       i = j;
     }
-    f->files[fname] += content;
+    files(f)[fname] += content;
   }
 
-  string readContentFromFile(string path) {
-    auto *f = root;
+  string readContentFromFile(const string &path) {
+    int f = root;
     string fname;
-    for (int i = 1; i < path.size(); i++) {
+    int pn = path.size();
+    for (int i = 1; i < pn; i++) {
       int j = i;
-      while (j < path.size() && path[j] != '/') j++;
+      while (j < pn && path[j] != '/')
+        j++;
       fname = path.substr(i, j - i);
-      if (j == path.size()) break;
-      f = f->dirs[fname];
+      if (j == pn)
+        break;
+      f = dirs(f)[fname];
       i = j;
     }
-    return f->files[fname];
+    return files(f)[fname];
   }
 };
 /**
