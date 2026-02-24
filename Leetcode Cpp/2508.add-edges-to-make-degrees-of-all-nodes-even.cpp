@@ -8,34 +8,45 @@
 class Solution {
  public:
   bool isPossible(int n, vector<vector<int>>& es) {
-    unordered_map<int, unordered_set<int>> g;
+    using PII = pair<int, int>;
+    auto ha = [](const PII& p) {
+      using ll = long long;
+      return hash<ll>{}((ll)p.first << 32 | p.second);
+    };
+    unordered_set<PII, decltype(ha)> g;
+    vector<int> deg(n + 1);
     for (auto& e : es) {
-      g[e[0]].insert(e[1]);
-      g[e[1]].insert(e[0]);
+      int u = e[0], v = e[1];
+      deg[u]++;
+      deg[v]++;
+      g.emplace(min(u, v), max(u, v));
     }
 
     vector<int> vs;
     for (int i = 1; i <= n; i++)
-      if (g[i].size() & 1) vs.push_back(i);
+      if (deg[i] & 1) vs.push_back(i);
 
     if (vs.empty()) return true;
+    auto has = [&](int u, int v) {
+      return g.count({min(u, v), max(u, v)});
+    };
     if (vs.size() == 2) {
       int u = vs[0], v = vs[1];
-      if (!g[u].count(v)) return true;
+      if (!has(u, v)) return true;
       for (int w = 1; w <= n; w++)
-        if (w != u && w != v && !g[w].count(u) && !g[w].count(v)) return true;
+        if (w != u && w != v && !has(w, u) && !has(w, v)) return true;
       return false;
     }
 
     if (vs.size() == 4) {
-      for (int i = 0; i < 4; ++i) {
-        for (int j = i + 1; j < 4; ++j) {
+      for (int i = 0; i < 4; i++) {
+        for (int j = i + 1; j < 4; j++) {
           vector<int> a = {vs[i], vs[j]};
           vector<int> b;
-          for (int k = 0; k < 4; ++k)
+          for (int k = 0; k < 4; k++)
             if (k != i && k != j) b.push_back(vs[k]);
 
-          if (!g[a[0]].count(a[1]) && !g[b[0]].count(b[1])) return true;
+          if (!has(a[0], a[1]) && !has(b[0], b[1])) return true;
         }
       }
     }
