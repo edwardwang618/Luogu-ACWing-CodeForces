@@ -6,17 +6,16 @@
 
 // @lc code=start
 class Solution {
- public:
+public:
   int reverse(int x) {
     int res = 0;
     while (x) {
-      // 如果下一步就要溢出了，则返回0
-      if (res > 0 && res > (INT_MAX - x % 10) / 10) return 0;
-      if (res < 0 && res < (INT_MIN - x % 10) / 10) return 0;
-      res = res * 10 + x % 10;
+      int y = x % 10;
+      if (res > 0 && res > (numeric_limits<int>::max() - y) / 10) return 0;
+      if (res < 0 && res < (numeric_limits<int>::min() - y) / 10) return 0;
+      res = res * 10 + y;
       x /= 10;
     }
-
     return res;
   }
 };

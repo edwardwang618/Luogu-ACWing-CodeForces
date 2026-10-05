@@ -6,12 +6,12 @@
 
 // @lc code=start
 class Solution {
- public:
-  int maxSubArray(vector<int>& a) {
-    int res = -2e9, cur_sum = 0;
+public:
+  int maxSubArray(vector<int> &a) {
+    int s = 0, res = -2e9;
     for (int x : a) {
-      cur_sum = max(x, cur_sum + x);
-      res = max(res, cur_sum);
+      s = max(x, s + x);
+      res = max(res, s);
     }
     return res;
   }

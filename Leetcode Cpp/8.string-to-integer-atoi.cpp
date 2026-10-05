@@ -7,7 +7,7 @@
 // @lc code=start
 class Solution {
  public:
-  int myAtoi(string s) {
+  int myAtoi(string &s) {
     int k = 0;
     while (k < s.size() && s[k] == ' ') k++;
     if (k == s.size()) return 0;
@@ -17,14 +17,13 @@ class Solution {
     else if (s[k] == '+') k++;
 
     int res = 0;
-    for ( ; k < s.size() && '0' <= s[k] && s[k] <= '9'; k++) {
+    for (; k < s.size() && isdigit(s[k]); k++) {
       int x = s[k] - '0';
-      if (sign == 1 && res > (INT_MAX - x) / 10) return INT_MAX;
-      if (sign == -1 && -res < (INT_MIN + x) / 10) return INT_MIN;
-      if (-res * 10 - x == INT_MIN) return INT_MIN;
-      res = res * 10 + x;
+      if (sign == 1 && (res > INT_MAX / 10 || res == INT_MAX / 10 && x > 7)) return INT_MAX;
+      if (sign == -1 && (res < INT_MIN / 10 || res == INT_MIN / 10 && x > 8)) return INT_MIN;
+      res = res * 10 + sign * x;
     }
-    return sign * res;
+    return res;
   }
 };
 // @lc code=end

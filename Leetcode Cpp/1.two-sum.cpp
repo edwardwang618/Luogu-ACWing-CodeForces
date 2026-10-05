@@ -7,13 +7,16 @@
 // @lc code=start
 class Solution {
 public:
-  vector<int> twoSum(vector<int> &A, int t) {
+  vector<int> twoSum(vector<int> &a, int t) {
+    size_t n = a.size();
     unordered_map<int, int> mp;
-    for (int i = 0; i < A.size(); i++) {
-      if (auto it = mp.find(t - A[i]); it != mp.end())
+    mp.reserve(n);
+    for (int i = 0; i < n; i++) {
+      if (auto it = mp.find(t - a[i]); it != mp.end())
         return {it->second, i};
-      mp[A[i]] = i;
+      mp.try_emplace(a[i], i);
     }
+    
     return {};
   }
 };

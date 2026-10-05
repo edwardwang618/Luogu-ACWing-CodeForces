@@ -33,7 +33,7 @@ class Solution {
  public:
   // Node* treeToDoublyList(Node* root) {
   //   if (!root) return nullptr;
-  //   auto dummy = new Node(0), cur = dummy;
+  //   Node dummy, *cur = &dummy;
   //   stack<Node*> stk;
   //   auto node = root;
   //   while (node || stk.size()) {
@@ -50,18 +50,18 @@ class Solution {
   //     node = node->right;
   //   }
 
-  //   cur->right = dummy->right;
-  //   dummy->right->left = cur;
-  //   return dummy->right;
+  //   cur->right = dummy.right;
+  //   dummy.right->left = cur;
+  //   return dummy.right;
   // }
 
   Node* treeToDoublyList(Node* root) {
     if (!root) return nullptr;
-    auto dummy = new Node(0), cur = dummy;
+    Node dummy, *cur = &dummy;
     dfs(root, cur);
-    cur->right = dummy->right;
+    cur->right = dummy.right;
     cur->right->left = cur;
-    return dummy->right;
+    return dummy.right;
   }
 
   void dfs(Node* p, Node*& cur) {

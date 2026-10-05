@@ -28,16 +28,10 @@ public:
         prev->next = l1;
         break;
       }
-      if (l1->val <= l2->val) {
-        prev->next = l1;
-        l1 = l1->next;
-      } else {
-        prev->next = l2;
-        l2 = l2->next;
-      }
+      if (l1->val <= l2->val) prev->next = l1, l1 = l1->next;
+      else prev->next = l2, l2 = l2->next;
       prev = prev->next;
     }
-
     return dummy.next;
   }
 };
